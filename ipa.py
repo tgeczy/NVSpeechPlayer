@@ -1,4 +1,4 @@
-﻿###
+###
 #This file is a part of the NV Speech Player project. 
 #URL: https://bitbucket.org/nvaccess/speechplayer
 #Copyright 2014 NV Access Limited.
@@ -15,11 +15,197 @@
 import os
 import itertools
 import codecs
+import ast
+import re
 from . import speechPlayer
 
 dataPath=os.path.join(os.path.dirname(__file__),'data.py')
 
-data=eval(codecs.open(dataPath,'r','utf8').read(),None,None)
+data=ast.literal_eval(codecs.open(dataPath,'r','utf8').read())
+def normalizeIPA(text, language=None):
+	"""Normalize eSpeak phoneme/IPA output into a stable IPA stream.
+
+	This function accepts either:
+	- eSpeak phoneme mnemonics (Kirshenbaum-ish ASCII, e.g. rI2z'o@rs)
+	- true IPA output (Unicode, e.g. ɹɪˈzɔːɹs)
+
+	It removes eSpeak utility markers and maps known mnemonics/variants to IPA
+	symbols that exist in data.py.
+	"""
+	if text is None:
+		return u""
+	if not isinstance(text, str):
+		# Best effort decoding.
+		try:
+			text = text.decode("utf-8", "ignore")
+		except Exception:
+			text = str(text)
+
+	# --- Language helpers ---
+	lang = (language or "").lower()
+	isEnglish = lang.startswith("en")
+	isRhoticEnglish = (lang in ("en-us", "en-ca", "en-us-nyc"))
+
+	# --- eSpeak utility codes / cleanup ---
+	# Normalise tie bar variants.
+	text = text.replace(u"͜", u"͡")
+	# Remove common wrapper punctuation.
+	for c in (u"[", u"]", u"(", u")", u"{", u"}", u"/", u"\\"):
+		text = text.replace(c, u"")
+	# eSpeak dictionary utility codes.
+	# '  primary stress, , secondary stress, % unstressed syllable
+	# || word boundary within a phoneme string, | separator
+	text = text.replace(u"||", u" ")
+	text = text.replace(u"|", u"")
+	text = text.replace(u"%", u"")
+	text = text.replace(u"=", u"")
+	# Pause markers.
+	text = text.replace(u"_:", u" ")
+	text = text.replace(u"_", u" ")
+
+	# Stress/length markers.
+	text = text.replace(u"'", u"ˈ")
+	text = text.replace(u",", u"ˌ")
+	# eSpeak uses ':' as a length marker; normalise to IPA 'ː'.
+	text = text.replace(u":", u"ː")
+
+	# --- Multi-character eSpeak mnemonics (must run before single-char map) ---
+	multi = {
+		# Common affricates.
+		u"tS": u"t͡ʃ",
+		u"t͡S": u"t͡ʃ",
+		u"dZ": u"d͡ʒ",
+		u"d͡Z": u"d͡ʒ",
+		# Hungarian/Slavic affricates (some eSpeak tables emit ASCII pairs).
+		u"ts": u"t͡s",
+		u"dz": u"d͡z",
+		# Unstressed/reduced English vowels.
+		u"I2": u"ɪ",  # RABBIT
+		# ROSES/BLESSED vary by accent; GenAm often centralises to ᵻ.
+		u"I#": (u"ᵻ" if isEnglish and isRhoticEnglish else u"ɪ"),
+		u"I2#": (u"ᵻ" if isEnglish and isRhoticEnglish else u"ɪ"),
+		u"e#": u"ɛ",  # EXPLORE (safe default; closer than dropping)
+		# Syllabic /l/.
+		u"@L": u"əl",
+		# A few language tables use these.
+		u"i@3": (u"ɪɹ" if isEnglish and isRhoticEnglish else u"ɪə"),
+		u"i@": (u"ɪɹ" if isEnglish and isRhoticEnglish else u"ɪə"),
+		u"e@": u"eə",
+		u"U@": u"ʊə",
+	}
+
+	if isEnglish:
+		if isRhoticEnglish:
+			multi.update({
+				u"3ː": u"ɝ",
+				u"3": u"ɚ",
+				u"A@": u"ɑɹ",
+				u"O@": u"ɔɹ",
+				u"o@": u"oɹ",
+			})
+		else:
+			multi.update({
+				u"3ː": u"ɜ",
+				u"3": u"ə",
+				u"A@": u"ɑː",
+				u"O@": u"ɔː",
+				u"o@": u"ɔː",
+			})
+
+	# Apply multi-char replacements (longest-first).
+	for k in sorted(multi, key=len, reverse=True):
+		text = text.replace(k, multi[k])
+
+	# --- Single-character ASCII mnemonics ---
+	asciiMap = {
+		u"@": u"ə",
+		u"E": u"ɛ",
+		u"O": u"ɔ",
+		u"V": u"ʌ",
+		u"U": u"ʊ",
+		u"I": u"ɪ",
+		u"A": u"ɑ",
+		# consonants that eSpeak may output as ASCII.
+		u"N": u"ŋ",
+		u"S": u"ʃ",
+		u"Z": u"ʒ",
+		u"T": u"θ",
+		u"D": u"ð",
+	}
+	# English LOT vowel differs across accents.
+	asciiMap[u"0"] = (u"ɑ" if (isEnglish and isRhoticEnglish) else u"ɒ")
+
+	for k, v in asciiMap.items():
+		text = text.replace(k, v)
+
+	# --- IPA normalisation / fallbacks ---
+	# Dark-L and syllabic-L variants.
+	text = text.replace(u"ɫ", u"ɫ" if u"ɫ" in data else u"l")
+	text = text.replace(u"l̩", u"əl")
+	text = text.replace(u"ɫ̩", u"əl")
+	text = text.replace(u"ə͡l", u"əl")
+	text = text.replace(u"ʊ͡l", u"əl")
+
+	# Common reduced/central vowel symbol used by some eSpeak accents.
+	if u"ᵻ" not in data:
+		text = text.replace(u"ᵻ", u"ɪ")
+
+	# Rhotic hook (˞) and syllabic-r.
+	text = text.replace(u"˞", u"ɹ")
+	text = text.replace(u"ɹ̩", u"ɚ" if u"ɚ" in data else u"əɹ")
+	text = text.replace(u"r̩", u"ɚ" if u"ɚ" in data else u"əɹ")
+
+	# If rhotic vowels don't exist, fall back to vowel+ɹ.
+	if u"ɚ" not in data:
+		text = text.replace(u"ɚ", u"əɹ")
+	if u"ɝ" not in data:
+		text = text.replace(u"ɝ", u"ɜɹ")
+
+	# English: normalize 'r' to approximant.
+	if isEnglish:
+		text = text.replace(u"r", u"ɹ")
+
+	# Light-weight cross-language approximations.
+	repl = {
+		# Polish.
+		u"ɕ": u"ʃ",
+		u"ʑ": u"ʒ",
+		u"ʂ": u"ʃ",
+		u"ʐ": u"ʒ",
+		u"t͡ɕ": u"t͡ʃ",
+		u"d͡ʑ": u"d͡ʒ",
+		# Spanish/Portuguese approximations.
+		u"β": u"b",
+		u"ɣ": u"g",
+		u"x": u"h",
+		u"ʝ": u"j",
+		u"ʎ": u"l",
+		# Palatal stops (many voices output these).
+		u"c": u"k",
+		u"ɟ": u"g",
+		# Nasals.
+		u"ɲ": u"ɲ" if u"ɲ" in data else u"n",
+		# Misc vowels not present in some tables.
+		u"ɘ": u"ɘ" if u"ɘ" in data else u"ə",
+		u"ɵ": u"ɵ" if u"ɵ" in data else (u"ø" if u"ø" in data else u"o"),
+		u"ɤ": u"ɤ" if u"ɤ" in data else u"ʌ",
+	}
+	for k, v in repl.items():
+		text = text.replace(k, v)
+
+	# Precomposed nasal vowels (seen in some pipelines).
+	text = text.replace(u"ã", u"a").replace(u"ẽ", u"e").replace(u"ĩ", u"i").replace(u"õ", u"o").replace(u"ũ", u"u")
+
+	# English TRAP: keep /a/ for non-US, use /æ/ for en-US.
+	if isEnglish and isRhoticEnglish:
+		text = text.replace(u"a", u"æ")
+
+	# Drop any leftover eSpeak hash markers.
+	text = text.replace(u"#", u"")
+
+	# Collapse whitespace.
+	text = re.sub(r"\s+", " ", text).strip()
+	return text
 
 def iterPhonemes(**kwargs):
 	for k,v in data.items():
@@ -132,7 +318,7 @@ def correctHPhonemes(phonemeList):
 					if not k.startswith('_') and k not in curPhoneme:
 						curPhoneme[k]=v
 
-def calculatePhonemeTimes(phonemeList,baseSpeed):
+def calculatePhonemeTimes(phonemeList,baseSpeed,language=None):
 	lastPhoneme=None
 	syllableStress=0
 	speed=baseSpeed
@@ -142,7 +328,7 @@ def calculatePhonemeTimes(phonemeList,baseSpeed):
 		if syllableStart:
 			syllableStress=phoneme.get('_stress')
 			if syllableStress:
-				speed=baseSpeed/1.4 if syllableStress==1 else baseSpeed/1.1
+				speed=baseSpeed/1.25 if syllableStress==1 else baseSpeed/1.07
 			else:
 				speed=baseSpeed
 		phonemeDuration=60.0/speed
@@ -151,6 +337,13 @@ def calculatePhonemeTimes(phonemeList,baseSpeed):
 			phonemeDuration=41.0/speed
 		elif phoneme.get('_postStopAspiration'):
 			phonemeDuration=20.0/speed
+		elif phoneme.get('_isTap') or phoneme.get('_isTrill'):
+			# Alveolar tap/trill: keep it short, but don't force a silence gap like a full stop.
+			if phoneme.get('_isTrill'):
+				phonemeDuration=22.0/speed
+			else:
+				phonemeDuration=min(14.0/speed,14.0)
+			phonemeFadeDuration=0.001
 		elif phoneme.get('_isStop'):
 			phonemeDuration=min(6.0/speed,6.0)
 			phonemeFadeDuration=0.001
@@ -164,21 +357,26 @@ def calculatePhonemeTimes(phonemeList,baseSpeed):
 				if lastPhoneme and (lastPhoneme.get('_isLiquid') or lastPhoneme.get('_isSemivowel')): 
 					phonemeFadeDuration=25.0/speed
 				if phoneme.get('_tiedTo'):
-					phonemeDuration=40.0/speed
+					phonemeDuration=50.0/speed
 				elif phoneme.get('_tiedFrom'):
-					phonemeDuration=20.0/speed
-					phonemeFadeDuration=20.0/speed
+					phonemeDuration=26.0/speed
+					phonemeFadeDuration=10.0/speed
 				elif not syllableStress and not syllableStart and nextPhoneme and not nextPhoneme.get('_wordStart') and (nextPhoneme.get('_isLiquid') or nextPhoneme.get('_isNasal')):
 					if nextPhoneme.get('_isLiquid'):
-						phonemeDuration=30.0/speed
+						phonemeDuration=45.0/speed
 					else:
-						phonemeDuration=40.0/speed
+						phonemeDuration=50.0/speed
 			else: # not a vowel
 				phonemeDuration=30.0/speed
 				if phoneme.get('_isLiquid') or phoneme.get('_isSemivowel'):
-					phonemeFadeDuration=20.0/speed
+					phonemeFadeDuration=12.0/speed
 		if phoneme.get('_lengthened'):
 			phonemeDuration*=1.05
+		# Keep very short reduced vowels from vanishing entirely at high rates.
+		_MIN_VOWEL_DURATION_MS = 18.0
+		if phoneme.get('_isVowel') and phonemeDuration < _MIN_VOWEL_DURATION_MS:
+			phonemeDuration = _MIN_VOWEL_DURATION_MS
+
 		phoneme['_duration']=phonemeDuration
 		phoneme['_fadeDuration']=phonemeFadeDuration
 		lastPhoneme=phoneme
@@ -333,12 +531,13 @@ def calculatePhonemePitches(phonemeList,speed,basePitch,inflection,clauseType):
 				elif lastHeadUnstressedRunStart is None: 
 					lastHeadUnstressedRunStart=index
 
-def generateFramesAndTiming(ipaText,speed=1,basePitch=100,inflection=0.5,clauseType=None):
+def generateFramesAndTiming(ipaText,speed=1,basePitch=100,inflection=0.5,clauseType=None,language=None):
+	ipaText=normalizeIPA(ipaText,language=language)
 	phonemeList=IPAToPhonemes(ipaText)
 	if len(phonemeList)==0:
 		return
 	correctHPhonemes(phonemeList)
-	calculatePhonemeTimes(phonemeList,speed)
+	calculatePhonemeTimes(phonemeList,speed,language=language)
 	calculatePhonemePitches(phonemeList,speed,basePitch,inflection,clauseType)
 	for phoneme in phonemeList:
 		frameDuration=phoneme.pop('_duration')
