@@ -16,6 +16,9 @@ struct Handle {
   bool packLoaded = false;
   std::string langTag;
   std::string lastError;
+  // True after at least one successful queueIPA call emitted frames.
+  // Used to insert an optional inter-segment gap between consecutive calls.
+  bool streamHasSpeech = false;
   std::mutex mu;
 };
 
@@ -70,6 +73,8 @@ NVSP_FRONTEND_API int nvspFrontend_setLanguage(nvspFrontend_handle_t handle, con
   h->pack = std::move(pack);
   h->packLoaded = true;
   h->langTag = normalizeLangTag(lang);
+  // Treat language change as a stream reset.
+  h->streamHasSpeech = false;
   return 1;
 }
 
@@ -118,7 +123,22 @@ NVSP_FRONTEND_API int nvspFrontend_queueIPA(
     return 0;
   }
 
+  // Optional: Insert a tiny silence between consecutive queueIPA calls.
+  // This helps with UI speech where NVDA supplies separate chunks (label/role/value)
+  // and the synthesizer would otherwise transition abruptly with no boundary.
+  //
+  // Units in YAML are ms at speed=1.0; we divide by speed.
+  const double effSpeed = (speed <= 0.0) ? 1.0 : speed;
+  if (cb && h->streamHasSpeech && !tokens.empty()) {
+    const double gap = h->pack.lang.segmentBoundaryGapMs;
+    const double fade = h->pack.lang.segmentBoundaryFadeMs;
+    if (gap > 0.0) {
+      cb(userData, nullptr, gap / effSpeed, (fade > 0.0 ? fade / effSpeed : 0.0), -1);
+    }
+  }
+
   emitFrames(h->pack, tokens, userIndexBase, cb, userData);
+  if (!tokens.empty()) h->streamHasSpeech = true;
   return 1;
 }
 

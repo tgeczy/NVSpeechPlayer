@@ -272,15 +272,11 @@ static void mergeSettings(LanguagePack& lp, const yaml_min::Node& settings) {
 
   getStr("stopClosureMode", lp.stopClosureMode);
   getBool("stopClosureClusterGapsEnabled", lp.stopClosureClusterGapsEnabled);
+  // Optional: insert a tiny silence between consecutive queueIPA calls
+  // to compensate for NVDA UI segmentation.
+  getNum("segmentBoundaryGapMs", lp.segmentBoundaryGapMs);
+  getNum("segmentBoundaryFadeMs", lp.segmentBoundaryFadeMs);
   getBool("stopClosureAfterNasalsEnabled", lp.stopClosureAfterNasalsEnabled);
-
-  // Stop closure timing (ms at speed=1.0; divided by current speed in the engine).
-  getNum("stopClosureVowelGapMs", lp.stopClosureVowelGapMs);
-  getNum("stopClosureVowelFadeMs", lp.stopClosureVowelFadeMs);
-  getNum("stopClosureClusterGapMs", lp.stopClosureClusterGapMs);
-  getNum("stopClosureClusterFadeMs", lp.stopClosureClusterFadeMs);
-  getNum("stopClosureWordBoundaryClusterGapMs", lp.stopClosureWordBoundaryClusterGapMs);
-  getNum("stopClosureWordBoundaryClusterFadeMs", lp.stopClosureWordBoundaryClusterFadeMs);
 
   getNum("lengthenedScale", lp.lengthenedScale);
   getNum("lengthenedScaleHu", lp.lengthenedScaleHu);
