@@ -156,6 +156,85 @@ They are retained for:
 
 If you want to tune phonemes or language rules going forward, update YAML packs instead.
 
+## How to add or tune phonemes (data.py reference + YAML packs)
+`data.py` is a dictionary: keys are IPA symbols (like `a`, `ɚ`, `t͡ʃ`, `ᴒ`, etc.) and values are parameter sets that describe how the formant synthesizer should shape that sound. While the runtime path is now YAML-based, the same concepts apply. Be sure to match any tuning with the equivalent entries in `packs/phonemes.yaml`, and map usage in `packs/lang/*.yaml` so your changes are actually used.
+
+### Adding a new phoneme (recommended workflow)
+1. **Pick a key**
+   - Use a real IPA symbol if possible (`ɲ`, `ʎ`, `ɨ`, …).
+   - If you need a language-specific variant, use a private/internal key (we use things like `ᴒ`, `ᴇ`, `ᴀ`, `ᴐ`).
+2. **Clone the closest existing phoneme**
+   - Copy an existing entry and adjust it.
+   - This is important: the engine expects most fields to exist. A “minimal” entry can crash.
+3. **Tune it**
+   - Start by adjusting formant center frequencies (`cf1`, `cf2`, `cf3`).
+   - Then adjust bandwidths (`cb1`, `cb2`, `cb3`) if it sounds “boxy/ringy”.
+   - Only then adjust frication/aspiration settings.
+4. **Wire it up in language-specific YAML**
+   - Make sure `normalizeIPA()` (legacy path) or the YAML normalization rules output your new key for the right language/case.
+   - If you don’t map it, the phoneme will never be used.
+
+### Parameter reference (what the fields mean)
+#### Phoneme type flags (metadata)
+These fields are used by timing rules and by a few special cases:
+- `_isVowel`: This is a vowel (timed longer, can be lengthened with `ː`).
+- `_isVoiced`: Voiced (uses `voiceAmplitude`).
+- `_isStop`: Stop consonant (very short; may get a silence gap).
+- `_isNasal`: Nasal consonant or nasal vowel coupling.
+- `_isLiquid`: l/r-like sounds (often get longer fades).
+- `_isSemivowel`: Glides like j/w.
+- `_isTap`, `_isTrill`: Very short rhotic types.
+- `_isAfricate`: Affricate (timed like a stop+fricative).
+
+#### Core formant synthesizer knobs
+Think of a vowel as resonances (formants). The important ones are F1–F3.
+
+**Formant center frequencies** define where the resonances are (in Hz-ish units):
+- `cf1`, `cf2`, `cf3`, `cf4`, `cf5`, `cf6` — “Cascade” formant frequencies. F1–F3 matter most for vowel identity.
+- `pf1`, `pf2`, `pf3`, `pf4`, `pf5`, `pf6` — “Parallel” formant frequencies. Usually matched to the `cf*` values.
+
+Quick intuition:
+- Higher `cf1` → more open mouth (e.g. “ah”)
+- Higher `cf2` → more front / brighter (e.g. “ee”)
+- Lower `cf2` → more back / rounder (“oo”)
+- Lower `cf3` → more “r-colored” (rhotic vowels)
+
+**Bandwidths** define how wide each resonance is:
+- `cb1..cb6` and `pb1..pb6`
+
+Quick intuition:
+- Narrow bandwidth (small numbers) → very “ringy / boxy / hollow”
+- Wider bandwidth → smoother / less resonant / less “plastic box”
+
+If something sounds “boxy”, widening `cb2`/`cb3` (and matching `pb2`/`pb3`) is often the first fix.
+
+#### Amplitude / mixing controls
+- `voiceAmplitude`: Strength of voicing. Lower it slightly if vowels feel “over-held” or harsh.
+- `fricationAmplitude`: Noise level for fricatives (`s`, `ʃ`, `f`, `x`, etc.). If “s” is too hissy, reduce this.
+- `aspirationAmplitude`: Breath noise used for aspirated/“h-like” behavior. Usually 0 for vowels.
+- `parallelBypass`: Mix control between cascade and parallel paths. Most phonemes keep this at 0.0 unless you know you need it.
+- `pa1..pa6`: Per-formant amplitude in the parallel path. Most entries keep these at 0.0. If a diphthong glide is too weak, a tiny `pa2`/`pa3` boost can help.
+
+#### Nasal coupling (optional)
+Some entries include:
+- `cfN0`, `cfNP`, `cbN0`, `cbNP`, `caNP`
+
+These relate to nasal resonance and coupling. We currently treat nasality conservatively; if you don’t know what to do, clone from an existing nasal vowel/consonant entry.
+
+### Practical tuning tips (fast wins)
+“This vowel sounds too much like another vowel”
+- Adjust `cf1` and `cf2` first.
+- Example: Hungarian short `a` vs long `á`: make short `a` lower `cf1` and lower `cf2` compared to `á`.
+
+“This vowel is boxy / hollow / plastic”
+- Widen `cb2`/`cb3` (and `pb2`/`pb3`) a bit.
+
+“This sound is too sharp/hissy”
+- Lower `fricationAmplitude`.
+
+“This rhotic vowel (`ɚ`/`ɝ`) is too thick”
+- Raise `cf3` slightly (less r-color) or widen `cb3`.
+
 ## Generating phonemes.yaml from Python data
 If you are migrating from the legacy data dictionary, use the conversion tool in `tools/` to regenerate `packs/phonemes.yaml`.
 
