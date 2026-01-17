@@ -872,35 +872,47 @@ static bool parseToTokens(const PackSet& pack, const std::u32string& text, std::
   bool newWord = true;
   int pendingStress = 0;
 
-  Token* last = nullptr;
-  Token* syllableStartToken = nullptr;
+  // IMPORTANT:
+  // We must NOT keep raw pointers into outTokens across push_back(), because
+  // std::vector can reallocate and invalidate them. Doing so breaks stress /
+  // syllable tracking and leads to "flat" or inconsistent intonation.
+  //
+  // Use indices instead.
+  int lastIndex = -1;           // index of last (non-gap) token
+  int syllableStartIndex = -1;  // index of current syllable start token
 
   auto attachToneToSyllable = [&](char32_t toneChar) {
     if (!lang.tonal) return;
-    if (!syllableStartToken) return;
-    syllableStartToken->tone.push_back(toneChar);
+    if (syllableStartIndex < 0) return;
+    if (syllableStartIndex >= static_cast<int>(outTokens.size())) return;
+    outTokens[syllableStartIndex].tone.push_back(toneChar);
   };
 
   auto attachToneStringToSyllable = [&](const std::u32string& toneStr) {
     if (!lang.tonal) return;
-    if (!syllableStartToken) return;
-    syllableStartToken->tone.append(toneStr);
+    if (syllableStartIndex < 0) return;
+    if (syllableStartIndex >= static_cast<int>(outTokens.size())) return;
+    outTokens[syllableStartIndex].tone.append(toneStr);
   };
 
   const size_t n = text.size();
+  // Reserve a bit extra because we sometimes insert gaps/aspiration.
+  outTokens.reserve(n * 2);
+
   for (size_t i = 0; i < n; ++i) {
-    char32_t c = text[i];
+    const char32_t c = text[i];
 
     if (c == U' ') {
       newWord = true;
       continue;
     }
 
-    if (c == U'\u02C8') { // ˈ primary stress
+    // Primary/secondary stress.
+    if (c == U'\u02C8') { // ˈ
       pendingStress = 1;
       continue;
     }
-if (c == U'\u02CC') { // ˌ secondary stress
+    if (c == U'\u02CC') { // ˌ
       pendingStress = 2;
       continue;
     }
@@ -908,7 +920,7 @@ if (c == U'\u02CC') { // ˌ secondary stress
     // Tone markers (only when tonal is enabled).
     if (lang.tonal) {
       if (isToneLetter(c)) {
-        // collect run of tone letters
+        // Collect run of tone letters.
         std::u32string run;
         run.push_back(c);
         while (i + 1 < n && isToneLetter(text[i + 1])) {
@@ -924,11 +936,11 @@ if (c == U'\u02CC') { // ˌ secondary stress
     }
 
     const bool isLengthened = (i + 1 < n && text[i + 1] == U'\u02D0'); // ː
-    const bool isTiedTo   = (i + 1 < n && text[i + 1] == U'\u0361'); // ͡
-const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');     // ͡
+    const bool isTiedTo = (i + 1 < n && text[i + 1] == U'\u0361');     // ͡
+    const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');       // ͡
+
     const PhonemeDef* def = nullptr;
     bool tiedTo = false;
-    bool tiedFrom = false;
     bool lengthened = false;
 
     if (isTiedTo) {
@@ -988,28 +1000,44 @@ const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');     // ͡
     const int stress = pendingStress;
     pendingStress = 0;
 
+    // Helper to access last token safely by index.
+    auto haveLast = [&]() -> bool {
+      return lastIndex >= 0 && lastIndex < static_cast<int>(outTokens.size());
+    };
+
+    auto lastTok = [&]() -> Token* {
+      return haveLast() ? &outTokens[lastIndex] : nullptr;
+    };
+
     // Syllable start detection.
-    if (last && !tokenIsVowel(*last) && tokenIsVowel(t)) {
-      last->syllableStart = true;
-      syllableStartToken = last;
-    } else if (stress == 1 && last && tokenIsVowel(*last)) {
-      t.syllableStart = true;
-      // We'll set syllableStartToken after insertion (below).
+    if (haveLast()) {
+      Token& last = outTokens[lastIndex];
+      if (!tokenIsVowel(last) && tokenIsVowel(t)) {
+        last.syllableStart = true;
+        syllableStartIndex = lastIndex;
+      } else if (stress == 1 && tokenIsVowel(last)) {
+        t.syllableStart = true;
+        // syllableStartIndex will be set after we push t.
+      }
     }
 
     // Post-stop aspiration insertion.
-    if (lang.postStopAspirationEnabled && last && tokenIsStop(*last) && !tokenIsVoiced(*last) &&
-        tokenIsVoiced(t) && !tokenIsStop(t) && !tokenIsAfricate(t)) {
-      const PhonemeDef* asp = findPhoneme(pack, lang.postStopAspirationPhoneme);
-      if (asp) {
-        Token a;
-        a.def = asp;
-        a.setMask = asp->setMask;
-        for (int f = 0; f < kFrameFieldCount; ++f) a.field[f] = asp->field[f];
-        a.postStopAspiration = true;
-        a.baseChar = U'\0';
-        outTokens.push_back(a);
-        last = &outTokens.back();
+    if (lang.postStopAspirationEnabled && haveLast()) {
+      Token& last = outTokens[lastIndex];
+      if (tokenIsStop(last) && !tokenIsVoiced(last) && tokenIsVoiced(t) &&
+          !tokenIsStop(t) && !tokenIsAfricate(t)) {
+        const PhonemeDef* asp = findPhoneme(pack, lang.postStopAspirationPhoneme);
+        if (asp) {
+          Token a;
+          a.def = asp;
+          a.setMask = asp->setMask;
+          for (int f = 0; f < kFrameFieldCount; ++f) a.field[f] = asp->field[f];
+          a.postStopAspiration = true;
+          a.baseChar = U'\0';
+          outTokens.push_back(a);
+          // Match the Python behavior: the inserted aspiration becomes "last".
+          lastIndex = static_cast<int>(outTokens.size()) - 1;
+        }
       }
     }
 
@@ -1017,7 +1045,8 @@ const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');     // ͡
       newWord = false;
       t.wordStart = true;
       t.syllableStart = true;
-      syllableStartToken = nullptr; // will be set after push
+      // Syllable start will be the token we append for this word.
+      syllableStartIndex = -1;
     }
 
     // Stop closure insertion.
@@ -1028,15 +1057,16 @@ const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');     // ͡
       if (lang.stopClosureMode == "always") {
         needGap = true;
       } else if (lang.stopClosureMode == "after-vowel") {
-        if (last && tokenIsVowel(*last)) needGap = true;
+        if (haveLast() && tokenIsVowel(outTokens[lastIndex])) needGap = true;
       } else if (lang.stopClosureMode == "vowel-and-cluster") {
-        if (last && tokenIsVowel(*last)) {
+        if (haveLast() && tokenIsVowel(outTokens[lastIndex])) {
           needGap = true;
-        } else if (lang.stopClosureClusterGapsEnabled && last && !last->silence) {
-          const bool prevIsNasal = tokenIsNasal(*last);
-          const bool prevIsStopLike = tokenIsStop(*last) || tokenIsAfricate(*last);
-          const bool prevIsLiquidLike = tokenIsLiquid(*last) || tokenIsSemivowel(*last);
-          const bool prevIsFric = tokenIsFricativeLike(*last);
+        } else if (lang.stopClosureClusterGapsEnabled && haveLast() && !outTokens[lastIndex].silence) {
+          const Token& prev = outTokens[lastIndex];
+          const bool prevIsNasal = tokenIsNasal(prev);
+          const bool prevIsStopLike = tokenIsStop(prev) || tokenIsAfricate(prev);
+          const bool prevIsLiquidLike = tokenIsLiquid(prev) || tokenIsSemivowel(prev);
+          const bool prevIsFric = tokenIsFricativeLike(prev);
           if (!prevIsNasal && (prevIsFric || prevIsStopLike || prevIsLiquidLike)) {
             needGap = true;
             clusterGap = true;
@@ -1052,31 +1082,30 @@ const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');     // ͡
         gap.preStopGap = true;
         gap.clusterGap = clusterGap;
         outTokens.push_back(gap);
+        // IMPORTANT: do NOT update lastIndex here; Python keeps lastPhoneme as the
+        // previous *real* phoneme, not the inserted gap.
       }
     }
 
     // Append the real phoneme.
     outTokens.push_back(t);
-    Token* cur = &outTokens.back();
+    const int curIndex = static_cast<int>(outTokens.size()) - 1;
 
     // Finish syllableStart handling after insertion.
-    if (cur->syllableStart) {
-      syllableStartToken = cur;
-    } else if (cur->wordStart) {
-      syllableStartToken = cur;
+    if (outTokens[curIndex].syllableStart) {
+      syllableStartIndex = curIndex;
+    } else if (outTokens[curIndex].wordStart) {
+      syllableStartIndex = curIndex;
     }
 
     // Apply stress to syllable start.
-    if (stress != 0) {
-      if (syllableStartToken) {
-        syllableStartToken->stress = stress;
-      }
+    if (stress != 0 && syllableStartIndex >= 0 && syllableStartIndex < static_cast<int>(outTokens.size())) {
+      outTokens[syllableStartIndex].stress = stress;
     }
 
-    last = cur;
+    lastIndex = curIndex;
   }
 
-  // Ensure every syllableStart token carries its stress value (if any was assigned later).
   (void)outError;
   return true;
 }
