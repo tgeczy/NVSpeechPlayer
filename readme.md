@@ -179,6 +179,13 @@ These settings help when callers stitch speech from multiple chunks (common in N
 - `segmentBoundaryGapMs` (number, default `0.0`)
 - `segmentBoundaryFadeMs` (number, default `0.0`)
   - If non-zero, inserts a short silence frame between consecutive frontend queue calls on the same handle.
+- `segmentBoundarySkipVowelToVowel` (bool, default `true`)
+  - If true, skips the segment-boundary silence when a chunk ends with a vowel/semivowel and the next chunk begins with a vowel/semivowel (to avoid audible gaps across diphthongs).
+
+#### Automatic diphthong handling
+These settings optionally add tie bars for vowel+vowel sequences that should behave like a diphthong.
+- `autoTieDiphthongs` (bool, default `false`): If true, the frontend can mark eligible vowel+vowel pairs as tied (diphthongs) even when the IPA lacks a tie bar.
+- `autoDiphthongOffglideToSemivowel` (bool, default `false`): If true (and `autoTieDiphthongs` is enabled), convert the diphthong offglide to a semivowel (`i/ɪ → j`, `u/ʊ → w`) when those phonemes exist.
 
 #### Post-stop aspiration insertion (English-style)
 - `postStopAspirationEnabled` (bool, default `false`): Inserts a short aspiration phoneme after unvoiced stops in specific contexts.
@@ -238,7 +245,17 @@ These are “compat switches” for behavior that existed in the legacy Python p
 
 `intonation`:
 - Clause-type pitch shapes keyed by punctuation (example keys: `.`, `?`, `!`, `:`, `;`, `,`)
-- Supports `headSteps` and other percent parameters (`preHeadStart`, `headStart`, etc.)
+- Defaults for `.`, `,`, `?`, `!` are seeded by `applyLanguageDefaults()` unless overridden by packs.
+- Each clause supports percent-based parameters used by `calculatePitches()` to apply pitch paths across prehead/head/nucleus/tail:
+  - `preHeadStart`, `preHeadEnd`: Pitch percentages for the prehead region (before the first stressed syllable).
+  - `headStart`, `headEnd`: Pitch percentages for the head region (from first stress up to the nucleus).
+  - `headSteps`: Ordered percentages that select stepped head contours on stressed syllables (example: `[100, 85, 70, 55, 40, 25, 10, 0]`).
+  - `headExtendFrom`: Index in `headSteps` to clamp/extend when the head is longer than the steps list.
+  - `headStressEndDelta`: Delta (in percent units) applied from a stressed syllable’s start to its end.
+  - `headUnstressedRunStartDelta`, `headUnstressedRunEndDelta`: Deltas applied over unstressed runs following a stress.
+  - `nucleus0Start`, `nucleus0End`: Pitch percentages for the nucleus when the clause has no tail (single-word or tail-less cases).
+  - `nucleusStart`, `nucleusEnd`: Pitch percentages for the nucleus when a tail exists.
+  - `tailStart`, `tailEnd`: Pitch percentages for the tail region (after the nucleus).
 
 `toneContours`:
 - Tone contour definitions (tone string → list of pitch-percent points)
