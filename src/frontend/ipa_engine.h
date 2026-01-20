@@ -22,6 +22,7 @@ struct Token {
   bool preStopGap = false;
   bool clusterGap = false;
   bool postStopAspiration = false;
+  bool vowelHiatusGap = false;
 
   bool wordStart = false;
   bool syllableStart = false;

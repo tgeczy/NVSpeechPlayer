@@ -537,7 +537,10 @@ static void calculateTimes(std::vector<Token>& tokens, const PackSet& pack, doub
     double dur = 60.0 / curSpeed;
     double fade = 10.0 / curSpeed;
 
-    if (t.preStopGap) {
+    if (t.vowelHiatusGap) {
+      dur = lang.stressedVowelHiatusGapMs / baseSpeed;
+      fade = lang.stressedVowelHiatusFadeMs / baseSpeed;
+    } else if (t.preStopGap) {
       if (t.clusterGap) {
         double baseDur = lang.stopClosureClusterGapMs;
         double baseFade = lang.stopClosureClusterFadeMs;
@@ -1356,6 +1359,24 @@ static bool parseToTokens(const PackSet& pack, const std::u32string& text, std::
       t.syllableStart = true;
       // Syllable start will be the token we append for this word.
       syllableStartIndex = -1;
+    }
+
+    // Optional: intra-word hiatus break between adjacent vowels when the
+    // second vowel is explicitly stressed (useful for spelled-out acronyms).
+    if (lang.stressedVowelHiatusGapMs > 0.0 && stress != 0 && haveLast()) {
+      const Token& prev = outTokens[lastIndex];
+      if (!prev.silence && !t.wordStart && tokenIsVowel(prev) && tokenIsVowel(t)) {
+        // Do not insert if IPA already tied these vowels.
+        if (!prev.tiedTo && !prev.tiedFrom && !t.tiedTo && !t.tiedFrom) {
+          Token gap;
+          gap.silence = true;
+          gap.vowelHiatusGap = true;
+          outTokens.push_back(gap);
+          // IMPORTANT: do NOT update lastIndex here. We want the previous real
+          // phoneme to remain "last" for stress and other logic, matching the
+          // stop-closure gap behavior.
+        }
+      }
     }
 
     // Stop closure insertion.

@@ -222,6 +222,19 @@ struct LanguagePack {
   // in phonemes.yaml. This can make diphthong movement more obvious.
   bool autoDiphthongOffglideToSemivowel = false;
 
+  // Intra-word vowel hiatus break (optional).
+  //
+  // If enabled (>0), insert a short silence between two adjacent vowels
+  // when the second vowel is explicitly stressed (ˈ or ˌ) and both
+  // vowels are within the same word.
+  //
+  // This mainly helps spelled-out acronyms (e.g. NVDA -> ... iːˈeɪ)
+  // where the vowel-to-vowel transition can otherwise sound like an extra glide.
+  //
+  // Disabled by default.
+  double stressedVowelHiatusGapMs = 0.0;
+  double stressedVowelHiatusFadeMs = 0.0;
+
   // Duration scaling.
   double lengthenedScale = 1.05;
   double lengthenedScaleHu = 1.3;

@@ -296,6 +296,10 @@ static void mergeSettings(LanguagePack& lp, const yaml_min::Node& settings) {
   getBool("autoTieDiphthongs", lp.autoTieDiphthongs);
   getBool("autoDiphthongOffglideToSemivowel", lp.autoDiphthongOffglideToSemivowel);
 
+  // Optional: intra-word vowel hiatus break on stressed vowel starts.
+  getNum("stressedVowelHiatusGapMs", lp.stressedVowelHiatusGapMs);
+  getNum("stressedVowelHiatusFadeMs", lp.stressedVowelHiatusFadeMs);
+
   getNum("lengthenedScale", lp.lengthenedScale);
   getNum("lengthenedScaleHu", lp.lengthenedScaleHu);
   getBool("applyLengthenedScaleToVowelsOnly", lp.applyLengthenedScaleToVowelsOnly);
