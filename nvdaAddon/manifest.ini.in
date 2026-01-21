@@ -1,7 +1,0 @@
-name=nvSpeechPlayer
-summary=nvSpeechPlayer
-description=A free Klatt-based speech synthesizer
-author=_author_
-version=_version_
-minimumNVDAVersion = 2019.3.0
-lastTestedNVDAVersion = 2019.3.1
