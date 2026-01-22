@@ -248,6 +248,22 @@ struct LanguagePack {
   // Default 1.0 = disabled.
   double semivowelOffglideScale = 1.0;
 
+  // Trill amplitude modulation (optional).
+  //
+  // Some languages use a true trill for /r/. Formant synthesis can render this
+  // more naturally when we modulate the trill's voicing rather than relying on
+  // pack-level hacks (e.g. duplicating 'r' tokens).
+  //
+  // When trillModulationMs > 0, the frontend will render `_isTrill` phonemes as
+  // a series of micro-frames that apply an amplitude modulation to voiceAmplitude.
+  //
+  // - trillModulationMs: modulation cycle duration in milliseconds.
+  // - trillModulationFadeMs: fade duration (ms) between micro-frames (0 = auto).
+  //
+  // NOTE: These values are treated as absolute milliseconds (not scaled by speed).
+  double trillModulationMs = 0.0;
+  double trillModulationFadeMs = 0.0;
+
   // Intra-word vowel hiatus break (optional).
   //
   // If enabled (>0), insert a short silence between two adjacent vowels

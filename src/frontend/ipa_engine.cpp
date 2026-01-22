@@ -1774,7 +1774,6 @@ void emitFrames(
   nvspFrontend_FrameCallback cb,
   void* userData
 ) {
-  (void)pack;
   if (!cb) return;
 
   // We intentionally treat nvspFrontend_Frame as a dense sequence of doubles.
@@ -1786,6 +1785,30 @@ void emitFrames(
   static_assert(std::is_trivially_copyable<nvspFrontend_Frame>::value,
                 "nvspFrontend_Frame must remain trivially copyable");
 
+  const bool trillEnabled = (pack.lang.trillModulationMs > 0.0);
+
+  const int vp = static_cast<int>(FieldId::voicePitch);
+  const int evp = static_cast<int>(FieldId::endVoicePitch);
+  const int va = static_cast<int>(FieldId::voiceAmplitude);
+  const int fa = static_cast<int>(FieldId::fricationAmplitude);
+
+  // Trill modulation constants.
+  //
+  // We implement the trill as an amplitude modulation on voiceAmplitude using a
+  // sequence of short frames (micro-frames). This keeps the speechPlayer.dll ABI
+  // stable (no extra fields) while avoiding pack-level hacks such as duplicating
+  // phoneme tokens.
+  //
+  // These constants were chosen to produce an audible trill without introducing
+  // clicks or an overly "tremolo" sound. Packs can tune the modulation speed and
+  // fade via settings, but not the depth (kept fixed for simplicity).
+  constexpr double kTrillCloseFactor = 0.22;   // voiceAmplitude multiplier during closure
+  constexpr double kTrillCloseFrac = 0.28;     // fraction of cycle spent in closure
+  constexpr double kTrillFricFloor = 0.12;     // minimum fricationAmplitude during closure (if frication is present)
+  constexpr double kMinCycleMs = 6.0;          // avoid pathological configs
+  constexpr double kMaxCycleMs = 120.0;
+  constexpr double kMinPhaseMs = 1.0;
+
   for (const Token& t : tokens) {
     if (t.silence || !t.def) {
       cb(userData, nullptr, t.durationMs, t.fadeMs, userIndexBase);
@@ -1794,15 +1817,111 @@ void emitFrames(
 
     // Build a dense array of doubles and memcpy into the frame.
     // This avoids UB from treating a struct as an array via pointer arithmetic.
-    double buf[kFrameFieldCount] = {};
+    double base[kFrameFieldCount] = {};
     const std::uint64_t mask = t.setMask;
     for (int f = 0; f < kFrameFieldCount; ++f) {
       if ((mask & (1ull << f)) == 0) continue;
-      buf[f] = t.field[f];
+      base[f] = t.field[f];
+    }
+
+    // Optional trill modulation (only when `_isTrill` is true for the phoneme).
+    if (trillEnabled && tokenIsTrill(t) && t.durationMs > 0.0) {
+      double totalDur = t.durationMs;
+
+      // Cycle length is an absolute milliseconds value from the pack.
+      double cycleMs = pack.lang.trillModulationMs;
+      if (cycleMs < kMinCycleMs) cycleMs = kMinCycleMs;
+      if (cycleMs > kMaxCycleMs) cycleMs = kMaxCycleMs;
+
+      // For short trills, compress the cycle so we still get at least one closure dip.
+      if (cycleMs > totalDur) cycleMs = totalDur;
+
+      // Split the cycle into an "open" and "closure" phase.
+      double closeMs = cycleMs * kTrillCloseFrac;
+      double openMs = cycleMs - closeMs;
+
+      // Keep both phases non-trivial (prevents zero-length frames).
+      if (openMs < kMinPhaseMs) {
+        openMs = kMinPhaseMs;
+        closeMs = std::max(kMinPhaseMs, cycleMs - openMs);
+      }
+      if (closeMs < kMinPhaseMs) {
+        closeMs = kMinPhaseMs;
+        openMs = std::max(kMinPhaseMs, cycleMs - closeMs);
+      }
+
+      // Fade between micro-frames. If not configured, choose a small default
+      // relative to the cycle.
+      double microFadeMs = pack.lang.trillModulationFadeMs;
+      if (microFadeMs <= 0.0) {
+        microFadeMs = std::min(2.0, cycleMs * 0.12);
+      }
+
+      const bool hasVoiceAmp = ((mask & (1ull << va)) != 0);
+      const bool hasFricAmp = ((mask & (1ull << fa)) != 0);
+      const double baseVoiceAmp = base[va];
+      const double baseFricAmp = base[fa];
+
+      const double startPitch = base[vp];
+      const double endPitch = base[evp];
+      const double pitchDelta = endPitch - startPitch;
+
+      double remaining = totalDur;
+      double pos = 0.0;
+      bool highPhase = true;
+
+      while (remaining > 1e-9) {
+        double phaseDur = highPhase ? openMs : closeMs;
+        if (phaseDur > remaining) phaseDur = remaining;
+
+        // Interpolate pitch over the original token's duration so pitch remains continuous.
+        double t0 = (totalDur > 0.0) ? (pos / totalDur) : 0.0;
+        double t1 = (totalDur > 0.0) ? ((pos + phaseDur) / totalDur) : 1.0;
+
+        double seg[kFrameFieldCount];
+        std::memcpy(seg, base, sizeof(seg));
+
+        seg[vp] = startPitch + pitchDelta * t0;
+        seg[evp] = startPitch + pitchDelta * t1;
+
+        if (!highPhase) {
+          if (hasVoiceAmp) {
+            seg[va] = baseVoiceAmp * kTrillCloseFactor;
+          }
+          // Add a small noise burst on closure to make the trill more perceptible,
+          // but only if the phoneme already has a frication path.
+          if (hasFricAmp) {
+            seg[fa] = std::max(baseFricAmp, kTrillFricFloor);
+          }
+        }
+
+        nvspFrontend_Frame frame;
+        std::memcpy(&frame, seg, sizeof(frame));
+
+        // Internal fades use microFadeMs; the final micro-frame must use the
+        // token's original fade (transition to the next phoneme).
+        const bool isLast = (remaining - phaseDur) <= 1e-9;
+        double fadeOut = isLast ? t.fadeMs : microFadeMs;
+        if (isLast && fadeOut < microFadeMs) fadeOut = microFadeMs;
+
+        // Prevent fade dominating very short micro-frames.
+        if (fadeOut > phaseDur) fadeOut = phaseDur;
+
+        cb(userData, &frame, phaseDur, fadeOut, userIndexBase);
+
+        remaining -= phaseDur;
+        pos += phaseDur;
+        highPhase = !highPhase;
+
+        // If the remaining duration is too small to fit another phase, let the loop
+        // handle it naturally by truncating phaseDur above.
+      }
+
+      continue;
     }
 
     nvspFrontend_Frame frame;
-    std::memcpy(&frame, buf, sizeof(frame));
+    std::memcpy(&frame, base, sizeof(frame));
 
     cb(userData, &frame, t.durationMs, t.fadeMs, userIndexBase);
   }

@@ -298,6 +298,10 @@ static void mergeSettings(LanguagePack& lp, const yaml_min::Node& settings) {
   getBool("autoDiphthongOffglideToSemivowel", lp.autoDiphthongOffglideToSemivowel);
   getNum("semivowelOffglideScale", lp.semivowelOffglideScale);
 
+  // Trill amplitude modulation (ms; applies only to `_isTrill` phonemes).
+  getNum("trillModulationMs", lp.trillModulationMs);
+  getNum("trillModulationFadeMs", lp.trillModulationFadeMs);
+
   // Optional: spelling diphthong handling in acronym-like (spelled-out) words.
   {
     std::string mode;
