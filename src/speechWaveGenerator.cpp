@@ -141,6 +141,11 @@ class Resonator {
 		return out;
 	}
 
+	void reset() {
+		p1=0;
+		p2=0;
+	}
+
 };
 
 class CascadeFormantGenerator { 
@@ -150,6 +155,10 @@ class CascadeFormantGenerator {
 
 	public:
 	CascadeFormantGenerator(int sr): sampleRate(sr), r1(sr), r2(sr), r3(sr), r4(sr), r5(sr), r6(sr), rN0(sr,true), rNP(sr) {};
+
+	void reset() {
+		r1.reset(); r2.reset(); r3.reset(); r4.reset(); r5.reset(); r6.reset(); rN0.reset(); rNP.reset();
+	}
 
 	double getNext(const speechPlayer_frame_t* frame, bool glottisOpen, double input) {
 		input/=2.0;
@@ -174,6 +183,10 @@ class ParallelFormantGenerator {
 
 	public:
 	ParallelFormantGenerator(int sr): sampleRate(sr), r1(sr), r2(sr), r3(sr), r4(sr), r5(sr), r6(sr) {};
+
+	void reset() {
+		r1.reset(); r2.reset(); r3.reset(); r4.reset(); r5.reset(); r6.reset();
+	}
 
 	double getNext(const speechPlayer_frame_t* frame, bool glottisOpen, double input) {
 		input/=2.0;
@@ -200,9 +213,10 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 	FrameManager* frameManager;
 	double lastInput;
 	double lastOutput;
+	bool wasSilence;
 
 	public:
-	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0) {
+	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0), wasSilence(true) {
 	}
 
 	unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
@@ -211,6 +225,11 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 		for(unsigned int i=0;i<sampleCount;++i) {
 			const speechPlayer_frame_t* frame=frameManager->getCurrentFrame();
 			if(frame) {
+				if(wasSilence) {
+					cascade.reset();
+					parallel.reset();
+					wasSilence=false;
+				}
 				double voice=voiceGenerator.getNext(frame);
 				double cascadeOut=cascade.getNext(frame,voiceGenerator.glottisOpen,voice*frame->preFormantGain);
 				double fric=fricGenerator.getNext()*0.3*frame->fricationAmplitude;
@@ -221,6 +240,7 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 				lastOutput=filteredOut;
 				sampleBuf[i].value=(int)max(min(filteredOut*4000,32000),-32000);
 			} else {
+				wasSilence=true;
 				return i;
 			}
 		}
