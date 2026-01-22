@@ -254,6 +254,8 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 					fricGenerator.reset();
 					cascade.reset();
 					parallel.reset();
+					lastInput=0.0;
+					lastOutput=0.0;
 					wasSilence=false;
 				}
 				double voice=voiceGenerator.getNext(frame);
