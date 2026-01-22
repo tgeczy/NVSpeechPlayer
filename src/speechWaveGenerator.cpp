@@ -36,8 +36,17 @@ class NoiseGenerator {
 	public:
 	NoiseGenerator(): lastValue(0.0) {};
 
+	void reset() {
+		lastValue=0.0;
+	}
+
 	double getNext() {
-		lastValue=(((double)rand()/RAND_MAX)-0.5)+0.75*lastValue;
+		// rand() returns a non-negative value, so using it directly yields strictly
+		// positive noise and a significant DC bias after the one-pole filter.
+		//
+		// Center the random value at 0 ([-0.5, 0.5]) to avoid DC offset "thumps"
+		// when the signal (especially turbulence) is faded in/out.
+		lastValue=(((double)rand()/(double)RAND_MAX)-0.5)+0.75*lastValue;
 		return lastValue;
 	}
 
@@ -50,6 +59,10 @@ class FrequencyGenerator {
 
 	public:
 	FrequencyGenerator(int sr): sampleRate(sr), lastCyclePos(0) {}
+
+	void reset() {
+		lastCyclePos=0;
+	}
 
 	double getNext(double frequency) {
 		double cyclePos=fmod((frequency/sampleRate)+lastCyclePos,1);
@@ -68,6 +81,13 @@ class VoiceGenerator {
 	public:
 	bool glottisOpen;
 	VoiceGenerator(int sr): pitchGen(sr), vibratoGen(sr), aspirationGen(), glottisOpen(false) {};
+
+	void reset() {
+		pitchGen.reset();
+		vibratoGen.reset();
+		aspirationGen.reset();
+		glottisOpen=false;
+	}
 
 	double getNext(const speechPlayer_frame_t* frame) {
 		double vibrato=(sin(vibratoGen.getNext(frame->vibratoSpeed)*PITWO)*0.06*frame->vibratoPitchOffset)+1;
@@ -147,6 +167,7 @@ class Resonator {
 	void reset() {
 		p1=0;
 		p2=0;
+		setOnce=false;
 	}
 
 };
@@ -229,6 +250,8 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 			const speechPlayer_frame_t* frame=frameManager->getCurrentFrame();
 			if(frame) {
 				if(wasSilence) {
+					voiceGenerator.reset();
+					fricGenerator.reset();
 					cascade.reset();
 					parallel.reset();
 					wasSilence=false;
