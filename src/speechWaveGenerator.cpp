@@ -198,9 +198,11 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 	CascadeFormantGenerator cascade;
 	ParallelFormantGenerator parallel;
 	FrameManager* frameManager;
+	double lastInput;
+	double lastOutput;
 
 	public:
-	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL) {
+	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0) {
 	}
 
 	unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
@@ -214,7 +216,10 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 				double fric=fricGenerator.getNext()*0.3*frame->fricationAmplitude;
 				double parallelOut=parallel.getNext(frame,voiceGenerator.glottisOpen,fric*frame->preFormantGain);
 				double out=(cascadeOut+parallelOut)*frame->outputGain;
-				sampleBuf[i].value=(int)max(min(out*4000,32000),-32000);
+				double filteredOut=out-lastInput+0.995*lastOutput;
+				lastInput=out;
+				lastOutput=filteredOut;
+				sampleBuf[i].value=(int)max(min(filteredOut*4000,32000),-32000);
 			} else {
 				return i;
 			}
