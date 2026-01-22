@@ -36,6 +36,9 @@ void msgBox(
 // Folder picker (IFileDialog).
 bool pickFolder(HWND owner, const wchar_t* title, std::wstring& outFolder);
 
+// File picker for an executable (GetOpenFileName).
+bool pickOpenExe(HWND owner, std::wstring& outPath);
+
 // Save WAV path picker.
 bool pickSaveWav(HWND owner, std::wstring& outPath);
 

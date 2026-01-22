@@ -119,6 +119,37 @@ bool pickFolder(HWND owner, const wchar_t* title, std::wstring& outFolder) {
   return !outFolder.empty();
 }
 
+
+
+bool pickOpenExe(HWND owner, std::wstring& outPath) {
+  outPath.clear();
+
+  // Preserve keyboard focus across modal dialogs.
+  HWND prevFocus = GetFocus();
+  auto restoreFocus = [&]() {
+    if (prevFocus && IsWindow(prevFocus) && IsWindowEnabled(prevFocus) && IsWindowVisible(prevFocus)) {
+      SetFocus(prevFocus);
+    }
+  };
+
+  wchar_t fileBuf[MAX_PATH] = {0};
+  OPENFILENAMEW ofn{};
+  ofn.lStructSize = sizeof(ofn);
+  ofn.hwndOwner = owner;
+  ofn.lpstrFile = fileBuf;
+  ofn.nMaxFile = MAX_PATH;
+  ofn.lpstrFilter = L"Executable files (*.exe)\0*.exe\0All files\0*.*\0";
+  ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+  if (!GetOpenFileNameW(&ofn)) {
+    restoreFocus();
+    return false;
+  }
+
+  outPath = fileBuf;
+  restoreFocus();
+  return !outPath.empty();
+}
+
 bool pickSaveWav(HWND owner, std::wstring& outPath) {
   outPath.clear();
 

@@ -8,6 +8,7 @@
 #include "WinUtils.h"
 
 #include "process_util.h"
+#include "phonemizer_cli.h"
 #include "resource.h"
 #include "utf8.h"
 #include "wav_writer.h"
@@ -796,9 +797,16 @@ static void onSavePhonemes(AppController& app) {
 // -------------------------
 static std::wstring getText(HWND hEdit) {
   int len = GetWindowTextLengthW(hEdit);
+  if (len <= 0) return L"";
+
+  // GetWindowTextW writes a trailing NUL, so allocate len+1.
   std::wstring buf;
-  buf.resize(static_cast<size_t>(len));
-  GetWindowTextW(hEdit, buf.data(), len + 1);
+  buf.resize(static_cast<size_t>(len) + 1);
+
+  int copied = GetWindowTextW(hEdit, buf.data(), len + 1);
+  if (copied < 0) copied = 0;
+
+  buf.resize(static_cast<size_t>(copied));
   return buf;
 }
 
@@ -812,93 +820,55 @@ static bool ensureEspeakDir(AppController& app) {
   return !app.espeakDir.empty();
 }
 
-static bool convertTextToIpaViaEspeak(AppController& app, const std::wstring& text, std::string& outIpaUtf8, std::string& outError) {
+static bool convertTextToIpaViaPhonemizer(AppController& app, const std::wstring& text, std::string& outIpaUtf8, std::string& outError) {
   outIpaUtf8.clear();
   outError.clear();
 
-  if (!ensureEspeakDir(app)) {
-    outError = "eSpeak directory is not set";
-    return false;
-  }
-
   std::string langTag = selectedLangTagUtf8(app);
 
-  // Sanitize text for command-line invocation: make it single-line and trim.
-  std::wstring safeText = text;
-  for (wchar_t& c : safeText) {
-    if (c == L'\r' || c == L'\n' || c == L'\t') c = L' ';
-  }
-  {
-    std::wstring collapsed;
-    collapsed.reserve(safeText.size());
-    bool inSpace = true; // trim leading
-    for (wchar_t c : safeText) {
-      const bool isSpace = (c == L' ' || c == L'\v' || c == L'\f');
-      if (isSpace) {
-        if (!inSpace) collapsed.push_back(L' ');
-        inSpace = true;
-      } else {
-        collapsed.push_back(c);
-        inSpace = false;
-      }
+  // Config lives in nvspPhonemeEditor.ini.
+  //
+  // If [phonemizer].exe is empty, we use the configured eSpeak directory and call
+  // espeak-ng.exe/espeak.exe.
+  //
+  // This is intentionally CLI-only (no DLL loading) to keep licensing simpler and
+  // to let advanced users point the tool at other phonemizers.
+  nvsp_editor::CliPhonemizerConfig cfg;
+  cfg.preferStdin = (readIniInt(L"phonemizer", L"preferStdin", 1) != 0);
+  cfg.maxChunkChars = static_cast<size_t>(readIniInt(L"phonemizer", L"maxChunkChars", 420));
+
+  cfg.exePath = readIni(L"phonemizer", L"exe", L"");
+  cfg.argsStdinTemplate = readIni(L"phonemizer", L"argsStdin", L"");
+  cfg.argsCliTemplate = readIni(L"phonemizer", L"argsCli", L"");
+
+  // Default: use eSpeak NG CLI.
+  if (cfg.exePath.empty()) {
+    if (!ensureEspeakDir(app)) {
+      outError = "eSpeak directory is not set";
+      return false;
     }
-    while (!collapsed.empty() && collapsed.back() == L' ') collapsed.pop_back();
-    safeText.swap(collapsed);
-  }
 
-  std::wstring dataDir = nvsp_editor::findEspeakDataDir(app.espeakDir);
+    cfg.espeakDir = app.espeakDir;
+    cfg.espeakDataDir = nvsp_editor::findEspeakDataDir(app.espeakDir);
 
-  // Prefer NVDA-compatible IPA from the eSpeak DLL if present.
-  // This matches NVDA's use of espeak_TextToPhonemes() more closely than
-  // command-line IPA flags, which can differ for some languages (e.g. Hungarian).
-  {
-    std::string dllErr;
-    if (nvsp_editor::espeakTextToIpaViaDll(app.espeakDir, langTag, safeText, outIpaUtf8, dllErr)) {
-      return true;
+    cfg.exePath = nvsp_editor::findEspeakExe(app.espeakDir);
+    if (cfg.exePath.empty()) {
+      outError = "Could not find espeak-ng.exe or espeak.exe in the configured directory";
+      return false;
+    }
+
+    // Sensible defaults.
+    // - Prefer stdin to avoid Windows command-line length limits.
+    // - Keep -b 1 so stdin is interpreted as UTF-8.
+    if (cfg.argsStdinTemplate.empty()) {
+      cfg.argsStdinTemplate = L"-q {pathArg}--ipa=3 -b 1 -v {qlang} --stdin";
+    }
+    if (cfg.argsCliTemplate.empty()) {
+      cfg.argsCliTemplate = L"-q {pathArg}--ipa=3 -b 1 -v {qlang} {qtext}";
     }
   }
 
-  // Fall back to spawning espeak-ng.exe / espeak.exe.
-  std::wstring espeakExe = nvsp_editor::findEspeakExe(app.espeakDir);
-  if (espeakExe.empty()) {
-    outError = "Could not find espeak-ng.exe or espeak.exe in the configured directory";
-    return false;
-  }
-
-  std::wstring wLang = utf8ToWide(langTag);
-
-  // eSpeak args:
-  //   -q           quiet
-  //   --ipa=3      output IPA phonemes (level 3)
-  //   -v <lang>    voice
-  //   --path=...   force data directory when a packaged build uses a relative layout
-  std::wstring args;
-  args += L"-q ";
-  if (!dataDir.empty()) {
-    args += L"--path=\"" + dataDir + L"\" ";
-  }
-  args += L"--ipa=3 ";
-  if (!wLang.empty()) {
-    args += L"-v \"" + wLang + L"\" ";
-  }
-  args += L"\"" + safeText + L"\"";
-
-  std::string stdoutUtf8;
-  if (!nvsp_editor::runProcessCaptureStdout(espeakExe, args, stdoutUtf8, outError)) {
-    return false;
-  }
-
-  // Trim ASCII whitespace from both ends.
-  while (!stdoutUtf8.empty() && (stdoutUtf8.back() == '\r' || stdoutUtf8.back() == '\n' || stdoutUtf8.back() == ' ' || stdoutUtf8.back() == '\t')) {
-    stdoutUtf8.pop_back();
-  }
-  size_t startWs = 0;
-  while (startWs < stdoutUtf8.size() && (stdoutUtf8[startWs] == ' ' || stdoutUtf8[startWs] == '\t' || stdoutUtf8[startWs] == '\r' || stdoutUtf8[startWs] == '\n')) {
-    startWs++;
-  }
-
-  outIpaUtf8 = stdoutUtf8.substr(startWs);
-  return true;
+  return nvsp_editor::phonemizeTextToIpa(cfg, langTag, text, outIpaUtf8, outError);
 }
 
 static void onConvertIpa(AppController& app) {
@@ -910,13 +880,13 @@ static void onConvertIpa(AppController& app) {
 
   std::string ipa;
   std::string err;
-  if (!convertTextToIpaViaEspeak(app, text, ipa, err)) {
+  if (!convertTextToIpaViaPhonemizer(app, text, ipa, err)) {
     msgBox(app.wnd, L"IPA conversion failed:\n" + utf8ToWide(err) + L"\n\nTip: you can also tick 'Input is IPA' and paste IPA directly.", L"NVSP Phoneme Editor", MB_ICONERROR);
     return;
   }
 
   setText(app.editIpaOut, utf8ToWide(ipa));
-  app.setStatus(L"Converted text to IPA via eSpeak");
+  app.setStatus(L"Converted text to IPA");
 }
 
 static bool synthIpaFromUi(AppController& app, std::vector<sample>& outSamples, std::string& outError) {
@@ -953,7 +923,7 @@ static bool synthIpaFromUi(AppController& app, std::vector<sample>& outSamples, 
     ipa = wideToUtf8(text);
   } else {
     std::string err;
-    if (!convertTextToIpaViaEspeak(app, text, ipa, err)) {
+    if (!convertTextToIpaViaPhonemizer(app, text, ipa, err)) {
       outError = err;
       return false;
     }
@@ -1344,6 +1314,32 @@ LRESULT AppController::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         }
         return 0;
       }
+      if (id == IDM_SETTINGS_PHONEMIZER) {
+        PhonemizerSettingsDialogState st;
+        st.exePath = readIni(L"phonemizer", L"exe", L"");
+        st.argsStdin = readIni(L"phonemizer", L"argsStdin", L"");
+        st.argsCli = readIni(L"phonemizer", L"argsCli", L"");
+        st.preferStdin = (readIniInt(L"phonemizer", L"preferStdin", 1) != 0);
+        st.maxChunkChars = readIniInt(L"phonemizer", L"maxChunkChars", 420);
+
+        if (ShowPhonemizerSettingsDialog(app.hInst, hWnd, st)) {
+          writeIni(L"phonemizer", L"exe", st.exePath);
+          writeIni(L"phonemizer", L"argsStdin", st.argsStdin);
+          writeIni(L"phonemizer", L"argsCli", st.argsCli);
+
+          writeIniInt(L"phonemizer", L"preferStdin", st.preferStdin ? 1 : 0);
+
+          // Clamp to something sane.
+          int mc = st.maxChunkChars;
+          if (mc < 50) mc = 50;
+          if (mc > 4000) mc = 4000;
+          writeIniInt(L"phonemizer", L"maxChunkChars", mc);
+
+          app.setStatus(L"Phonemizer settings saved.");
+        }
+        return 0;
+      }
+
       if (id == IDM_SETTINGS_DLL_DIR) {
         std::wstring folder;
         if (pickFolder(hWnd, L"Select DLL directory (contains speechPlayer.dll and nvspFrontend.dll)", folder)) {

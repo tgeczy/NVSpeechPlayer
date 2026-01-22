@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstring>
+#include <cctype>
 #include <sstream>
 
 namespace nvsp_editor {
@@ -163,6 +164,13 @@ NvspRuntime::~NvspRuntime() {
 void NvspRuntime::setSpeechSettings(const SpeechSettings& s) {
   m_speech = s;
   if (m_speech.voiceName.empty()) m_speech.voiceName = "Adam";
+  // Normalize pauseMode (matches NVDA driver: off | short | long).
+  {
+    std::string pm = m_speech.pauseMode;
+    for (auto& ch : pm) ch = static_cast<char>(::tolower(static_cast<unsigned char>(ch)));
+    if (pm != "off" && pm != "short" && pm != "long") pm = "short";
+    m_speech.pauseMode = pm;
+  }
   if (m_speech.frameParams.size() != frameParamNames().size()) {
     m_speech.frameParams.assign(frameParamNames().size(), 50);
   }
@@ -447,6 +455,128 @@ bool NvspRuntime::synthPreviewPhoneme(
   return true;
 }
 
+// -------------------------
+// Punctuation pauses (matches NVDA driver behavior)
+// -------------------------
+
+static std::string toLowerAscii(std::string s) {
+  for (auto& ch : s) ch = static_cast<char>(::tolower(static_cast<unsigned char>(ch)));
+  return s;
+}
+
+static double punctuationPauseMs(char punct, const std::string& pauseMode) {
+  const std::string pm = toLowerAscii(pauseMode);
+  if (pm == "off") return 0.0;
+
+  auto strong = [&]() { return (pm == "long") ? 50.0 : 30.0; };
+  auto comma = [&]() { return (pm == "long") ? 6.0 : 0.0; };
+
+  switch (punct) {
+    case '.':
+    case '!':
+    case '?':
+      return strong();
+    case ':':
+    case ';':
+      return strong();
+    case ',':
+      return comma();
+    default:
+      return 0.0;
+  }
+}
+
+static bool isClauseMarkerToken(const std::string& tok, char& outPunct) {
+  // Marker tokens are inserted by the phonemizer bridge and may also be typed
+  // directly by users in IPA mode.
+  //
+  // Supported: ".", "!", "?", ",", ":", ";", "..." (ellipsis treated as '.').
+  if (tok == "...") {
+    outPunct = '.';
+    return true;
+  }
+  if (tok.size() == 1) {
+    const char c = tok[0];
+    if (c == '.' || c == '!' || c == '?' || c == ',' || c == ':' || c == ';') {
+      outPunct = c;
+      return true;
+    }
+  }
+  return false;
+}
+
+struct IpaClauseChunk {
+  std::string ipa;   // IPA tokens (no marker punctuation tokens)
+  char punct = 0;    // punctuation that ended this chunk (0 if none)
+};
+
+static void splitIpaByClauseMarkers(const std::string& ipaUtf8, std::vector<IpaClauseChunk>& out) {
+  out.clear();
+
+  // Tokenize on ASCII whitespace. (IPA itself can include non-ASCII bytes.)
+  std::vector<std::string> tokens;
+  tokens.reserve(256);
+  std::string cur;
+  cur.reserve(64);
+
+  auto flushTok = [&]() {
+    if (!cur.empty()) {
+      tokens.push_back(std::move(cur));
+      cur.clear();
+    }
+  };
+
+  for (unsigned char b : ipaUtf8) {
+    if (b == ' ' || b == '\t' || b == '\r' || b == '\n' || b == '\v' || b == '\f') {
+      flushTok();
+      continue;
+    }
+    cur.push_back(static_cast<char>(b));
+  }
+  flushTok();
+
+  std::vector<std::string> buf;
+  buf.reserve(tokens.size());
+
+  auto flushClause = [&](char punct) {
+    if (buf.empty()) return;
+    std::string joined;
+    // Rebuild with single spaces.
+    size_t total = 0;
+    for (const auto& t : buf) total += t.size() + 1;
+    joined.reserve(total);
+
+    for (size_t i = 0; i < buf.size(); ++i) {
+      if (i) joined.push_back(' ');
+      joined += buf[i];
+    }
+
+    IpaClauseChunk c;
+    c.ipa = std::move(joined);
+    c.punct = punct;
+    out.push_back(std::move(c));
+    buf.clear();
+  };
+
+  for (const auto& t : tokens) {
+    char punct = 0;
+    if (isClauseMarkerToken(t, punct)) {
+      flushClause(punct);
+      continue;
+    }
+    buf.push_back(t);
+  }
+  flushClause(0);
+
+  // If nothing was split out (e.g. whitespace-only), keep a single empty chunk.
+  if (out.empty()) {
+    IpaClauseChunk c;
+    c.ipa = "";
+    c.punct = 0;
+    out.push_back(std::move(c));
+  }
+}
+
 struct QueueCtx {
   sp_queueFrame_fn queueFrame;
   speechPlayer_handle_t player;
@@ -599,21 +729,58 @@ bool NvspRuntime::synthIpa(
   const double speed = 0.25 * std::pow(2.0, static_cast<double>(rate) / 25.0);
   const double basePitch = 25.0 + (21.25 * (static_cast<double>(pitch) / 12.5));
   const double inflection = static_cast<double>(infl) / 100.0;
-  const char* clause = ".";
 
-  int ok = m_feQueueIPA(
+// Split IPA into clause chunks. Clause markers can be:
+// - inserted by our phonemizer chunker (for text->IPA)
+// - typed directly by users (in IPA mode)
+//
+// This lets us insert real silence frames between sentences/clauses so speech
+// does not sound like one long run-on stream.
+std::vector<IpaClauseChunk> clauses;
+splitIpaByClauseMarkers(ipaUtf8, clauses);
+
+bool ok = true;
+for (size_t i = 0; i < clauses.size(); ++i) {
+  const IpaClauseChunk& c = clauses[i];
+  if (c.ipa.empty()) continue;
+
+  // nvspFrontend only reads a single byte from clauseType.
+  // Use '.' as a safe default if the chunk has no marker punctuation.
+  const char punct = c.punct ? c.punct : '.';
+  char clauseBuf[2] = { punct, 0 };
+
+  int qok = m_feQueueIPA(
     m_feHandle,
-    ipaUtf8.c_str(),
+    c.ipa.c_str(),
     speed,
     basePitch,
     inflection,
-    clause,
-    0,
+    clauseBuf,
+    -1,
     frameCallback,
     &ctx
   );
 
-  if (!ok) {
+  if (!qok) {
+    ok = false;
+    break;
+  }
+
+  // Optional punctuation pause (micro-silence) between clauses.
+  // This is separate from "clauseType" prosody; it adds actual time separation.
+  if (c.punct && (i + 1) < clauses.size()) {
+    const double pMs = punctuationPauseMs(c.punct, m_speech.pauseMode);
+    if (pMs > 0.0) {
+      const unsigned int durS = msToSamples(pMs, sampleRate);
+      const double fadeMs = (std::min)(pMs, 3.0);
+      const unsigned int fadeS = msToSamples(fadeMs, sampleRate);
+      ctx.queueFrame(ctx.player, nullptr, durS, fadeS, -1, ctx.first);
+      ctx.first = false;
+    }
+  }
+}
+
+if (!ok) {
     const char* msg = m_feGetLastError(m_feHandle);
     m_lastFrontendError = msg ? msg : "";
     outError = m_lastFrontendError.empty() ? "nvspFrontend_queueIPA failed" : m_lastFrontendError;

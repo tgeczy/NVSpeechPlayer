@@ -13,6 +13,7 @@
 #include <mmsystem.h>
 
 #include <algorithm>
+#include <cwchar>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -825,6 +826,7 @@ nvsp_editor::SpeechSettings loadSpeechSettingsFromIni() {
   s.pitch = readIniInt(L"speech", L"pitch", s.pitch);
   s.volume = readIniInt(L"speech", L"volume", s.volume);
   s.inflection = readIniInt(L"speech", L"inflection", s.inflection);
+  s.pauseMode = wideToUtf8(readIni(L"speech", L"pauseMode", L"short"));
 
   const auto& names = NvspRuntime::frameParamNames();
   s.frameParams.assign(names.size(), 50);
@@ -841,6 +843,7 @@ void saveSpeechSettingsToIni(const nvsp_editor::SpeechSettings& s) {
   writeIniInt(L"speech", L"pitch", s.pitch);
   writeIniInt(L"speech", L"volume", s.volume);
   writeIniInt(L"speech", L"inflection", s.inflection);
+  writeIni(L"speech", L"pauseMode", utf8ToWide(s.pauseMode));
 
   const auto& names = NvspRuntime::frameParamNames();
   for (size_t i = 0; i < names.size() && i < s.frameParams.size(); ++i) {
@@ -1083,5 +1086,211 @@ bool ShowEditPhonemeDialog(HINSTANCE hInst, HWND parent, EditPhonemeDialogState&
 bool ShowSpeechSettingsDialog(HINSTANCE hInst, HWND parent, SpeechSettingsDialogState& st) {
   st.ok = false;
   DialogBoxParamW(hInst, MAKEINTRESOURCEW(IDD_SPEECH_SETTINGS), parent, SpeechSettingsDlgProc, (LPARAM)&st);
+  return st.ok;
+}
+
+
+// ----------------------------
+// Phonemizer settings dialog
+// ----------------------------
+
+static std::wstring getDlgItemTextAllocW(HWND hDlg, int id) {
+  HWND h = GetDlgItem(hDlg, id);
+  if (!h) return L"";
+  int len = GetWindowTextLengthW(h);
+  if (len <= 0) return L"";
+  std::wstring buf;
+  buf.resize(static_cast<size_t>(len) + 1);
+  GetWindowTextW(h, buf.data(), len + 1);
+  // Trim to actual length.
+  buf.resize(wcslen(buf.c_str()));
+  return buf;
+}
+
+struct PhonemizerTemplateItem {
+  const wchar_t* name;
+  const wchar_t* exePath;
+  const wchar_t* argsStdin;
+  const wchar_t* argsCli;
+  bool preferStdin;
+  int maxChunkChars;
+  bool apply; // if false, selecting it doesn't overwrite fields
+};
+
+static const PhonemizerTemplateItem kPhonemizerTemplates[] = {
+  {
+    L"Custom (do not overwrite fields)",
+    L"",
+    L"",
+    L"",
+    true,
+    420,
+    false
+  },
+  {
+    L"eSpeak NG (recommended, uses eSpeak directory if exe is blank)",
+    L"",
+    L"-q {pathArg}--ipa=3 -b 1 -v {qlang} --stdin",
+    L"-q {pathArg}--ipa=3 -b 1 -v {qlang} {qtext}",
+    true,
+    420,
+    true
+  },
+  {
+    L"phonemize (Python phonemizer package, espeak backend)",
+    L"phonemize",
+    L"-l {qlang} -b espeak --strip -p _",
+    L"",
+    true,
+    420,
+    true
+  }
+};
+
+static void setDlgItemIntText(HWND hDlg, int id, int val) {
+  wchar_t buf[64];
+  _snwprintf_s(buf, _countof(buf), _TRUNCATE, L"%d", val);
+  SetDlgItemTextW(hDlg, id, buf);
+}
+
+static void applyPhonemizerTemplate(HWND hDlg, int idx) {
+  if (idx < 0) return;
+  const int count = static_cast<int>(sizeof(kPhonemizerTemplates) / sizeof(kPhonemizerTemplates[0]));
+  if (idx >= count) return;
+  const auto& t = kPhonemizerTemplates[idx];
+  if (!t.apply) return;
+
+  SetDlgItemTextW(hDlg, IDC_PHONEMIZER_EXE, t.exePath ? t.exePath : L"");
+  SetDlgItemTextW(hDlg, IDC_PHONEMIZER_ARGS_STDIN, t.argsStdin ? t.argsStdin : L"");
+  SetDlgItemTextW(hDlg, IDC_PHONEMIZER_ARGS_CLI, t.argsCli ? t.argsCli : L"");
+  setDlgItemIntText(hDlg, IDC_PHONEMIZER_MAXCHUNK, t.maxChunkChars);
+
+  // Mode combo: 0 = prefer stdin, 1 = CLI only
+  SendDlgItemMessageW(hDlg, IDC_PHONEMIZER_MODE, CB_SETCURSEL, t.preferStdin ? 0 : 1, 0);
+}
+
+static void updatePhonemizerDialogEnableState(HWND hDlg) {
+  int mode = static_cast<int>(SendDlgItemMessageW(hDlg, IDC_PHONEMIZER_MODE, CB_GETCURSEL, 0, 0));
+  bool preferStdin = (mode == 0);
+  EnableWindow(GetDlgItem(hDlg, IDC_PHONEMIZER_ARGS_STDIN), preferStdin ? TRUE : FALSE);
+}
+
+static INT_PTR CALLBACK PhonemizerSettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+  auto* st = reinterpret_cast<PhonemizerSettingsDialogState*>(GetWindowLongPtrW(hDlg, GWLP_USERDATA));
+
+  switch (msg) {
+    case WM_INITDIALOG: {
+      st = reinterpret_cast<PhonemizerSettingsDialogState*>(lParam);
+      SetWindowLongPtrW(hDlg, GWLP_USERDATA, (LONG_PTR)st);
+
+      // Populate template combo
+      HWND cmbTemplate = GetDlgItem(hDlg, IDC_PHONEMIZER_TEMPLATE);
+      if (cmbTemplate) {
+        const int count = static_cast<int>(sizeof(kPhonemizerTemplates) / sizeof(kPhonemizerTemplates[0]));
+        for (int i = 0; i < count; ++i) {
+          SendMessageW(cmbTemplate, CB_ADDSTRING, 0, (LPARAM)kPhonemizerTemplates[i].name);
+        }
+        // Default selection is Custom.
+        SendMessageW(cmbTemplate, CB_SETCURSEL, 0, 0);
+      }
+
+      // Populate mode combo
+      HWND cmbMode = GetDlgItem(hDlg, IDC_PHONEMIZER_MODE);
+      if (cmbMode) {
+        SendMessageW(cmbMode, CB_ADDSTRING, 0, (LPARAM)L"Prefer STDIN (silent, recommended)");
+        SendMessageW(cmbMode, CB_ADDSTRING, 0, (LPARAM)L"Command-line only");
+        SendMessageW(cmbMode, CB_SETCURSEL, (st && st->preferStdin) ? 0 : 1, 0);
+      }
+
+      if (st) {
+        SetDlgItemTextW(hDlg, IDC_PHONEMIZER_EXE, st->exePath.c_str());
+        SetDlgItemTextW(hDlg, IDC_PHONEMIZER_ARGS_STDIN, st->argsStdin.c_str());
+        SetDlgItemTextW(hDlg, IDC_PHONEMIZER_ARGS_CLI, st->argsCli.c_str());
+        setDlgItemIntText(hDlg, IDC_PHONEMIZER_MAXCHUNK, st->maxChunkChars);
+
+        // Auto-select a matching template if it looks like one.
+        auto looksLike = [&](const PhonemizerTemplateItem& t) -> bool {
+          if (!t.apply) return false;
+          // exe path match: blank means "leave blank"
+          if (t.exePath && wcslen(t.exePath) > 0) {
+            if (_wcsicmp(st->exePath.c_str(), t.exePath) != 0) return false;
+          } else {
+            if (!st->exePath.empty()) return false;
+          }
+          if ((t.argsStdin ? t.argsStdin : L"") != st->argsStdin) return false;
+          if ((t.argsCli ? t.argsCli : L"") != st->argsCli) return false;
+          if (t.preferStdin != st->preferStdin) return false;
+          return true;
+        };
+
+        const int count = static_cast<int>(sizeof(kPhonemizerTemplates) / sizeof(kPhonemizerTemplates[0]));
+        int match = 0;
+        for (int i = 1; i < count; ++i) {
+          if (looksLike(kPhonemizerTemplates[i])) { match = i; break; }
+        }
+        SendDlgItemMessageW(hDlg, IDC_PHONEMIZER_TEMPLATE, CB_SETCURSEL, match, 0);
+      }
+
+      updatePhonemizerDialogEnableState(hDlg);
+      return TRUE;
+    }
+
+    case WM_COMMAND: {
+      const int id = LOWORD(wParam);
+      const int code = HIWORD(wParam);
+
+      if (id == IDC_PHONEMIZER_BROWSE && code == BN_CLICKED) {
+        std::wstring path;
+        if (pickOpenExe(hDlg, path)) {
+          SetDlgItemTextW(hDlg, IDC_PHONEMIZER_EXE, path.c_str());
+          // Selecting browse implies custom.
+          SendDlgItemMessageW(hDlg, IDC_PHONEMIZER_TEMPLATE, CB_SETCURSEL, 0, 0);
+        }
+        return TRUE;
+      }
+
+      if (id == IDC_PHONEMIZER_TEMPLATE && code == CBN_SELCHANGE) {
+        int sel = static_cast<int>(SendDlgItemMessageW(hDlg, IDC_PHONEMIZER_TEMPLATE, CB_GETCURSEL, 0, 0));
+        applyPhonemizerTemplate(hDlg, sel);
+        updatePhonemizerDialogEnableState(hDlg);
+        return TRUE;
+      }
+
+      if (id == IDC_PHONEMIZER_MODE && code == CBN_SELCHANGE) {
+        updatePhonemizerDialogEnableState(hDlg);
+        return TRUE;
+      }
+
+      if (id == IDOK && st) {
+        st->exePath = getDlgItemTextAllocW(hDlg, IDC_PHONEMIZER_EXE);
+        st->argsStdin = getDlgItemTextAllocW(hDlg, IDC_PHONEMIZER_ARGS_STDIN);
+        st->argsCli = getDlgItemTextAllocW(hDlg, IDC_PHONEMIZER_ARGS_CLI);
+
+        // Mode: 0 = prefer stdin, 1 = CLI only
+        int mode = static_cast<int>(SendDlgItemMessageW(hDlg, IDC_PHONEMIZER_MODE, CB_GETCURSEL, 0, 0));
+        st->preferStdin = (mode == 0);
+
+        BOOL okNum = FALSE;
+        UINT mc = GetDlgItemInt(hDlg, IDC_PHONEMIZER_MAXCHUNK, &okNum, FALSE);
+        st->maxChunkChars = okNum ? static_cast<int>(mc) : 420;
+
+        st->ok = true;
+        EndDialog(hDlg, IDOK);
+        return TRUE;
+      }
+
+      if (id == IDCANCEL) {
+        EndDialog(hDlg, IDCANCEL);
+        return TRUE;
+      }
+      break;
+    }
+  }
+  return FALSE;
+}
+
+bool ShowPhonemizerSettingsDialog(HINSTANCE hInst, HWND parent, PhonemizerSettingsDialogState& st) {
+  st.ok = false;
+  DialogBoxParamW(hInst, MAKEINTRESOURCEW(IDD_PHONEMIZER_SETTINGS), parent, PhonemizerSettingsDlgProc, (LPARAM)&st);
   return st.ok;
 }

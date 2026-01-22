@@ -31,6 +31,38 @@ The executable target is:
 3. (Optional) **Settings > Set eSpeak directory...**
    - Needed if you want "Convert to IPA" for plain text.
 
+## CLI phonemizer configuration (optional)
+
+"Convert to IPA" uses a **CLI phonemizer** and captures its stdout. By default it uses
+`espeak-ng.exe` (or `espeak.exe`) from the configured eSpeak directory.
+
+Advanced users can override the phonemizer in `nvspPhonemeEditor.ini`:
+
+```ini
+[phonemizer]
+; If empty, the tool uses espeak-ng.exe in [paths].espeakDir.
+exe=
+
+; Prefer feeding text via stdin (safer for long input) and fall back to passing
+; the text as a command-line argument.
+preferStdin=1
+
+; Soft limit used for sentence-aware chunking before calling the phonemizer.
+maxChunkChars=420
+
+; Templates. Supported placeholders:
+;   {lang} {qlang} {text} {qtext} {espeakDir} {qespeakDir} {dataDir} {qdataDir} {pathArg}
+;
+; When using eSpeak defaults, {pathArg} expands to "--path=... " if the data dir
+; can be found, otherwise it is empty.
+;
+; For eSpeak (defaults):
+; argsStdin=-q {pathArg}--ipa=3 -b 1 -v {qlang} --stdin
+; argsCli=-q {pathArg}--ipa=3 -b 1 -v {qlang} {qtext}
+argsStdin=
+argsCli=
+```
+
 The tool stores these paths in `nvspPhonemeEditor.ini` next to the exe.
 
 ## What it can do

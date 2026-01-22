@@ -15,6 +15,7 @@
 #define IDD_EDIT_SETTINGS 205
 #define IDD_EDIT_SETTING  206
 #define IDD_SPEECH_SETTINGS 207
+#define IDD_PHONEMIZER_SETTINGS 208
 
 // -----------------
 // Menu commands
@@ -27,6 +28,7 @@
 #define IDM_SETTINGS_ESPEAK_DIR   40101
 #define IDM_SETTINGS_DLL_DIR      40102
 #define IDM_SETTINGS_SPEECH_SETTINGS 40103
+#define IDM_SETTINGS_PHONEMIZER 40104
 
 #define IDM_HELP_ABOUT            40201
 
@@ -119,3 +121,14 @@
 #define IDC_SPEECH_PARAM_RESET        2713
 #define IDC_SPEECH_RESET_ALL          2714
 
+
+// -----------------
+// Dialog controls: Phonemizer settings
+// -----------------
+#define IDC_PHONEMIZER_TEMPLATE      2801
+#define IDC_PHONEMIZER_EXE           2802
+#define IDC_PHONEMIZER_BROWSE        2803
+#define IDC_PHONEMIZER_MODE          2804
+#define IDC_PHONEMIZER_ARGS_STDIN    2805
+#define IDC_PHONEMIZER_ARGS_CLI      2806
+#define IDC_PHONEMIZER_MAXCHUNK      2807

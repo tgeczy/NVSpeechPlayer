@@ -25,6 +25,7 @@ struct SpeechSettings {
   int pitch = 50;      // 0..100
   int volume = 90;     // 0..100
   int inflection = 60; // 0..100
+  std::string pauseMode = "short"; // off | short | long
   std::vector<int> frameParams; // size == frameParamNames().size()
 };
 

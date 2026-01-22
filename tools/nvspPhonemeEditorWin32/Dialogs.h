@@ -69,6 +69,23 @@ struct SpeechSettingsDialogState {
   bool ok = false;
 };
 
+struct PhonemizerSettingsDialogState {
+  // If empty, the editor uses espeak-ng.exe/espeak.exe found in the configured eSpeak directory.
+  std::wstring exePath;
+
+  // Argument templates. Placeholders: {lang} {qlang} {text} {qtext} {dataDir} {pathArg}
+  std::wstring argsStdin;
+  std::wstring argsCli;
+
+  // When true, we try STDIN first and fall back to CLI args if provided.
+  bool preferStdin = true;
+
+  // Sentence-aware chunk size for phonemizer calls.
+  int maxChunkChars = 420;
+
+  bool ok = false;
+};
+
 // Dialog launch helpers (return true if OK was pressed).
 bool ShowAddMappingDialog(HINSTANCE hInst, HWND parent, AddMappingDialogState& st);
 bool ShowClonePhonemeDialog(HINSTANCE hInst, HWND parent, ClonePhonemeDialogState& st);
@@ -76,6 +93,7 @@ bool ShowEditValueDialog(HINSTANCE hInst, HWND parent, EditValueDialogState& st)
 bool ShowEditSettingsDialog(HINSTANCE hInst, HWND parent, EditSettingsDialogState& st);
 bool ShowEditPhonemeDialog(HINSTANCE hInst, HWND parent, EditPhonemeDialogState& st);
 bool ShowSpeechSettingsDialog(HINSTANCE hInst, HWND parent, SpeechSettingsDialogState& st);
+bool ShowPhonemizerSettingsDialog(HINSTANCE hInst, HWND parent, PhonemizerSettingsDialogState& st);
 
 // Persistence for speech settings (nvspPhonemeEditor.ini).
 nvsp_editor::SpeechSettings loadSpeechSettingsFromIni();
