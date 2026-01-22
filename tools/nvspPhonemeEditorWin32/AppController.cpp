@@ -654,6 +654,8 @@ static std::vector<std::string> knownLanguageSettingKeys() {
     "autoTieDiphthongs",
     "autoDiphthongOffglideToSemivowel",
     "semivowelOffglideScale",
+    "trillModulationMs",
+    "trillModulationFadeMs",
     "stressedVowelHiatusGapMs",
     "stressedVowelHiatusFadeMs",
     "spellingDiphthongMode",
