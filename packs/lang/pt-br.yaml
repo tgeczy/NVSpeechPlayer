@@ -11,6 +11,36 @@ settings:
   stopClosureWordBoundaryClusterFadeMs: 3.0
 
 normalization:
+  classes:
+    # Broad list of consonants for cluster rules.
+    # (Used to detect consonant+ɾ+vowel sequences like "bra", "tra", "pra"...)
+    PT_CONSONANTS:
+      - p
+      - b
+      - t
+      - d
+      - k
+      - ɡ
+      - f
+      - v
+      - s
+      - z
+      - ʃ
+      - ʒ
+      - m
+      - n
+      - ɲ
+      - l
+      - ʎ
+      - r
+      - ɾ
+      - j
+      - w
+      - t͡s
+      - d͡z
+      - t͡ʃ
+      - d͡ʒ
+
   replacements:
     # eSpeak pt-br emits "y" for the raised final "e" (roughly like [i~ɪ]).
     # But after nasal "ã" it behaves like a glide (mãe, pães).
@@ -33,20 +63,20 @@ normalization:
     - from: "r"
       to: "ɾ"
 
-# Insert a non-syllabic schwa-like separator before the tap in consonant+R clusters
-# (bra, tra, cra, fra, ...). This improves intelligibility without creating a full extra syllable.
-- from: "ɾˈ"
-  to: "ᵊɾˈ"
-  when:
-    afterClass: PT_CONSONANTS
-    beforeClass: PT_VOWELS
-- from: "ɾˌ"
-  to: "ᵊɾˌ"
-  when:
-    afterClass: PT_CONSONANTS
-    beforeClass: PT_VOWELS
-- from: "ɾ"
-  to: "ᵊɾ"
-  when:
-    afterClass: PT_CONSONANTS
-    beforeClass: PT_VOWELS
+    # Insert a non-syllabic schwa-like separator before the tap in consonant+R clusters
+    # (bra, tra, cra, fra, ...). This improves intelligibility without creating a full extra syllable.
+    - from: "ɾˈ"
+      to: "ᵊɾˈ"
+      when:
+        afterClass: PT_CONSONANTS
+        beforeClass: PT_VOWELS
+    - from: "ɾˌ"
+      to: "ᵊɾˌ"
+      when:
+        afterClass: PT_CONSONANTS
+        beforeClass: PT_VOWELS
+    - from: "ɾ"
+      to: "ᵊɾ"
+      when:
+        afterClass: PT_CONSONANTS
+        beforeClass: PT_VOWELS

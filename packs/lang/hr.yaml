@@ -1,12 +1,21 @@
 # Croatian (hr)
 
 settings:
+
+  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
+  trillModulationMs: 50
+  trillModulationFadeMs: 2
+
   # Croatian eSpeak IPA uses the length mark (ː) for long vowels.
   # Make it a bit more audible than the global default.
   lengthenedScale: 1.15
 
 normalization:
   replacements:
+    # Use the trill key for Croatian /r/ so trill modulation can apply.
+    - from: "ɾ"
+      to: "r"
+
     # Some eSpeak voices may output "æ" in contexts where Croatian should use plain "a".
     - from: "æ"
       to: "a"

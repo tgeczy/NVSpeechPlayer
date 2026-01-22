@@ -4,6 +4,10 @@ settings:
   primaryStressDiv: 1.25
   secondaryStressDiv: 1.07
 
+  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
+  trillModulationMs: 50
+  trillModulationFadeMs: 2
+
 normalization:
   replacements:
     # eSpeak Polish uses the palatalization marker ʲ on consonants.
@@ -15,10 +19,39 @@ normalization:
     - from: "y"
       to: "ɨ"
 
+    # If an approximant R sneaks in (from other IPA sources), force it to the trill key.
+    - from: "ɹ"
+      to: "r"
+
+
+    # Polish /ɨ/ ("y") is tuned in phonemes.yaml; keep it as ɨ.
+
     # eSpeak Polish reduces many unstressed /a/ to ɐ, but Polish doesn't really
     # do vowel reduction like that. Keep it as a clearer /a/.
     - from: "ɐ"
       to: "a"
+
+    # eSpeak pl sometimes emits nasal vowels (especially word-final ą as ɔ̃).
+    # NVSP doesn't have dedicated ɔ̃/ɛ̃ keys in the base phoneme table, so
+    # approximate them as vowel+nasal (matches many other Polish contexts like
+    # "kąt" -> ɔnt).
+    - from: "ɔ̃"
+      to: "ɔn"
+    - from: "ɛ̃"
+      to: "ɛn"
+
+    # Safety: some IPA sources use velarized-l symbols for Polish "ł".
+    # eSpeak usually already outputs /w/, but keep a fallback.
+    - from: "ɫ"
+      to: "w"
+    - from: "l̴"
+      to: "w"
+
+    # H / CH – Polish velar fricative (fallback).
+    - from: "h"
+      to: "x"
+    - from: "ɦ"
+      to: "x"
 
     # eSpeak writes Polish cz/dż as tʃ/dʒ (which default.yaml turns into t͡ʃ/d͡ʒ).
     # Polish cz/dż are typically retroflex t͡ʂ/d͡ʐ.

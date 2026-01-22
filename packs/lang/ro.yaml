@@ -4,6 +4,10 @@ settings:
   primaryStressDiv: 1.25
   secondaryStressDiv: 1.07
 
+  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
+  trillModulationMs: 50
+  trillModulationFadeMs: 2
+
 normalization:
   # eSpeak (classic) Romanian IPA frequently uses plain two-character sequences
   # for affricates (ts/tʃ/dʒ) rather than tie-bar forms. We map them to the

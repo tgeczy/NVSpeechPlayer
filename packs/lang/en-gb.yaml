@@ -43,3 +43,6 @@ normalization:
       to: "ɜː"
     - from: "ɝ"
       to: "ɜ"
+    # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
+    - from: "d͡ʒ"
+      to:   "dʒ"

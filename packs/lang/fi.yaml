@@ -4,5 +4,9 @@ settings:
   primaryStressDiv: 1.25
   secondaryStressDiv: 1.07
 
+  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
+  trillModulationMs: 50
+  trillModulationFadeMs: 2
+
   # Finnish has phonemic length; eSpeak marks long segments with ː.
   lengthenedScale: 1.5

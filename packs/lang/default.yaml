@@ -11,9 +11,9 @@ settings:
   # Stop closure insertion ("click" before stops/affricates)
   stopClosureMode: vowel-and-cluster
   stopClosureClusterGapsEnabled: true
-  stopClosureClusterGapMs: 26
-  segmentBoundaryGapMs: 18
-  segmentBoundaryFadeMs: 4
+  stopClosureClusterGapMs: 22
+  segmentBoundaryGapMs: 12
+  segmentBoundaryFadeMs: 6
   # Default is true even if you omit it.
   # Set false only if you explicitly want pauses even between vowel→vowel.
   segmentBoundarySkipVowelToVowel: true
@@ -50,8 +50,9 @@ settings:
 
 # Global IPA normalizations that are *not* language-specific.
 # These closely match the multi-character replacements in ipa_bestversion.py.
-  stressedVowelHiatusGapMs: ""
-  stressedVowelHiatusFadeMs: ""
+  stressedVowelHiatusGapMs: 0
+  stressedVowelHiatusFadeMs: 0
+  semivowelOffglideScale: 1.0
 normalization:
   preReplacements:
     # Tie common affricate spellings into the single phonemes in Phonemes.yaml.
@@ -77,3 +78,10 @@ normalization:
       to: "t͡ʃ"
     - from: "d͡Z"
       to: "d͡ʒ"
+
+    # eSpeak sometimes inserts zero-width joiners in IPA output (e.g. ɑː‍ɹ).
+    # Strip them so string-based normalization rules match reliably.
+    - from: "\u200d"
+      to: ""
+    - from: "\u200c"
+      to: ""

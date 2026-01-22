@@ -5,6 +5,10 @@ settings:
   primaryStressDiv: 1.25
   secondaryStressDiv: 1.07
 
+  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
+  trillModulationMs: 40
+  trillModulationFadeMs: 2
+
   # Keep stops audible in nasal+stop clusters (e.g. "pont" -> n+t).
   # This adds a short closure before stops after nasals, which helps at higher rates.
   stopClosureAfterNasalsEnabled: true

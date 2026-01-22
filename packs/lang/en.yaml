@@ -11,7 +11,14 @@ settings:
   secondaryStressDiv: 1.1
 
   # English sounds clearer with explicit stop closures.
-  stopClosureMode: always
+  # Stop closures help clarity, but using them *everywhere* can make the voice feel clicky,
+  # especially for short chunks like key echo / character echo.
+  # Keep closures mostly after vowels/clusters, and keep the gaps short.
+  stopClosureMode: vowel-and-cluster
+  stopClosureVowelGapMs: 26
+  stopClosureVowelFadeMs: 6
+  stopClosureClusterGapMs: 16
+  stopClosureClusterFadeMs: 3
 
   # English: insert short aspiration after unvoiced stops in the right contexts.
   postStopAspirationEnabled: true
@@ -53,3 +60,13 @@ normalization:
     # Accent-specific vowel set tweaks live in per-region packs:
     #  - en-gb.yaml (BATH broadening, UK THOUGHT rounding, non-rhotic NURSE)
     #  - en-us.yaml (rhotic NURSE, narrow BATH, etc.)
+    # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
+    - from: "d͡ʒ"
+      to:   "dʒ"
+
+    # Pre-fortis clipping: shorten long FLEECE before word-final /t/
+    # so minimal pairs like "bead" vs "beat" are distinguishable.
+    - from: "iːt"
+      to:   "it"
+      when:
+        atWordEnd: true

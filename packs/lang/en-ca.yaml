@@ -177,6 +177,21 @@ normalization:
     - from: "ɜ"
       to: "ɝ"
 
+    # In many common words ending in -art (start/smart/cart/apart/depart...),
+    # /ɑːɹt/ can sound overly open as a separate "ah" + "r" segment in a formant synth.
+    # Nudge it toward a more central "uh" before word-final /t/.
+    - from: "ɑːɹt"
+      to:   "ʌɹt"
+      when:
+        atWordEnd: true
+    - from: "ɑɹt"
+      to:   "ʌɹt"
+      when:
+        atWordEnd: true
+
     # Use the dedicated US/CA /r/ variant.
     - from: "ɹ"
       to: "ɻ"
+    # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
+    - from: "d͡ʒ"
+      to:   "dʒ"

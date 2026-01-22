@@ -63,8 +63,8 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    cf1: 500
-    cf2: 1400
+    cf1: 330
+    cf2: 1480
     cf3: 2300
     cf4: 3300
     cf5: 3750
@@ -91,7 +91,7 @@ phonemes:
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    voiceAmplitude: 0.9
+    voiceAmplitude: 0.85
   "?":
     _isLiquid: false
     _isNasal: false
@@ -521,7 +521,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.7
     pa1: 0
     pa2: 0.3333333333
     pa3: 0.3333333333
@@ -1005,7 +1005,7 @@ phonemes:
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    voiceAmplitude: 0.45
+    voiceAmplitude: 0.35
   k:
     _isLiquid: false
     _isNasal: false
@@ -2661,7 +2661,7 @@ phonemes:
     cbN0: 100
     cbNP: 100
     cf1: 700
-    cf2: 1280
+    cf2: 1330
     cf3: 2600
     cf4: 3300
     cf5: 3750
@@ -2683,7 +2683,7 @@ phonemes:
     pb5: 200
     pb6: 1000
     pf1: 700
-    pf2: 1280
+    pf2: 1330
     pf3: 2600
     pf4: 3300
     pf5: 3750
@@ -3600,6 +3600,51 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
+    cb1: 70
+    cb2: 110
+    cb3: 140
+    cb4: 260
+    cb5: 220
+    cb6: 1100
+    cbN0: 100
+    cbNP: 100
+    cf1: 320
+    cf2: 1300
+    cf3: 2300
+    cf4: 3200
+    cf5: 3600
+    cf6: 4800
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 70
+    pb2: 110
+    pb3: 140
+    pb4: 260
+    pb5: 220
+    pb6: 1100
+    pf1: 320
+    pf2: 1200
+    pf3: 2300
+    pf4: 3200
+    pf5: 3600
+    pf6: 4800
+    voiceAmplitude: 0.88
+  "ɯ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 55
     cb2: 75
     cb3: 105
@@ -3609,7 +3654,7 @@ phonemes:
     cbN0: 100
     cbNP: 100
     cf1: 330
-    cf2: 1400
+    cf2: 1150
     cf3: 2400
     cf4: 3300
     cf5: 3750
@@ -3631,7 +3676,7 @@ phonemes:
     pb5: 200
     pb6: 1000
     pf1: 330
-    pf2: 1400
+    pf2: 1150
     pf3: 2400
     pf4: 3300
     pf5: 3750
@@ -3826,16 +3871,16 @@ phonemes:
     aspirationAmplitude: 0
     caNP: 0
     cb1: 77
-    cb2: 75
-    cb3: 112.5
+    cb2: 80
+    cb3: 135
     cb4: 250
     cb5: 200
     cb6: 1000
     cbN0: 100
     cbNP: 100
     cf1: 310
-    cf2: 1200
-    cf3: 1350
+    cf2: 1300
+    cf3: 1650
     cf4: 3300
     cf5: 3750
     cf6: 4900
@@ -3871,16 +3916,16 @@ phonemes:
     aspirationAmplitude: 0
     caNP: 0
     cb1: 77
-    cb2: 75
-    cb3: 112.5
+    cb2: 80
+    cb3: 135
     cb4: 250
     cb5: 200
     cb6: 1000
     cbN0: 100
     cbNP: 100
     cf1: 250
-    cf2: 1100
-    cf3: 1500
+    cf2: 1200
+    cf3: 1750
     cf4: 3300
     cf5: 3750
     cf6: 4900
@@ -4779,15 +4824,15 @@ phonemes:
     aspirationAmplitude: 0
     caNP: 0
     cb1: 77
-    cb2: 75
-    cb3: 150
+    cb2: 85
+    cb3: 165
     cb4: 250
     cb5: 200
     cb6: 1000
     cbN0: 100
     cbNP: 100
     cf1: 350
-    cf2: 2200
+    cf2: 2150
     cf3: 2950
     cf4: 3300
     cf5: 3750

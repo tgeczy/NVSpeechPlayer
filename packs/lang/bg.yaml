@@ -4,6 +4,10 @@ settings:
   primaryStressDiv: 1.1
   secondaryStressDiv: 1.05
 
+  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
+  trillModulationMs: 50
+  trillModulationFadeMs: 2
+
   # Bulgarian clusters are often tight; avoid adding extra closure gaps.
   stopClosureClusterGapsEnabled: false
 
