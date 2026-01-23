@@ -30,34 +30,28 @@ using namespace std;
 const double PITWO=M_PI*2;
 
 class NoiseGenerator {
-	private:
+private:
 	double lastValue;
 
-	public:
-	NoiseGenerator(): lastValue(0.0) {};
+public:
+	NoiseGenerator(): lastValue(0.0) {}
 
 	void reset() {
 		lastValue=0.0;
 	}
 
 	double getNext() {
-		// rand() returns a non-negative value.
-		// Center the random value at 0 ([-0.5, 0.5]).
-		// FIXED: Set coeff to 0.0 (Pure White Noise).
-		// Previous values (0.75, 0.25) created "dark rumble."
-		// 0.0 allows full high-frequency "air" to pass through.
-		lastValue=(((double)rand()/(double)RAND_MAX)-0.5)+0.0*lastValue;
+		lastValue=(((double)rand()/(double)RAND_MAX)-0.5)+0.75*lastValue;
 		return lastValue;
 	}
-
 };
 
 class FrequencyGenerator {
-	private:
+private:
 	int sampleRate;
 	double lastCyclePos;
 
-	public:
+public:
 	FrequencyGenerator(int sr): sampleRate(sr), lastCyclePos(0) {}
 
 	void reset() {
@@ -69,22 +63,22 @@ class FrequencyGenerator {
 		lastCyclePos=cyclePos;
 		return cyclePos;
 	}
-
 };
 
 class VoiceGenerator {
-	private:
+private:
+	int sampleRate;
 	FrequencyGenerator pitchGen;
 	FrequencyGenerator vibratoGen;
 	NoiseGenerator aspirationGen;
-	// State for source shaping / DC-blocking.
 	double lastFlow;
 	double lastVoicedIn;
 	double lastVoicedOut;
 
-	public:
+public:
 	bool glottisOpen;
-	VoiceGenerator(int sr): pitchGen(sr), vibratoGen(sr), aspirationGen(), lastFlow(0.0), lastVoicedIn(0.0), lastVoicedOut(0.0), glottisOpen(false) {};
+	
+	VoiceGenerator(int sr): sampleRate(sr), pitchGen(sr), vibratoGen(sr), aspirationGen(), lastFlow(0.0), lastVoicedIn(0.0), lastVoicedOut(0.0), glottisOpen(false) {}
 
 	void reset() {
 		pitchGen.reset();
@@ -98,70 +92,70 @@ class VoiceGenerator {
 
 	double getNext(const speechPlayer_frame_t* frame) {
 		double vibrato=(sin(vibratoGen.getNext(frame->vibratoSpeed)*PITWO)*0.06*frame->vibratoPitchOffset)+1;
-		double cyclePos=pitchGen.getNext(frame->voicePitch*vibrato);
+		double pitchHz = frame->voicePitch * vibrato;
+		double cyclePos = pitchGen.getNext(pitchHz > 0.0 ? pitchHz : 0.0);
 
 		double aspiration=aspirationGen.getNext()*0.1;
 
-		// glottalOpenQuotient is optional in many packs.
-		// Keep a sensible default that preserves brightness.
 		double effectiveOQ = frame->glottalOpenQuotient;
 		if (effectiveOQ <= 0.0) effectiveOQ = 0.4;
 		if (effectiveOQ < 0.10) effectiveOQ = 0.10;
 		if (effectiveOQ > 0.95) effectiveOQ = 0.95;
 
-		glottisOpen = cyclePos >= effectiveOQ;
+		glottisOpen = (pitchHz > 0.0) && (cyclePos >= effectiveOQ);
 
 		double flow = 0.0;
 		if(glottisOpen) {
 			double openLen = 1.0 - effectiveOQ;
 			if (openLen < 0.0001) openLen = 0.0001;
-			double phase = (cyclePos - effectiveOQ) / openLen; // 0..1 across open phase
 
-			// 90/10 Asymmetric Pulse (The "Bright & Clear" Fix).
-			// 1. Rise Phase (0.0 to 0.9): Long, smooth rise fills out the "Mids".
-			// 2. Fall Phase (0.9 to 1.0): Very fast (10%) closure generates the "Highs".
-			// 3. NO Squaring: We keep the raw amplitude to prevent "muffling".
-			
-			const double peakPos = 0.90; // Peak at 90% (Sharper than previous 75/80)
+			const double basePeakPos = 0.90;
+			double peakPos = basePeakPos;
+
+			double dt = 0.0;
+			if (pitchHz > 0.0) dt = pitchHz / (double)sampleRate;
+
+			double denom = openLen - dt;
+			if (denom < 0.0001) denom = 0.0001;
+			double phase = (cyclePos - effectiveOQ) / denom;
+			if (phase < 0.0) phase = 0.0;
+			if (phase > 1.0) phase = 1.0;
+
+			const double minCloseSamples = 2.0;
+			if (pitchHz > 0.0) {
+				double periodSamples = (double)sampleRate / pitchHz;
+				double minCloseFrac = minCloseSamples / (periodSamples * openLen);
+				if (minCloseFrac > 0.5) minCloseFrac = 0.5;
+				double limitPeakPos = 1.0 - minCloseFrac;
+				if (limitPeakPos < peakPos) peakPos = limitPeakPos;
+				if (peakPos < 0.50) peakPos = 0.50;
+			}
 
 			if (phase < peakPos) {
-				// Gentle Rise
 				flow = 0.5 * (1.0 - cos(phase * M_PI / peakPos));
 			} else {
-				// Fast "Snap" Closure (Generates Highs/Brightness)
 				flow = 0.5 * (1.0 + cos((phase - peakPos) * M_PI / (1.0 - peakPos)));
 			}
 		}
 
-		// Scale the flow pulse into a classic-ish excitation range.
 		const double flowScale = 1.6;
 		flow *= flowScale;
 
-		// Add a "radiation" component (first difference).
-		// 2.0 is good. Combined with the 90/10 pulse, this will produce 
-		// plenty of high-end presence.
 		double dFlow = flow - lastFlow;
 		lastFlow = flow;
-		const double radiationMix = 2.0;
+		const double radiationMix = 1.0;
 		double voicedSrc = flow + (dFlow * radiationMix);
 
-		// Turbulence: scale by instantaneous flow so it ramps smoothly with the pulse.
 		double turbulence = aspiration * frame->voiceTurbulenceAmplitude;
 		if(glottisOpen) {
-			double flow01 = flow / flowScale; // 0..1
+			double flow01 = flow / flowScale;
 			if(flow01 < 0.0) flow01 = 0.0;
 			if(flow01 > 1.0) flow01 = 1.0;
-			
-			// Turbulence Mix:
-			// Back to standard scaling (no extra reduction) since we fixed the
-			// noise generator filter. This restores the "air" texture.
-			turbulence *= flow01; 
+			turbulence *= flow01;
 		} else {
 			turbulence = 0.0;
 		}
 
-		// Apply voice amplitude, and remove any residual DC from the voiced source
-		// (low cutoff so this doesn't "thin" the sound).
 		double voicedIn = (voicedSrc + turbulence) * frame->voiceAmplitude;
 		const double dcPole = 0.9995;
 		double voiced = voicedIn - lastVoicedIn + (dcPole * lastVoicedOut);
@@ -171,23 +165,19 @@ class VoiceGenerator {
 		double aspOut = aspiration * frame->aspirationAmplitude;
 		return aspOut + voiced;
 	}
-
 };
 
 class Resonator {
-	private:
-	//raw parameters
+private:
 	int sampleRate;
 	double frequency;
 	double bandwidth;
 	bool anti;
-	//calculated parameters
 	bool setOnce;
 	double a, b, c;
-	//Memory
 	double p1, p2;
 
-	public:
+public:
 	Resonator(int sampleRate, bool anti=false) {
 		this->sampleRate=sampleRate;
 		this->anti=anti;
@@ -201,7 +191,6 @@ class Resonator {
 			this->frequency=frequency;
 			this->bandwidth=bandwidth;
 
-			// Keep bandwidths "as-is" for clarity.
 			double effectiveBandwidth = bandwidth;
 
 			double r=exp(-M_PI/sampleRate*effectiveBandwidth);
@@ -230,16 +219,15 @@ class Resonator {
 		p2=0;
 		setOnce=false;
 	}
-
 };
 
 class CascadeFormantGenerator { 
-	private:
+private:
 	int sampleRate;
 	Resonator r1, r2, r3, r4, r5, r6, rN0, rNP;
 
-	public:
-	CascadeFormantGenerator(int sr): sampleRate(sr), r1(sr), r2(sr), r3(sr), r4(sr), r5(sr), r6(sr), rN0(sr,true), rNP(sr) {};
+public:
+	CascadeFormantGenerator(int sr): sampleRate(sr), r1(sr), r2(sr), r3(sr), r4(sr), r5(sr), r6(sr), rN0(sr,true), rNP(sr) {}
 
 	void reset() {
 		r1.reset(); r2.reset(); r3.reset(); r4.reset(); r5.reset(); r6.reset(); rN0.reset(); rNP.reset();
@@ -247,32 +235,26 @@ class CascadeFormantGenerator {
 
 	double getNext(const speechPlayer_frame_t* frame, bool glottisOpen, double input) {
 		input/=2.0;
-		// Updating resonator coefficients while strongly driven can produce zipper/clicks.
-		// However, freezing them all the way through the open phase can leave a few
-		// "stale" samples at segment boundaries (e.g. stop onsets like "B"), which is
-		// also audible. Allow updates when the excitation is tiny.
-		const double kUpdateEps = 0.03;
-		bool allowUpdate = (!glottisOpen) || (fabs(input) < kUpdateEps);
-		double n0Output=rN0.resonate(input,frame->cfN0,frame->cbN0,allowUpdate);
-		double output=calculateValueAtFadePosition(input,rNP.resonate(n0Output,frame->cfNP,frame->cbNP,allowUpdate),frame->caNP);
-		output=r6.resonate(output,frame->cf6,frame->cb6,allowUpdate);
-		output=r5.resonate(output,frame->cf5,frame->cb5,allowUpdate);
-		output=r4.resonate(output,frame->cf4,frame->cb4,allowUpdate);
-		output=r3.resonate(output,frame->cf3,frame->cb3,allowUpdate);
-		output=r2.resonate(output,frame->cf2,frame->cb2,allowUpdate);
-		output=r1.resonate(output,frame->cf1,frame->cb1,allowUpdate);
+		(void)glottisOpen;
+		double n0Output=rN0.resonate(input,frame->cfN0,frame->cbN0);
+		double output=calculateValueAtFadePosition(input,rNP.resonate(n0Output,frame->cfNP,frame->cbNP),frame->caNP);
+		output=r6.resonate(output,frame->cf6,frame->cb6);
+		output=r5.resonate(output,frame->cf5,frame->cb5);
+		output=r4.resonate(output,frame->cf4,frame->cb4);
+		output=r3.resonate(output,frame->cf3,frame->cb3);
+		output=r2.resonate(output,frame->cf2,frame->cb2);
+		output=r1.resonate(output,frame->cf1,frame->cb1);
 		return output;
 	}
-
 };
 
 class ParallelFormantGenerator { 
-	private:
+private:
 	int sampleRate;
 	Resonator r1, r2, r3, r4, r5, r6;
 
-	public:
-	ParallelFormantGenerator(int sr): sampleRate(sr), r1(sr), r2(sr), r3(sr), r4(sr), r5(sr), r6(sr) {};
+public:
+	ParallelFormantGenerator(int sr): sampleRate(sr), r1(sr), r2(sr), r3(sr), r4(sr), r5(sr), r6(sr) {}
 
 	void reset() {
 		r1.reset(); r2.reset(); r3.reset(); r4.reset(); r5.reset(); r6.reset();
@@ -280,22 +262,20 @@ class ParallelFormantGenerator {
 
 	double getNext(const speechPlayer_frame_t* frame, bool glottisOpen, double input) {
 		input/=2.0;
-		const double kUpdateEps = 0.06;
-		bool allowUpdate = (!glottisOpen) || (fabs(input) < kUpdateEps);
+		(void)glottisOpen;
 		double output=0;
-		output+=(r1.resonate(input,frame->pf1,frame->pb1,allowUpdate)-input)*frame->pa1;
-		output+=(r2.resonate(input,frame->pf2,frame->pb2,allowUpdate)-input)*frame->pa2;
-		output+=(r3.resonate(input,frame->pf3,frame->pb3,allowUpdate)-input)*frame->pa3;
-		output+=(r4.resonate(input,frame->pf4,frame->pb4,allowUpdate)-input)*frame->pa4;
-		output+=(r5.resonate(input,frame->pf5,frame->pb5,allowUpdate)-input)*frame->pa5;
-		output+=(r6.resonate(input,frame->pf6,frame->pb6,allowUpdate)-input)*frame->pa6;
+		output+=(r1.resonate(input,frame->pf1,frame->pb1)-input)*frame->pa1;
+		output+=(r2.resonate(input,frame->pf2,frame->pb2)-input)*frame->pa2;
+		output+=(r3.resonate(input,frame->pf3,frame->pb3)-input)*frame->pa3;
+		output+=(r4.resonate(input,frame->pf4,frame->pb4)-input)*frame->pa4;
+		output+=(r5.resonate(input,frame->pf5,frame->pb5)-input)*frame->pa5;
+		output+=(r6.resonate(input,frame->pf6,frame->pb6)-input)*frame->pa6;
 		return calculateValueAtFadePosition(output,input,frame->parallelBypass);
 	}
-
 };
 
 class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
-	private:
+private:
 	int sampleRate;
 	VoiceGenerator voiceGenerator;
 	NoiseGenerator fricGenerator;
@@ -306,17 +286,47 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 	double lastOutput;
 	bool wasSilence;
 
-	// Tiny attack smoothing for preFormantGain (helps stop onsets like "B" in letter echo).
 	double smoothPreGain;
 	double preGainAttackAlpha;
+	double preGainReleaseAlpha;
 
+	// High-shelf EQ state for brightness
+	double hsIn1, hsIn2, hsOut1, hsOut2;
+	double hsB0, hsB1, hsB2, hsA1, hsA2;
 
+	void initHighShelf(double fc, double gainDb, double Q) {
+		double A = pow(10.0, gainDb / 40.0);
+		double w0 = PITWO * fc / sampleRate;
+		double cosw0 = cos(w0);
+		double sinw0 = sin(w0);
+		double alpha = sinw0 / (2.0 * Q);
+		
+		double a0 = (A+1) - (A-1)*cosw0 + 2*sqrt(A)*alpha;
+		hsB0 = (A*((A+1) + (A-1)*cosw0 + 2*sqrt(A)*alpha)) / a0;
+		hsB1 = (-2*A*((A-1) + (A+1)*cosw0)) / a0;
+		hsB2 = (A*((A+1) + (A-1)*cosw0 - 2*sqrt(A)*alpha)) / a0;
+		hsA1 = (2*((A-1) - (A+1)*cosw0)) / a0;
+		hsA2 = ((A+1) - (A-1)*cosw0 - 2*sqrt(A)*alpha) / a0;
+	}
 
-	public:
-	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0), wasSilence(true), smoothPreGain(0.0), preGainAttackAlpha(0.0) {
-		// Tiny attack smoothing for preFormantGain (helps stop onsets like "B" in letter echo).
+	double applyHighShelf(double in) {
+		double out = hsB0*in + hsB1*hsIn1 + hsB2*hsIn2 - hsA1*hsOut1 - hsA2*hsOut2;
+		hsIn2 = hsIn1;
+		hsIn1 = in;
+		hsOut2 = hsOut1;
+		hsOut1 = out;
+		return out;
+	}
+
+public:
+	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0), wasSilence(true), smoothPreGain(0.0), preGainAttackAlpha(0.0), preGainReleaseAlpha(0.0), hsIn1(0), hsIn2(0), hsOut1(0), hsOut2(0) {
 		const double attackMs = 1.0;
+		const double releaseMs = 0.5;
 		preGainAttackAlpha = 1.0 - exp(-1.0 / (sampleRate * (attackMs * 0.001)));
+		preGainReleaseAlpha = 1.0 - exp(-1.0 / (sampleRate * (releaseMs * 0.001)));
+		
+		// High shelf: boost above 2kHz by 6dB for Eloquence-like brightness
+		initHighShelf(2000.0, 6.0, 0.7);
 	}
 
 	unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
@@ -332,16 +342,13 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 					lastInput=0.0;
 					lastOutput=0.0;
 					smoothPreGain=0.0;
+					hsIn1=hsIn2=hsOut1=hsOut2=0.0;
 					wasSilence=false;
 				}
 
-				// Smooth only the attack of preFormantGain (fast release keeps stops crisp).
 				double targetPreGain = frame->preFormantGain;
-				if(targetPreGain > smoothPreGain) {
-					smoothPreGain += (targetPreGain - smoothPreGain) * preGainAttackAlpha;
-				} else {
-					smoothPreGain = targetPreGain;
-				}
+				double alpha = (targetPreGain > smoothPreGain) ? preGainAttackAlpha : preGainReleaseAlpha;
+				smoothPreGain += (targetPreGain - smoothPreGain) * alpha;
 
 				double voice=voiceGenerator.getNext(frame);
 
@@ -350,14 +357,16 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 				double fric=fricGenerator.getNext()*0.175*frame->fricationAmplitude;
 				double parallelOut=parallel.getNext(frame,voiceGenerator.glottisOpen,fric*smoothPreGain);
 				double out=(cascadeOut+parallelOut)*frame->outputGain;
+				
+				// DC blocking
 				double filteredOut=out-lastInput+0.9995*lastOutput;
 				lastInput=out;
 				lastOutput=filteredOut;
+				
+				// Apply high-shelf EQ for brightness
+				double bright = applyHighShelf(filteredOut);
 
-				// Linear output scaling + hard clip.
-				// Reduced gain slightly (6000.0) because removing the "square" function
-				// makes the pulse significantly louder naturally.
-				double scaled = filteredOut * 6000.0;
+				double scaled = bright * 5000.0;
 				const double limit = 32767.0;
 				if(scaled > limit) scaled = limit;
 				if(scaled < -limit) scaled = -limit;
@@ -373,7 +382,6 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 	void setFrameManager(FrameManager* frameManager) {
 		this->frameManager=frameManager;
 	}
-
 };
 
 SpeechWaveGenerator* SpeechWaveGenerator::create(int sampleRate) {return new SpeechWaveGeneratorImpl(sampleRate); }
