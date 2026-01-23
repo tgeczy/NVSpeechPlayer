@@ -154,6 +154,16 @@ class Resonator {
 			// Add constant bandwidth to reduce "boxiness" and soften transient clicks
 			double effectiveBandwidth = bandwidth + 25.0;
 			double r=exp(-M_PI/sampleRate*effectiveBandwidth);
+// Add extra damping mainly to low formants (reduces boxiness),
+// but keep high formants sharper (keeps brightness).
+double bwAdd = 25.0;
+if (frequency > 0.0) {
+	// 25Hz extra at 0Hz, tapering down to ~8Hz extra by 4000Hz+
+	double f = frequency;
+	if (f > 4000.0) f = 4000.0;
+	bwAdd = 8.0 + (25.0 - 8.0) * (1.0 - (f / 4000.0));
+}
+double effectiveBandwidth = bandwidth + bwAdd;
 			c=-(r*r);
 			b=r*cos(PITWO/sampleRate*-frequency)*2.0;
 			a=1.0-b-c;
