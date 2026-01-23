@@ -9,6 +9,7 @@ Pipeline:
 
 from __future__ import annotations
 
+import array
 import ctypes
 import math
 import os
@@ -48,6 +49,16 @@ except Exception:  # pragma: no cover
     BooleanDriverSetting = None  # type: ignore
 
 from . import speechPlayer
+
+# Frame field names from the ctypes Frame definition in speechPlayer.py.
+# Used to validate voice parameter overrides/multipliers at import time.
+try:
+    _frameFieldNames = {x[0] for x in speechPlayer.Frame._fields_}
+except Exception:  # pragma: no cover
+    # If this fails, voices won't apply correctly; log for diagnosis.
+    log.error("nvSpeechPlayer: unable to read Frame._fields_; voice presets will not apply", exc_info=True)
+    _frameFieldNames = set()
+
 from ._dll_utils import findDllDir
 from ._frontend import NvspFrontend
 
@@ -172,43 +183,146 @@ pauseModes = OrderedDict(
 
 # Voice presets: simple multipliers/overrides on the generated frames.
 voices = {
-    "Adam": {
-        "cb1_mul": 1.3,
-        "pa6_mul": 1.3,
+    # ---------------------------------------------------------------------
+    # Voice profiles
+    #
+    # These operate as *global* multipliers / overrides on the per-phoneme
+    # frame parameters coming from the language packs.
+    #
+    # Notes:
+    # - "Reed" / "Glen" are the tuned, clearer voices (Eloquence-ish).
+    # - "AdamClassic" / "BenjaminClassic" stay closer to the older tone.
+    # - "Caleb" is whisper (no periodic voicing).
+    # - "David" is very deep ("giant").
+    # ---------------------------------------------------------------------
+
+    "Reed": {
+        # Source / voicing
+        "voicePitch_mul": 1.02,
+        "voiceAmplitude_mul": 0.98,
+        "glottalOpenQuotient": 0.52,  # higher = brighter harmonics, but keep moderate for smoothness
+
+        # Reduce nasal coupling a bit (helps with "nasal/forceful" feedback)
+        "caNP_mul": 0.85,
+
+        # Bandwidth shaping:
+        # - slightly *wider* on the first two formants (reduces boom)
+        # - *narrower* above that (adds focus/clarity)
+        "cb1_mul": 1.08,
+        "cb2_mul": 1.05,
+        "cb3_mul": 0.85,
+        "cb4_mul": 0.85,
+        "cb5_mul": 0.90,
+        "cb6_mul": 0.92,
+
+        # Tiny tract tweak for intelligibility/"air"
+        "cf3_mul": 1.02,
+
+        # Consonants: keep crisp but less "spit"
+        "parallelBypass_mul": 0.90,
         "fricationAmplitude_mul": 0.85,
     },
+
+    # AdamClassic: closer to the older / smoother voicing, a bit darker.
+    "AdamClassic": {
+        "voicePitch_mul": 1.00,
+        "voiceAmplitude_mul": 1.00,
+        "glottalOpenQuotient": 0.47,
+
+        "caNP_mul": 0.95,
+
+        # Slightly wider bandwidths overall -> less edge
+        "cb1_mul": 1.18,
+        "cb2_mul": 1.10,
+        "cb3_mul": 1.05,
+        "cb4_mul": 1.02,
+
+        "parallelBypass_mul": 0.98,
+        "fricationAmplitude_mul": 0.90,
+    },
+
+    # Benjamin: "Glen-ish" — a touch warmer/deeper than Adam, still clear.
     "Benjamin": {
-        "cf1_mul": 1.01,
-        "cf2_mul": 1.02,
-        "cf4": 3770,
-        "cf5": 4100,
-        "cf6": 5000,
-        "cfNP_mul": 0.9,
-        "cb1_mul": 1.3,
-        "fricationAmplitude_mul": 0.7,
-        "pa6_mul": 1.3,
+        "voicePitch_mul": 0.96,
+        "voiceAmplitude_mul": 0.98,
+        "glottalOpenQuotient": 0.50,
+
+        "caNP_mul": 0.90,
+
+        "cb1_mul": 1.12,
+        "cb2_mul": 1.06,
+        "cb3_mul": 0.88,
+        "cb4_mul": 0.88,
+        "cb5_mul": 0.94,
+        "cb6_mul": 0.96,
+
+        # Slightly lower first two formants => warmer colour
+        "cf1_mul": 0.97,
+        "cf2_mul": 0.98,
+        "cf3_mul": 0.99,
+
+        "parallelBypass_mul": 0.92,
+        "fricationAmplitude_mul": 0.80,
+
+        # Keep nasal pole a bit tighter for Benjamin to avoid "honk"
+        "cfNP_mul": 0.92,
     },
+
+    # BenjaminClassic: closer to older tone; deeper and less bright.
+    "BenjaminClassic": {
+        "voicePitch_mul": 0.92,
+        "voiceAmplitude_mul": 1.00,
+        "glottalOpenQuotient": 0.46,
+
+        "caNP_mul": 0.95,
+
+        "cf1_mul": 0.96,
+        "cf2_mul": 0.97,
+        "cf3_mul": 0.98,
+
+        "cb1_mul": 1.22,
+        "cb2_mul": 1.12,
+        "cb3_mul": 1.08,
+        "cb4_mul": 1.05,
+
+        "parallelBypass_mul": 0.98,
+        "fricationAmplitude_mul": 0.85,
+    },
+
+    # Caleb: whisper/breathy voice (no periodic voicing).
     "Caleb": {
-        "aspirationAmplitude": 1,
-        "voiceAmplitude": 0,
+        "aspirationAmplitude": 1.0,
+        "voiceAmplitude": 0.0,
+
+        # Whisper can get harsh fast; keep it filtered a bit.
+        "parallelBypass_mul": 0.95,
+        "fricationAmplitude_mul": 0.95,
     },
+
+    # David: very deep / "giant" voice.
     "David": {
         "voicePitch_mul": 0.75,
-        "endVoicePitch_mul": 0.75,
-        "cf1_mul": 0.75,
-        "cf2_mul": 0.85,
-        "cf3_mul": 0.85,
+        "voiceAmplitude_mul": 1.05,
+        "glottalOpenQuotient": 0.48,
+
+        # Lower formants => bigger vocal tract feel
+        "cf1_mul": 0.85,
+        "cf2_mul": 0.90,
+        "cf3_mul": 0.92,
+
+        # Slightly wider low bandwidth to keep it from ringing
+        "cb1_mul": 1.15,
+        "cb2_mul": 1.10,
+        "cb3_mul": 1.05,
+
+        "caNP_mul": 0.95,
+
+        "parallelBypass_mul": 0.95,
+        "fricationAmplitude_mul": 0.90,
     },
 }
 
 
-# Pre-calculate per-voice operations so we don't scan all frame fields for every frame.
-# Each entry is a tuple: (absoluteAssignments, multipliers).
-# - absoluteAssignments: tuple[(paramName, value)]
-# - multipliers: tuple[(paramName, multiplier)]
-#
-# For safety, we only include keys that exist on speechPlayer.Frame.
-_frameFieldNames = {x[0] for x in speechPlayer.Frame._fields_}
 _voiceOps = {}
 for _voiceName, _voiceMap in voices.items():
     _absOps = []
@@ -229,7 +343,7 @@ del _frameFieldNames, _voiceName, _voiceMap, _absOps, _mulOps, _k, _v
 
 
 def applyVoiceToFrame(frame: speechPlayer.Frame, voiceName: str) -> None:
-    absOps, mulOps = _voiceOps.get(voiceName) or _voiceOps.get("Adam", ((), ()))
+    absOps, mulOps = _voiceOps.get(voiceName) or _voiceOps.get("Reed", ((), ()))
 
     for paramName, absVal in absOps:
         setattr(frame, paramName, absVal)
@@ -289,6 +403,14 @@ class _AudioThread(threading.Thread):
         self._feedErrorLogged = False
         self._idleErrorLogged = False
         self._synthErrorLogged = False
+
+        # After stop(), prepend tiny silence to first audio chunk to prevent click
+        self._prependSilence = False
+        self._silencePrefix = None  # Created after we know sample rate
+        
+        # Fade-in parameters: apply envelope to first audio chunk after stop()
+        self._applyFadeIn = False
+        self._fadeInSamples = 0  # Will be set based on sample rate
 
         self.start()
         self._init.wait()
@@ -362,6 +484,12 @@ class _AudioThread(threading.Thread):
             log.error("nvSpeechPlayer: failed to initialize audio output", exc_info=True)
             self._wavePlayer = None
         finally:
+            # Create tiny silence buffer (3ms) to prepend after stop()
+            # This smooths the audio device restart without perceptible delay
+            silenceSamples = int(self._sampleRate * 0.003)
+            self._silencePrefix = bytes(silenceSamples * 2)  # 16-bit mono
+            # Fade-in: ~2ms worth of samples to ramp up from zero
+            self._fadeInSamples = int(self._sampleRate * 0.002)
             self._init.set()
 
         while self._keepAlive:
@@ -386,6 +514,24 @@ class _AudioThread(threading.Thread):
 
                     nbytes = n * ctypes.sizeof(ctypes.c_short)
                     audioBytes = ctypes.string_at(ctypes.addressof(data), nbytes)
+                    
+                    # Apply fade-in envelope to first chunk after stop() to prevent click
+                    # This smoothly ramps the first few samples from zero, eliminating
+                    # any DC offset or transient that causes the click.
+                    if self._applyFadeIn and self._fadeInSamples > 0:
+                        samples = array.array('h')  # signed 16-bit
+                        samples.frombytes(audioBytes)
+                        fadeLen = min(self._fadeInSamples, len(samples))
+                        for i in range(fadeLen):
+                            # Linear fade from 0 to 1
+                            samples[i] = int(samples[i] * (i / fadeLen))
+                        audioBytes = samples.tobytes()
+                        self._applyFadeIn = False
+                    
+                    # Also prepend tiny silence for stream priming
+                    if self._prependSilence and self._silencePrefix:
+                        audioBytes = self._silencePrefix + audioBytes
+                        self._prependSilence = False
 
                     idx = int(self._player.getLastIndex())
                     s = self._synthRef()
@@ -626,7 +772,7 @@ class SynthDriver(SynthDriver):
 
         self._language = "en-us"
         self._curPitch = 50
-        self._curVoice = "Adam"
+        self._curVoice = "Reed"
         self._curInflection = 0.5
         self._curVolume = 1.0
         self._curRate = 1.0
@@ -1509,6 +1655,10 @@ class SynthDriver(SynthDriver):
             self._audio.kick()
             if self._audio and self._audio._wavePlayer:
                 self._audio._wavePlayer.stop()
+                # Apply fade-in and silence prefix to next audio chunk
+                # to prevent click from abrupt stream restart
+                self._audio._applyFadeIn = True
+                self._audio._prependSilence = True
         except Exception:
             log.debug("nvSpeechPlayer: cancel failed", exc_info=True)
 
@@ -1565,7 +1715,7 @@ class SynthDriver(SynthDriver):
 
     def _set_voice(self, voice):
         if voice not in self.availableVoices:
-            voice = "Adam"
+            voice = "Reed"
         self._curVoice = voice
         if self.exposeExtraParams:
             for paramName in self._extraParamNames:
@@ -1576,5 +1726,3 @@ class SynthDriver(SynthDriver):
         for name in sorted(voices):
             d[name] = VoiceInfo(name, name)
         return d
-
-
