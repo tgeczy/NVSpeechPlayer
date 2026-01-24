@@ -9,6 +9,7 @@ Pipeline:
 
 from __future__ import annotations
 
+import array
 import ctypes
 import math
 import os
@@ -51,60 +52,16 @@ from . import speechPlayer
 from ._dll_utils import findDllDir
 from ._frontend import NvspFrontend
 
-# --- nvspFrontend.dll (IPA -> Frames) ---
-#
-# This replaces the old pure-Python ipa.py pipeline.
-#
+# --- Frontend DLL (IPA -> Frames) ---
 # The frontend reads YAML packs from a local "packs" folder.
-# Your directory layout should look like this (Windows paths shown; case-insensitive on Windows):
-#   synthDrivers/nvSpeechPlayer/
-#     __init__.py
-#     speechPlayer.py
-#     x86/
-#       speechPlayer.dll
-#       nvspFrontend.dll
-#     x64/
-#       speechPlayer.dll
-#       nvspFrontend.dll
-#     packs/
-#       phonemes.yaml
-#       lang/
-#         default.yaml
-#         bg.yaml
-#         zh.yaml
-#         hu.yaml
-#         pt.yaml
-#         pl.yaml
-#         es.yaml
-#
-# Note: the C++ pack loader looks for "phonemes.yaml" and "packs/phonemes.yaml".
-# If your file is named "Phonemes.yaml", Windows will still open it, but keeping
-# everything lowercase helps if you ever run builds/tests on a case-sensitive FS.
-
-
-# --- DLL directory selection and frontend wrapper live in dedicated modules ---
+# DLL directory selection and frontend wrapper live in dedicated modules.
 
 
 
-# Split on punctuation+space so we can add end-of-clause pauses.
+# Split on punctuation+space for clause pauses
 re_textPause = re.compile(r"(?<=[.?!,:;])\s", re.DOTALL | re.UNICODE)
 
-# Punctuation pause modes.
-#
-# Some pipelines (including nvspFrontend-based ones) do not produce strong
-# clause-boundary pauses for all punctuation marks (notably ':' and '...').
-# We can optionally insert *very short* (<= 20 ms) silences after punctuation
-# to avoid a "run-on sentence" feeling, while keeping the pause short enough
-# to avoid DSP clicks/pops on sensitive output backends.
-
-# Normalize line breaks and other whitespace before feeding eSpeak.
-#
-# Why this exists:
-# - NVDA's "say all" (and some controls) often include hard newlines in the text stream.
-# - Some TTS/phoneme pipelines treat '\n' as a stronger boundary than a normal space,
-#   which can manifest as a perceptible pause between *visual* lines.
-#
-# We only normalize whitespace *inside* text chunks; punctuation handling remains intact.
+# Normalize whitespace before feeding eSpeak
 _re_lineBreaks = re.compile(r"[\r\n\u2028\u2029]+", re.UNICODE)
 _re_spaceRuns = re.compile(r"[\t \u00A0]+", re.UNICODE)
 
@@ -119,12 +76,7 @@ def _normalizeTextForEspeak(text: str) -> str:
     return text.strip()
 
 
-# --- Say All / wrapped-line coalescing heuristics ---
-#
-# NVDA frequently inserts IndexCommand markers at visual line boundaries during Say All.
-# If the synth driver treats those markers as hard utterance boundaries, speech can pause
-# between *visual* lines (even mid-sentence). We delay/coalesce such breaks so eSpeak +
-# nvspFrontend get more context and the frame stream stays continuous.
+# Say All coalescing: delay/coalesce line breaks so eSpeak gets more context
 _COALESCE_MAX_CHARS = 900
 _COALESCE_MAX_INDEXES = 48
 _SENT_END_RE = re.compile(r"(?:[.!?]+|\.{3})[)\]\"']*\s*$")
@@ -170,7 +122,7 @@ pauseModes = OrderedDict(
 )
 
 
-# Voice presets: simple multipliers/overrides on the generated frames.
+# Voice presets: multipliers/overrides on generated frames
 voices = {
     "Adam": {
         "cb1_mul": 1.3,
@@ -202,12 +154,7 @@ voices = {
 }
 
 
-# Pre-calculate per-voice operations so we don't scan all frame fields for every frame.
-# Each entry is a tuple: (absoluteAssignments, multipliers).
-# - absoluteAssignments: tuple[(paramName, value)]
-# - multipliers: tuple[(paramName, multiplier)]
-#
-# For safety, we only include keys that exist on speechPlayer.Frame.
+# Pre-calculate per-voice operations for fast application
 _frameFieldNames = {x[0] for x in speechPlayer.Frame._fields_}
 _voiceOps = {}
 for _voiceName, _voiceMap in voices.items():
@@ -269,6 +216,12 @@ class _BgThread(threading.Thread):
 
 class _AudioThread(threading.Thread):
     """Pulls synthesized audio from the DLL and feeds nvwave.WavePlayer."""
+    
+    # Pre-compute cosine fade table for fast lookup (256 entries)
+    _FADE_TABLE_SIZE = 256
+    _fadeTable = tuple((1.0 - math.cos(i * math.pi / 255)) / 2.0 
+                       for i in range(256))
+    
     def __init__(self, synth: "SynthDriver", player: speechPlayer.SpeechPlayer, sampleRate: int):
         super().__init__(name=f"{self.__class__.__module__}.{self.__class__.__qualname__}")
         self.daemon = True
@@ -290,13 +243,18 @@ class _AudioThread(threading.Thread):
         self._idleErrorLogged = False
         self._synthErrorLogged = False
 
+        # Fade-in state: apply envelope to first audio chunk after stop()/idle()
+        self._applyFadeIn = False
+        # Fade duration in samples (~12ms for smooth transition that covers stop() discontinuity)
+        self._fadeInSamples = int(sampleRate * 0.012)
+        # Pre-allocated silence buffer (3ms) to prepend before faded audio
+        # This gives the audio device time to stabilize before non-zero samples
+        self._silencePrefix = bytes(int(sampleRate * 0.003) * 2)
+
         self.start()
         self._init.wait()
 
     def _getOutputDevice(self):
-        # NVDA moved the output device setting from config.conf["speech"]["outputDevice"]
-        # to config.conf["audio"]["outputDevice"] in newer versions.
-        # We support both (NVDA 2024.1 .. 2026.1).
         try:
             return config.conf["audio"]["outputDevice"]
         except Exception:
@@ -321,6 +279,37 @@ class _AudioThread(threading.Thread):
                     log.error("nvSpeechPlayer: WavePlayer.feed failed", exc_info=True)
                     self._feedErrorLogged = True
 
+    def _applyFadeInEnvelope(self, audioBytes: bytes) -> bytes:
+        """Apply fade-in envelope to audio samples. Returns modified bytes.
+        
+        Uses a modified cosine curve that starts at zero and ramps up.
+        The first few samples are forced to zero to mask any click from stop().
+        """
+        samples = array.array('h')
+        samples.frombytes(audioBytes)
+        fadeLen = min(self._fadeInSamples, len(samples))
+        
+        if fadeLen > 0:
+            # Force first few samples to absolute zero (mask any click)
+            zeroSamples = min(fadeLen // 4, 30)  # ~0.7ms at 44.1kHz
+            for i in range(zeroSamples):
+                samples[i] = 0
+            
+            # Apply cosine fade to remaining samples
+            tableSize = self._FADE_TABLE_SIZE
+            fadeTable = self._fadeTable
+            fadeStart = zeroSamples
+            fadeRemaining = fadeLen - fadeStart
+            
+            for i in range(fadeStart, fadeLen):
+                # Map sample index to table index (starting from where zeros end)
+                progress = (i - fadeStart) / fadeRemaining if fadeRemaining > 0 else 1.0
+                tableIdx = int(progress * (tableSize - 1))
+                samples[i] = int(samples[i] * fadeTable[tableIdx])
+        
+        # Prepend silence to let audio device stabilize
+        return self._silencePrefix + samples.tobytes()
+
     def terminate(self):
         self._keepAlive = False
         self.isSpeaking = False
@@ -338,41 +327,55 @@ class _AudioThread(threading.Thread):
     def run(self):
         try:
             self._outputDevice = self._getOutputDevice()
-            # NVDA's nvwave.WavePlayer gained a "buffered" kwarg in some versions.
-            # Prefer buffered playback when available (it reduces glitches/gaps),
-            # but fall back gracefully for older signatures.
+            # Try to create WavePlayer with AudioPurpose.SPEECH for NVDA's built-in
+            # audio keepalive and trimming features
             try:
                 self._wavePlayer = nvwave.WavePlayer(
                     channels=1,
                     samplesPerSec=self._sampleRate,
                     bitsPerSample=16,
                     outputDevice=self._outputDevice,
-                    buffered=True,
+                    purpose=nvwave.AudioPurpose.SPEECH,
                 )
-            except TypeError:
-                self._wavePlayer = nvwave.WavePlayer(
-                    channels=1,
-                    samplesPerSec=self._sampleRate,
-                    bitsPerSample=16,
-                    outputDevice=self._outputDevice,
-                )
+            except (TypeError, AttributeError):
+                # Older NVDA versions don't have purpose parameter or AudioPurpose
+                try:
+                    self._wavePlayer = nvwave.WavePlayer(
+                        channels=1,
+                        samplesPerSec=self._sampleRate,
+                        bitsPerSample=16,
+                        outputDevice=self._outputDevice,
+                        buffered=True,
+                    )
+                except TypeError:
+                    self._wavePlayer = nvwave.WavePlayer(
+                        channels=1,
+                        samplesPerSec=self._sampleRate,
+                        bitsPerSample=16,
+                        outputDevice=self._outputDevice,
+                    )
         except Exception:
-            # Without this log, failures in nvwave (e.g. bad device) can lead to
-            # "dead silence" with no explanation.
             log.error("nvSpeechPlayer: failed to initialize audio output", exc_info=True)
             self._wavePlayer = None
         finally:
             self._init.set()
 
+        # Local references for faster access in tight loop
+        player = self._player
+        wavePlayer = self._wavePlayer
+        wake = self._wake
+        synthRef = self._synthRef
+        
         while self._keepAlive:
-            self._wake.wait()
-            self._wake.clear()
+            wake.wait()
+            wake.clear()
 
             lastIndex = None
+            isFirstChunk = True
 
             while self._keepAlive and self.isSpeaking:
                 try:
-                    data = self._player.synthesize(8192)
+                    data = player.synthesize(8192)
                 except Exception:
                     if not self._synthErrorLogged:
                         log.error("nvSpeechPlayer: speechPlayer.synthesize failed", exc_info=True)
@@ -384,11 +387,17 @@ class _AudioThread(threading.Thread):
                     if n <= 0:
                         continue
 
-                    nbytes = n * ctypes.sizeof(ctypes.c_short)
+                    nbytes = n * 2  # 16-bit = 2 bytes per sample
                     audioBytes = ctypes.string_at(ctypes.addressof(data), nbytes)
+                    
+                    # Apply fade-in to first chunk after stop()/idle() to prevent click
+                    if self._applyFadeIn and isFirstChunk:
+                        audioBytes = self._applyFadeInEnvelope(audioBytes)
+                        self._applyFadeIn = False
+                    isFirstChunk = False
 
-                    idx = int(self._player.getLastIndex())
-                    s = self._synthRef()
+                    idx = int(player.getLastIndex())
+                    s = synthRef()
 
                     if idx >= 0:
                         def cb(index=idx, synth=s):
@@ -401,33 +410,32 @@ class _AudioThread(threading.Thread):
                     lastIndex = idx
                     continue
 
-                # No audio was produced. This can happen when we hit a 0-duration
-                # index marker, or when the queue is empty.
-                idx = int(self._player.getLastIndex())
+                # No audio was produced - check for index markers
+                idx = int(player.getLastIndex())
                 if idx >= 0 and idx != lastIndex:
-                    s = self._synthRef()
+                    s = synthRef()
                     if s:
                         def cb(index=idx, synth=s):
                             if synth:
                                 synthIndexReached.notify(synth=synth, index=index)
-                        # Insert a 0-length marker in the audio stream so the callback
-                        # fires at the right playback position without adding samples.
                         self._feed(b"", onDone=cb)
                     lastIndex = idx
-                    # Keep looping; there may be more audio after a 0-duration marker.
                     continue
 
                 break
 
+            # Stream finished - go idle and prepare for next stream
             try:
-                if self._wavePlayer:
-                    self._wavePlayer.idle()
+                if wavePlayer:
+                    wavePlayer.idle()
+                    # Next audio feed should have fade-in applied
+                    self._applyFadeIn = True
             except Exception:
                 if not self._idleErrorLogged:
                     log.debug("nvSpeechPlayer: WavePlayer.idle failed", exc_info=True)
                     self._idleErrorLogged = True
 
-            s = self._synthRef()
+            s = synthRef()
             if s:
                 synthDoneSpeaking.notify(synth=s)
 
@@ -438,13 +446,6 @@ class SynthDriver(SynthDriver):
     name = "nvSpeechPlayer"
     description = "NV Speech Player"
 
-    # Keep language-pack settings *early* in the voice settings dialog, before
-    # the (optional) 47 SpeechPlayer frame parameters.
-    #
-    # IMPORTANT: Some NVDA versions don't expose BooleanDriverSetting. In that
-    # case we *omit* the boolean quick toggles rather than trying to fake them
-    # as string DriverSettings (which would require extra available* plumbing
-    # and can break the settings dialog).
     _supportedSettings = [
         SynthDriver.VoiceSetting(),
         SynthDriver.RateSetting(),
@@ -498,26 +499,7 @@ class SynthDriver(SynthDriver):
     def __init__(self):
         super().__init__()
 
-        # ------------------------------------------------------------------
-        # Language-pack (YAML) config sync
-        # ------------------------------------------------------------------
-        # NVDA persists synth driver settings in config.conf and will replay
-        # them when a synth is (re)initialized.
-        #
-        # For NV Speech Player, many of those settings are actually stored in
-        # YAML language packs (packs/lang/*.yaml). Users can edit those YAML
-        # files directly (Notepad) or via our dedicated settings panel.
-        #
-        # If we blindly honor NVDA's replayed config values, they can
-        # accidentally overwrite newer YAML edits when the driver loads.
-        #
-        # Therefore:
-        #   - YAML is treated as the source of truth.
-        #   - During driver initialization we temporarily suppress writes back
-        #     to YAML from the "Lang pack:" quick settings.
-        #   - After NVDA finishes applying persisted config, we re-enable YAML
-        #     writes so user-initiated changes in the synth settings dialog
-        #     still work.
+        # Suppress YAML writes during NVDA config replay (YAML is source of truth)
         self._suppressLangPackWrites = True
         self._scheduleEnableLangPackWrites()
 
@@ -539,7 +521,7 @@ class SynthDriver(SynthDriver):
             for attrName in self._extraParamAttrNames:
                 setattr(self, attrName, 50)
 
-        self._sampleRate = 16000
+        self._sampleRate = 22050
         self._player = speechPlayer.SpeechPlayer(self._sampleRate)
 
         # Frontend: YAML packs + IPA->frames conversion.
@@ -606,22 +588,13 @@ class SynthDriver(SynthDriver):
 
         _espeak.initialize()
 
-        # NVDA's synthDrivers._espeak module does not configure ctypes prototypes for
-        # espeak_TextToPhonemes because NVDA itself doesn't call it.
-        #
-        # On 64-bit Python, ctypes defaults to returning c_int (32-bit) when restype
-        # isn't set, which truncates the returned char* pointer. This then crashes when
-        # we later pass the truncated pointer to ctypes.string_at().
-        #
-        # Fix: explicitly set argtypes/restype for espeak_TextToPhonemes.
+        # Fix espeak_TextToPhonemes prototype for 64-bit Python
         try:
             if getattr(_espeak, "espeakDLL", None):
                 _ttp = _espeak.espeakDLL.espeak_TextToPhonemes
                 _ttp.argtypes = (ctypes.POINTER(ctypes.c_void_p), ctypes.c_int, ctypes.c_int)
                 _ttp.restype = ctypes.c_void_p
         except Exception:
-            # Non-fatal: we'll just fall back to whatever ctypes guessed.
-            # However, on x64 this can cause access violations.
             log.debug("nvSpeechPlayer: failed to configure espeak_TextToPhonemes prototype", exc_info=True)
 
         self._language = "en-us"
@@ -640,13 +613,6 @@ class SynthDriver(SynthDriver):
         self.language = self._language
 
         # Prime language-pack settings cache for the initial language.
-        try:
-            self._refreshLangPackSettingsCache()
-        except Exception:
-            log.debug("nvSpeechPlayer: could not prime language-pack cache", exc_info=True)
-
-        # Keep a cache of effective language-pack settings (packs/lang/*.yaml).
-        # This is used by the "Lang pack:" quick settings.
         self._refreshLangPackSettingsCache()
         self.pitch = 45
         self.rate = 50
@@ -786,37 +752,24 @@ class SynthDriver(SynthDriver):
         self._suppressLangPackWrites = False
 
     def _scheduleEnableLangPackWrites(self) -> None:
-        """Schedule re-enabling YAML writes after NVDA finishes config replay.
-
-        NVDA replays persisted driver settings immediately after constructing
-        the SynthDriver instance. We want to ignore those replays for YAML
-        backed settings, but still allow user-initiated changes afterwards.
-
-        We therefore re-enable writes on the next GUI/core tick.
-        """
-
-        # Prefer NVDA's core.callLater (runs on the main thread).
+        """Schedule re-enabling YAML writes after NVDA finishes config replay."""
         try:
-            import core  # type: ignore
-
+            import core
             callLater = getattr(core, "callLater", None)
             if callable(callLater):
                 callLater(0, self._enableLangPackWrites)
                 return
         except Exception:
-            log.debug("nvSpeechPlayer: core.callLater unavailable; falling back", exc_info=True)
+            pass
 
-        # Fallback to wx.CallAfter.
         try:
-            import wx  # type: ignore
-
+            import wx
             if hasattr(wx, "CallAfter"):
                 wx.CallAfter(self._enableLangPackWrites)
                 return
         except Exception:
-            log.debug("nvSpeechPlayer: wx.CallAfter unavailable; falling back", exc_info=True)
+            pass
 
-        # Last resort: enable immediately.
         self._enableLangPackWrites()
 
     # ---- Language-pack (YAML) helpers ----
@@ -1216,79 +1169,25 @@ class SynthDriver(SynthDriver):
         self._enqueue(self._speakBg, list(speechSequence))
 
     def _speakBg(self, speakList):
-        # Tracks whether we've already queued any non-silent speech frames during this
-        # background speak operation. Used to suppress redundant "leading silence" frames
-        # that some frame generators emit at utterance boundaries.
         hadRealSpeech = False
-
         hasIndex = bool(IndexCommand) and any(isinstance(i, IndexCommand) for i in speakList)
         blocks = self._buildBlocks(speakList, coalesceSayAll=hasIndex)
 
-        # Trailing silence used to be added here to "flush" nvwave, but it also
-        # introduces a per-utterance latency penalty when NVDA sends many short chunks.
-        # The audio thread already calls WavePlayer.idle() to drain playback, so we default
-        # to *no* extra tail padding.
         endPause = 0.0
-
-        # Index markers:
-        # Queue them as 0-duration stream markers (no audio samples). This avoids tiny
-        # clicks/pops that can happen when inserting very short silent frames (notably
-        # with WASAPI on some systems), while still allowing NVDA to advance Say All.
-
-        # If we fully drop a frontend's leading-silence frame, some audio devices (or synth
-        # states) can produce a tiny pop at the start of the next voiced frame.
-        # Keep a *very* small slice of that leading silence instead.
         leadingSilenceMs = 1.0
-
-        # Also ensure a minimum fade-in on the first voiced frame when we are suppressing
-        # most of the leading silence.
         minFadeInMs = 3.0
-
-        # Ensure we fade *out* into silence too. Without some ramp-down, certain
-        # output backends (notably WASAPI) can click at clause boundaries.
-        # Keep this very short so it doesn't sound like an extra pause.
         minFadeOutMs = 3.0
-
-        # Tracks whether the most recently queued stream content was voiced.
-        # Used to make index markers "non-clicky" when they fall immediately after
-        # voiced audio.
         lastStreamWasVoiced = False
-
-        # Cache the punctuation pause mode for this background speak operation.
-        # (This is a user setting; reading it once avoids repeated getattr lookups
-        # in the hot path and keeps pauses consistent within a single speak call.)
         pauseMode = str(getattr(self, "_pauseMode", "short") or "short").strip().lower()
 
         def _punctuationPauseMs(punctToken: str | None) -> float:
-            """Return the pause duration in ms for a punctuation token.
-
-            NOTE: Keep these pauses very small (<= 20 ms) to reduce the chance of
-            audible clicks on some audio backends.
-            """
-
+            """Return pause duration in ms for punctuation (max 50ms)."""
             if not punctToken or pauseMode == "off":
                 return 0.0
-
-            # Strong clause boundary.
-            if punctToken in (".", "!", "?", "..."):
-                if pauseMode == "long":
-                    return 50.0
-                # short
-                return 30.0
-
-            # Medium boundary.
-            if punctToken in (":", ";"):
-                if pauseMode == "long":
-                    return 50.0
-                return 30.0
-
-            # Commas are very frequent; keep the default short mode at 0ms to
-            # avoid adding noticeable latency over long passages.
+            if punctToken in (".", "!", "?", "...", ":", ";"):
+                return 50.0 if pauseMode == "long" else 30.0
             if punctToken == ",":
-                if pauseMode == "long":
-                    return 6.0
-                return 0.0
-
+                return 6.0 if pauseMode == "long" else 0.0
             return 0.0
 
         for (text, indexesAfter, blockPitchOffset) in blocks:
@@ -1371,50 +1270,38 @@ class SynthDriver(SynthDriver):
                     def _onFrame(framePtr, frameDuration, fadeDuration, idxToSet):
                         nonlocal queuedCount, hadRealSpeech, sawRealFrameInThisUtterance, sawSilenceAfterVoice, lastStreamWasVoiced
 
-                        # Reduce redundant *leading* silence frames to reduce gaps between
-                        # consecutive chunks/lines.
-                        # Fully dropping them can cause audible pops on some systems, so keep a
-                        # tiny slice instead.
+                        # Reduce leading silence frames to minimize gaps
                         if (not framePtr) and suppressLeadingSilence and (not sawRealFrameInThisUtterance):
                             dur = min(float(frameDuration), float(leadingSilenceMs))
                             if dur > 0:
-                                self._player.queueFrame(
-                                    None,
-                                    dur,
-                                    min(float(fadeDuration), dur),
-                                    userIndex=idxToSet,
-                                )
+                                self._player.queueFrame(None, dur, min(float(fadeDuration), dur), userIndex=idxToSet)
                                 queuedCount += 1
                                 lastStreamWasVoiced = False
                             return
 
-                        # If this is a silence frame, queue it as a pause (NULL frame pointer).
+                        # Silence frame: queue as pause
                         if not framePtr:
-                            # First silence *after* voiced audio: ensure a tiny ramp-down.
                             if sawRealFrameInThisUtterance and (not sawSilenceAfterVoice):
                                 fd = max(float(fadeDuration), float(minFadeOutMs))
-                                # Fade can't be longer than the silence frame itself.
                                 if float(frameDuration) > 0:
                                     fd = min(fd, float(frameDuration))
                                 else:
                                     fd = 0.0
                                 fadeDuration = fd
                                 sawSilenceAfterVoice = True
-
                             self._player.queueFrame(None, frameDuration, fadeDuration, userIndex=idxToSet)
                             queuedCount += 1
                             lastStreamWasVoiced = False
                             return
 
-                        # Ensure a small fade-in on the first voiced frame of each utterance.
-                        # This helps prevent tiny clicks on some output backends.
+                        # Ensure fade-in on first voiced frame
                         if not sawRealFrameInThisUtterance:
                             fadeDuration = max(float(fadeDuration), float(minFadeInMs))
 
                         sawRealFrameInThisUtterance = True
                         hadRealSpeech = True
 
-                        # Copy the C frame into a Python-owned Frame.
+                        # Copy C frame to Python-owned Frame
                         frame = speechPlayer.Frame()
                         ctypes.memmove(ctypes.byref(frame), framePtr, ctypes.sizeof(speechPlayer.Frame))
 
@@ -1425,10 +1312,6 @@ class SynthDriver(SynthDriver):
                                 setattr(frame, paramName, getattr(frame, paramName) * ratio)
 
                         frame.preFormantGain *= self._curVolume
-
-                        # We intentionally do NOT attach NVDA indexes to the first speech frame here.
-                        # IndexCommands are emitted after blocks (see below), allowing us to coalesce
-                        # mid-sentence line breaks without adding audible gaps.
                         self._player.queueFrame(frame, frameDuration, fadeDuration, userIndex=idxToSet)
                         queuedCount += 1
                         lastStreamWasVoiced = True
@@ -1469,14 +1352,10 @@ class SynthDriver(SynthDriver):
                         except Exception:
                             log.debug("nvSpeechPlayer: failed inserting punctuation pause", exc_info=True)
 
-            # Emit any IndexCommands that occurred after this block.
+            # Emit IndexCommands after this block
             if indexesAfter:
                 for idx in indexesAfter:
                     try:
-                        # Prefer 0-duration stream markers (no samples). However, if a marker
-                        # lands immediately after voiced audio, a pure "pause" marker (NULL
-                        # frame) can make some backends click. In that case, insert an
-                        # inaudibly short fade-to-silence marker instead.
                         if lastStreamWasVoiced:
                             dur = float(minFadeOutMs)
                             self._player.queueFrame(None, dur, dur, userIndex=int(idx))
@@ -1484,31 +1363,27 @@ class SynthDriver(SynthDriver):
                         else:
                             self._player.queueFrame(None, 0.0, 0.0, userIndex=int(idx))
                     except Exception:
-                        # Don't let index marker failure hang NVDA.
                         log.debug("nvSpeechPlayer: failed to queue index marker %r", idx, exc_info=True)
 
-        # Optional trailing pad (normally disabled).
         if endPause and endPause > 0:
             self._player.queueFrame(None, float(endPause), min(float(endPause), 5.0))
 
-        # Optional tiny tail fade so the end of an utterance isn't too abrupt.
-        # This can *feel* like a loudness jump when we remove the old 20ms tail pad,
-        # even though the gain math is unchanged.
-        tailFadeMs = 1.0
-        if tailFadeMs and tailFadeMs > 0 and hadRealSpeech:
-            self._player.queueFrame(None, float(tailFadeMs), float(tailFadeMs))
+        # Tiny tail fade to smooth utterance end
+        if hadRealSpeech:
+            self._player.queueFrame(None, 1.0, 1.0)
 
         self._audio.isSpeaking = True
         self._audio.kick()
 
     def cancel(self):
-
+        """Cancel current speech immediately."""
         try:
-            self._player.queueFrame(None, 20.0, 5.0, purgeQueue=True)
+            self._player.queueFrame(None, 3.0, 3.0, purgeQueue=True)
             self._audio.isSpeaking = False
             self._audio.kick()
             if self._audio and self._audio._wavePlayer:
                 self._audio._wavePlayer.stop()
+            self._audio._applyFadeIn = True
         except Exception:
             log.debug("nvSpeechPlayer: cancel failed", exc_info=True)
 
@@ -1576,5 +1451,3 @@ class SynthDriver(SynthDriver):
         for name in sorted(voices):
             d[name] = VoiceInfo(name, name)
         return d
-
-
