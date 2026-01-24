@@ -74,11 +74,12 @@ private:
 	double lastFlow;
 	double lastVoicedIn;
 	double lastVoicedOut;
+	double lastVoicedSrc;
 
 public:
 	bool glottisOpen;
 	
-	VoiceGenerator(int sr): sampleRate(sr), pitchGen(sr), vibratoGen(sr), aspirationGen(), lastFlow(0.0), lastVoicedIn(0.0), lastVoicedOut(0.0), glottisOpen(false) {}
+	VoiceGenerator(int sr): sampleRate(sr), pitchGen(sr), vibratoGen(sr), aspirationGen(), lastFlow(0.0), lastVoicedIn(0.0), lastVoicedOut(0.0), lastVoicedSrc(0.0), glottisOpen(false) {}
 
 	void reset() {
 		pitchGen.reset();
@@ -87,6 +88,7 @@ public:
 		lastFlow=0.0;
 		lastVoicedIn=0.0;
 		lastVoicedOut=0.0;
+		lastVoicedSrc=0.0;
 		glottisOpen=false;
 	}
 
@@ -109,7 +111,7 @@ public:
 			double openLen = 1.0 - effectiveOQ;
 			if (openLen < 0.0001) openLen = 0.0001;
 
-			const double basePeakPos = 0.90;
+			const double basePeakPos = 0.91;
 			double peakPos = basePeakPos;
 
 			double dt = 0.0;
@@ -146,12 +148,23 @@ public:
 		const double radiationMix = 1.0;
 		double voicedSrc = flow + (dFlow * radiationMix);
 
+		
+
+		// ---- Voiced-only pre-emphasis (adds crispness without brightening frication) ----
+		// voicedPreEmphA: 0.0..0.97-ish. Higher = more HF boost. Start around 0.92.
+		// voicedPreEmphMix: 0..1. 0 disables it. Start around 0.35.
+		const double voicedPreEmphA = 0.92;
+		const double voicedPreEmphMix = 0.5;
+
+		double pre = voicedSrc - (voicedPreEmphA * lastVoicedSrc);
+		lastVoicedSrc = voicedSrc;
+		voicedSrc = (1.0 - voicedPreEmphMix) * voicedSrc + voicedPreEmphMix * pre;
 		double turbulence = aspiration * frame->voiceTurbulenceAmplitude;
 		if(glottisOpen) {
 			double flow01 = flow / flowScale;
 			if(flow01 < 0.0) flow01 = 0.0;
 			if(flow01 > 1.0) flow01 = 1.0;
-			turbulence *= flow01;
+			turbulence *= pow(flow01, 1.5);
 		} else {
 			turbulence = 0.0;
 		}
@@ -290,6 +303,11 @@ private:
 	double preGainAttackAlpha;
 	double preGainReleaseAlpha;
 
+	// Smooth frication amplitude to avoid sharp edges at fricative→vowel boundaries
+	double smoothFricAmp;
+	double fricAttackAlpha;
+	double fricReleaseAlpha;
+
 	// High-shelf EQ state for brightness
 	double hsIn1, hsIn2, hsOut1, hsOut2;
 	double hsB0, hsB1, hsB2, hsA1, hsA2;
@@ -319,14 +337,20 @@ private:
 	}
 
 public:
-	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0), wasSilence(true), smoothPreGain(0.0), preGainAttackAlpha(0.0), preGainReleaseAlpha(0.0), hsIn1(0), hsIn2(0), hsOut1(0), hsOut2(0) {
+	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL), lastInput(0.0), lastOutput(0.0), wasSilence(true), smoothPreGain(0.0), preGainAttackAlpha(0.0), preGainReleaseAlpha(0.0), smoothFricAmp(0.0), fricAttackAlpha(0.0), fricReleaseAlpha(0.0), hsIn1(0), hsIn2(0), hsOut1(0), hsOut2(0) {
 		const double attackMs = 1.0;
 		const double releaseMs = 0.5;
 		preGainAttackAlpha = 1.0 - exp(-1.0 / (sampleRate * (attackMs * 0.001)));
 		preGainReleaseAlpha = 1.0 - exp(-1.0 / (sampleRate * (releaseMs * 0.001)));
 		
+		// Frication smoothing (ms) - helps soften the leading edge of /f/ in phrases like \"file explorer\"
+		const double fricAttackMs = 0.8;
+		const double fricReleaseMs = 1.2;
+		fricAttackAlpha = 1.0 - exp(-1.0 / (sampleRate * (fricAttackMs * 0.001)));
+		fricReleaseAlpha = 1.0 - exp(-1.0 / (sampleRate * (fricReleaseMs * 0.001)));
+		
 		// High shelf: boost above 2kHz by 6dB for Eloquence-like brightness
-		initHighShelf(2000.0, 6.0, 0.7);
+		initHighShelf(2000.0, 4.0, 0.7);
 	}
 
 	unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
@@ -342,6 +366,7 @@ public:
 					lastInput=0.0;
 					lastOutput=0.0;
 					smoothPreGain=0.0;
+					smoothFricAmp=0.0;
 					hsIn1=hsIn2=hsOut1=hsOut2=0.0;
 					wasSilence=false;
 				}
@@ -354,7 +379,12 @@ public:
 
 				double cascadeOut=cascade.getNext(frame,voiceGenerator.glottisOpen,voice*smoothPreGain);
 
-				double fric=fricGenerator.getNext()*0.175*frame->fricationAmplitude;
+				// Smooth frication amplitude so fricatives don't \"spike\" at boundaries
+				double targetFricAmp = frame->fricationAmplitude;
+				double fricAlpha = (targetFricAmp > smoothFricAmp) ? fricAttackAlpha : fricReleaseAlpha;
+				smoothFricAmp += (targetFricAmp - smoothFricAmp) * fricAlpha;
+
+				double fric=fricGenerator.getNext()*0.175*smoothFricAmp;
 				double parallelOut=parallel.getNext(frame,voiceGenerator.glottisOpen,fric*smoothPreGain);
 				double out=(cascadeOut+parallelOut)*frame->outputGain;
 				
