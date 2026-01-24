@@ -56,6 +56,7 @@ class FrameManagerImpl: public FrameManager {
 			}
 		} else if(sampleCounter>(oldFrameRequest->minNumSamples)) {
 			if(!frameRequestQueue.empty()) {
+				bool wasFromSilence = curFrameIsNULL || oldFrameRequest->NULLFrame;
 				curFrameIsNULL=false;
 				newFrameRequest=frameRequestQueue.front();
 				frameRequestQueue.pop();
@@ -67,17 +68,28 @@ class FrameManagerImpl: public FrameManager {
 				} else if(oldFrameRequest->NULLFrame) {
 					memcpy(&(oldFrameRequest->frame),&(newFrameRequest->frame),sizeof(speechPlayer_frame_t));
 					oldFrameRequest->frame.preFormantGain=0;
+					// FIX: We are transitioning from silence to real audio.
+					// Mark the old request as non-NULL so subsequent transitions don't keep
+					// taking the "from silence" path with stale state.
+					oldFrameRequest->NULLFrame=false;
 				}
 				if(newFrameRequest) {
 					if(newFrameRequest->userIndex!=-1) lastUserIndex=newFrameRequest->userIndex;
 					sampleCounter=0;
 					// Process the start of the transition immediately (sample 0), so the
 					// first sample of a new segment can't use stale/garbage parameters.
-					memcpy(&curFrame, &(oldFrameRequest->frame), sizeof(speechPlayer_frame_t));
+					if(wasFromSilence) {
+						memcpy(&curFrame, &(oldFrameRequest->frame), sizeof(speechPlayer_frame_t));
+					}
 					newFrameRequest->frame.voicePitch+=(newFrameRequest->voicePitchInc*newFrameRequest->numFadeSamples);
 				}
 			} else {
-				curFrameIsNULL=true;
+								curFrameIsNULL=true;
+				// FIX: We have run out of frames. Mark the old request as NULL (Silence).
+				// This ensures that when a new frame eventually arrives, the engine treats it
+				// as a "Start from Silence" (triggering the 0-gain fade-in logic) rather than
+				// trying to interpolate from the stale state of the last utterance.
+				oldFrameRequest->NULLFrame = true;
 			}
 		} else {
 			curFrame.voicePitch+=oldFrameRequest->voicePitchInc;
@@ -118,9 +130,14 @@ class FrameManagerImpl: public FrameManager {
 		if(purgeQueue) {
 			for(;!frameRequestQueue.empty();frameRequestQueue.pop()) delete frameRequestQueue.front();
 			sampleCounter=oldFrameRequest->minNumSamples;
-			if(newFrameRequest) {
-				oldFrameRequest->NULLFrame=newFrameRequest->NULLFrame;
+			// Always snapshot curFrame to preserve current audio state for smooth transitions.
+			// This ensures we fade FROM the current state, not from stale/garbage parameters.
+			// Must happen regardless of whether newFrameRequest exists.
+			if(!curFrameIsNULL) {
+				oldFrameRequest->NULLFrame=false;
 				memcpy(&(oldFrameRequest->frame),&curFrame,sizeof(speechPlayer_frame_t));
+			}
+			if(newFrameRequest) {
 				delete newFrameRequest;
 				newFrameRequest=NULL;
 			}
