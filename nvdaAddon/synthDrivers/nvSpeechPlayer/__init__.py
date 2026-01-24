@@ -521,7 +521,7 @@ class SynthDriver(SynthDriver):
             for attrName in self._extraParamAttrNames:
                 setattr(self, attrName, 50)
 
-        self._sampleRate = 22050
+        self._sampleRate = 16000
         self._player = speechPlayer.SpeechPlayer(self._sampleRate)
 
         # Frontend: YAML packs + IPA->frames conversion.
