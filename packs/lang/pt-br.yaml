@@ -9,7 +9,7 @@ settings:
   stopClosureClusterFadeMs: 5.0
   stopClosureWordBoundaryClusterGapMs: 12.0
   stopClosureWordBoundaryClusterFadeMs: 3.0
-
+  lengthenedScale: 2.44
 normalization:
   classes:
     # Broad list of consonants for cluster rules.

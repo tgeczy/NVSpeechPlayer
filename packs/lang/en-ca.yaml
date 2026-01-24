@@ -47,6 +47,7 @@ normalization:
     VOWELS: ["a", "e", "i", "o", "u", "ɐ", "ə", "ɜ", "ɝ", "ɑ", "ɒ", "ɔ", "ɛ", "æ", "ʊ", "ɪ", "ᵾ", "ᵿ", "ᴏ", "ᴐ", "ᴒ", "ã", "ẽ", "ĩ", "õ", "ũ", "ᴜ"]
 
   replacements:
+
     # Letter name "A" can sound too much like a strong "ay" when FACE is rewritten
     # to a vowel+glide (eɪ -> ej). For the *standalone* letter token only, keep it
     # as a long monophthong.
@@ -105,6 +106,14 @@ normalization:
       to:   "oʊ"
     - from: "ə͡ʊ"
       to:   "o͡ʊ"
+
+    # Word-final NEAR: keep the nucleus softer (KIT) in North American speech.
+    # Base en.yaml rewrites ɪɹ -> iɹ at word end, which can make "fear/hear" too bright.
+    # This pack also swaps ɹ -> ɻ later, so just match the pre-swap form here.
+    - from: "iɹ"
+      to:   "ɪɹ"
+      when:
+        atWordEnd: true
 
     # Treat GOAT (oʊ) as vowel+glide so it doesn't split into two vowel beats
     # (e.g. "colon" sounding like "coh-oh-len").
@@ -195,3 +204,4 @@ normalization:
     # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
     - from: "d͡ʒ"
       to:   "dʒ"
+

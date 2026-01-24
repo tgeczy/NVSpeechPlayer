@@ -93,8 +93,8 @@ normalization:
     - from: "d͡Z"
       to: "d͡ʒ"
 
-    # eSpeak sometimes inserts zero-width joiners in IPA output (e.g. ɑː‍ɹ).
-    # Strip them so string-based normalization rules match reliably.
+    # eSpeak sometimes inserts zero-width joiners in IPA output (e.g. ɑː‍ɹ, t‍ʃ, a‍ɪ).
+    # Strip zero-width joiners/non-joiners so string-based rules match reliably.
     - from: "\u200d"
       to: ""
     - from: "\u200c"

@@ -70,3 +70,39 @@ normalization:
       to:   "it"
       when:
         atWordEnd: true
+
+    # Diphthongs/triphthongs:
+    #
+    # eSpeak often outputs triphthong-ish sequences like aɪə (e.g. "dialog", "fire").
+    # If treated as three full vowels, the middle /ɪ/ can sound oddly elongated and the
+    # following consonant can feel swallowed.
+    # Tie PRICE (aɪ) before schwa to keep the glide natural without over-stretching.
+    - from: "aɪə"
+      to:   "a͡ɪə"
+
+    # Tie FACE diphthong (eɪ) so words like "player" do not come out as "play-ay-er".
+    # eSpeak marks this with a ZWJ (e‍ɪ); we strip ZWJ globally, so we re-tie it here.
+    - from: "eɪ"
+      to:   "e͡ɪ"
+
+
+    # Word-final NEAR/SQUARE/CURE:
+    # Keep the nucleus bright (i) but end with a short, neutral-ish offglide.
+    # We use a dedicated English-only offglide (ᵊᵉ) so we can tune it without
+    # affecting other languages that use the generic ᵊ.
+    # Only do this at word end so we do not disturb sequences inside words like "dialog".
+    - from: "iə"
+      to:   "iᵊᵉ"
+      when:
+        atWordEnd: true
+    - from: "ɪɹ"
+      to:   "iɹ"
+      when:
+        atWordEnd: true
+
+    # -ily endings: eSpeak en/en-gb/en-ca sometimes uses FLEECE (i) where KIT (ɪ) is more natural
+    # (readily/lazily/angrily/easily...).
+    - from: "ili"
+      to:   "ɪli"
+      when:
+        atWordEnd: true

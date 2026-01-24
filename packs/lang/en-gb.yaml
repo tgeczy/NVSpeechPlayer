@@ -6,6 +6,7 @@ settings:
   # Keep word-final long /uː/ (do/two/you) from sounding too clipped.
   englishLongUWordFinalScale: 1.00
 
+
 normalization:
   preReplacements:
     # PRICE/MOUTH (five/nine/out): UK starts this diphthong a bit more open.
@@ -14,13 +15,19 @@ normalization:
       to:   "ᵃɪ"
     - from: "a͡ɪ"
       to:   "ᵃ͡ɪ"
+
+    # Tie PRICE before schwa in triphthongs (e.g. "dialog", "fire") after UK vowel mapping.
+    - from: "ᵃɪə"
+      to:   "ᵃ͡ɪə"
     - from: "aʊ"
       to:   "ᵃʊ"
     - from: "a͡ʊ"
       to:   "ᵃ͡ʊ"
 
-    # In eSpeak en-gb, "paren" comes out as "per-EN" (pəɹˈɛn), which sounds very US.
-    # In UK speech (especially in programming contexts) "PAR-en" is more common.
+    # FACE before schwa in words like "player", "layer", "prayer".
+    # eSpeak en-gb outputs plˈe‍ɪə (ZWJ marks the diphthong). Our global cleanup strips ZWJ,
+    # which leaves eɪə as three vowel-ish tokens and can sound like "play-ay-er".
+    # Fix: tie the FACE diphthong and use the short schwa separator (ᵊ) for the offglide.
     - from: "pəɹˈɛn"
       to:   "pˈæɹən"
 

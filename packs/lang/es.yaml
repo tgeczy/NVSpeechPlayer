@@ -7,3 +7,11 @@ settings:
   # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
   trillModulationMs: 60
   trillModulationFadeMs: 2
+
+normalization:
+  replacements:
+    # eSpeak Spanish uses ʝ for "y" at word start (e.g. "yo").
+    # Our ʝ definition tends to sound too fricative (Rioplatense/Argentinian-like).
+    # Map it to the palatal approximant/glide j for a more neutral Spanish "y".
+    - from: "ʝ"
+      to:   "j"

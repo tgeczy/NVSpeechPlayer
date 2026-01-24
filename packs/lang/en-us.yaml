@@ -51,6 +51,7 @@ normalization:
     D_ONLY: ["d"]
 
   replacements:
+
     # eSpeak (classic) en-us has a dictionary entry for "Microsoft" that produces
     # an "-soft" syllable with /ɑː/ ("microsaft"). "soft" by itself is /sɔft/.
     # Normalize the compound to use the same vowel as "soft".
@@ -128,7 +129,6 @@ normalization:
       to:   "ˈo"
     - from: "ˈo͡ʊ"
       to:   "ˈo"
-
 
     # Treat GOAT (oʊ) as vowel+glide so it doesn't split into two vowel beats.
     # But in many common words GOAT is an unstressed prefix followed by a consonant
@@ -218,6 +218,16 @@ normalization:
     - from: "ᴏ"
       to:   "ɔ"
 
+    # --- Word-final NEAR: keep US softer ---
+    # Base en.yaml rewrites ɪɹ -> iɹ at word end. That can make "fear/hear" too bright
+    # (closer to "feer") once US maps ɹ->ɻ.
+    # For en-us, keep the nucleus as KIT (ɪ) so the vowel feels softer and less "pronounced".
+    # This runs after we swap ɹ -> ɻ, so match the US rhotic form.
+    - from: "iɻ"
+      to:   "ɪɻ"
+      when:
+        atWordEnd: true
+
     # NOTE:
     # We intentionally *do not* undo the base English fronting of long /uː/.
     # eSpeak's en-us still outputs uː in many common words (rules, do, you),
@@ -225,3 +235,4 @@ normalization:
     # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
     - from: "d͡ʒ"
       to:   "dʒ"
+
