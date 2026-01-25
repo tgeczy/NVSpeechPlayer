@@ -196,6 +196,53 @@ If your pack represents diphthongs using a vowel+semivowel sequence (for example
   - If set to anything other than `1.0`, the engine multiplies the duration and fade of semivowel tokens in the pattern `vowel + semivowel + (vowel | liquid | tap | trill)`.
   - Values below `1.0` make those semivowels shorter and more “glide-like” without affecting word-final diphthongs like “day”.
 
+#### Liquid dynamics (optional)
+
+These settings add internal movement to liquids and glides, so they don't sound "stuck" on one static shape (especially noticeable on **/l/**, **/r/**, and **/w/**).
+
+You can write them as a nested block (preferred):
+
+```yaml
+settings:
+  liquidDynamics:
+    enabled: true
+
+    # /l/ clarity
+    lateralOnglide:
+      f1Delta: -50
+      f2Delta: 200
+      durationPct: 0.30
+
+    # American-style rhotic quality
+    rhoticF3Dip:
+      enabled: true
+      f3Minimum: 1600
+      dipDurationPct: 0.50
+
+    # /w/ should start labial and move toward the vowel
+    labialGlideTransition:
+      enabled: true
+      startF1: 300
+      startF2: 700
+      transitionPct: 0.60
+```
+
+Flat-key equivalents are also supported:
+
+- `liquidDynamicsEnabled`
+- `liquidDynamicsLateralOnglideF1Delta`
+- `liquidDynamicsLateralOnglideF2Delta`
+- `liquidDynamicsLateralOnglideDurationPct`
+- `liquidDynamicsRhoticF3DipEnabled`
+- `liquidDynamicsRhoticF3Minimum`
+- `liquidDynamicsRhoticF3DipDurationPct`
+- `liquidDynamicsLabialGlideTransitionEnabled`
+- `liquidDynamicsLabialGlideStartF1`
+- `liquidDynamicsLabialGlideStartF2`
+- `liquidDynamicsLabialGlideTransitionPct`
+
+Implementation note: the frontend splits the token into a short "onglide" segment + a steady segment and uses a small internal crossfade.
+
 #### Intra-word stressed vowel hiatus break (spelling aid)
 These settings can insert a tiny silence between two adjacent vowels when the *second* vowel is explicitly stressed. This mostly exists to help spelled-out acronyms (initialisms) where two letter names meet with no consonant in between.
 - `stressedVowelHiatusGapMs` (number, default `0.0`): Gap duration in milliseconds at speed=1.0. The engine divides it by current speed.
@@ -211,11 +258,101 @@ This is a more speech-like alternative to inserting a pause. It changes how some
 - `postStopAspirationEnabled` (bool, default `false`): Inserts a short aspiration phoneme after unvoiced stops in specific contexts.
 - `postStopAspirationPhoneme` (string/IPA key, default `"h"`): Which phoneme key to insert for aspiration.
 
+#### Positional allophones (optional)
+
+This pass applies small, position-based tweaks without needing new phonemes in your pack.
+
+Nested block form (preferred):
+
+```yaml
+settings:
+  positionalAllophones:
+    enabled: true
+
+    # Applies to the inserted post-stop aspiration phoneme (see `postStopAspirationEnabled`)
+    stopAspiration:
+      wordInitialStressed: 0.8
+      wordInitial: 0.5
+      intervocalic: 0.2
+      wordFinal: 0.1
+
+    # /l/ -> more [ɫ]-like as it moves later in the syllable/word
+    lateralDarkness:
+      preVocalic: 0.2
+      postVocalic: 0.8
+      syllabic: 0.9
+
+    # Simple target used for the F2 pull (Hz)
+    lateralDarkF2Target: 900
+
+    # Insert /ʔ/ before word-final voiceless stops in selected contexts
+    glottalReinforcement:
+      enabled: false
+      contexts: ["V_#"]   # "vowel before word-final stop"
+
+    # Inserted /ʔ/ duration in ms (at speed=1)
+    glottalReinforcementDurationMs: 18
+```
+
+Flat-key equivalents are also supported:
+
+- `positionalAllophonesEnabled`
+- `positionalAllophonesStopAspirationWordInitialStressed`
+- `positionalAllophonesStopAspirationWordInitial`
+- `positionalAllophonesStopAspirationIntervocalic`
+- `positionalAllophonesStopAspirationWordFinal`
+- `positionalAllophonesLateralDarknessPreVocalic`
+- `positionalAllophonesLateralDarknessPostVocalic`
+- `positionalAllophonesLateralDarknessSyllabic`
+- `positionalAllophonesLateralDarkF2TargetHz`
+- `positionalAllophonesGlottalReinforcementEnabled`
+- `positionalAllophonesGlottalReinforcementDurationMs`
+
+Notes:
+- Aspiration scaling only has an effect if `postStopAspirationEnabled` is already inserting aspiration tokens.
+- Glottal reinforcement requires the phoneme **`ʔ`** to exist in `phonemes.yaml`.
+
 #### Length mark handling (ː)
 - `lengthenedScale` (number, default `1.05`): Duration multiplier when a phoneme is lengthened with ː.
 - `lengthenedScaleHu` (number, default `1.3`): Hungarian-specific length scaling (used by legacy behavior).
 - `applyLengthenedScaleToVowelsOnly` (bool, default `true`): If true, ː only lengthens vowels.
 - `lengthenedVowelFinalCodaScale` (number, default `1.0`): Additional multiplier for lengthened vowels (ː) when they occur in a word-final closed syllable (vowel + final consonant cluster), e.g. “rules” /ruːlz/. This is intentionally conservative: it does not apply when there are later vowels in the same word (e.g. “ruler” /ruːlə/).
+
+#### Length contrast and gemination (optional)
+
+If a language has phonemic length (short vs long vowels) or geminate consonants, this pass helps keep those cues stable even at higher speech rates.
+
+Nested block form (preferred):
+
+```yaml
+settings:
+  lengthContrast:
+    enabled: true
+
+    # Vowel constraints (ms at speed=1)
+    shortVowelCeiling: 80
+    longVowelFloor: 120
+
+    # Gemination cues
+    geminateClosureScale: 1.8
+    geminateReleaseScale: 0.9
+    preGeminateVowelScale: 0.85
+```
+
+Flat-key equivalents are also supported:
+
+- `lengthContrastEnabled`
+- `lengthContrastShortVowelCeilingMs`
+- `lengthContrastLongVowelFloorMs`
+- `lengthContrastGeminateClosureScale`
+- `lengthContrastGeminateReleaseScale`
+- `lengthContrastPreGeminateVowelScale`
+
+How it behaves:
+
+- Short vowels are capped, long vowels are floored.
+- For doubled consonants, the engine mainly lengthens the **closure gap** (the inserted pre-stop gap between the consonants), which is where gemination tends to "live" perceptually.
+- The numbers are treated as **ms at speed=1**, and the effective limits are divided by the current speed so things don't explode at 3× speed.
 
 #### Language-specific duration tweaks
 These are “compat switches” for behavior that existed in the legacy Python pipeline.
@@ -292,6 +429,188 @@ This lets rules match segment clusters like `rˈa` the same way they match `ra`.
 
 `toneContours`:
 - Tone contour definitions (tone string → list of pitch-percent points)
+
+## Frontend rule passes settings
+
+Recent versions of the frontend can optionally run **modular “passes”** over the token stream (after IPA parsing, and optionally after timing / pitch). These passes are meant to encode phonetic/prosodic “rules” (in the spirit of SSRS/Delta/Eloquence) without turning the core IPA engine into a single giant function.
+
+All settings below live under `settings:` in a language YAML (for example `packs/lang/en.yaml`). Passes are **disabled by default** unless `enabled: true` is set for that pass.
+
+### Coarticulation
+
+Coarticulation modifies consonants based on adjacent vowels (F2/F3 locus targets, and optional velar pinch). This can improve intelligibility and reduce the “separate chunks” feeling at high rates.
+
+```yaml
+settings:
+  coarticulation:
+    enabled: true
+
+    # Overall intensity of locus nudges (0..1-ish). Start conservative.
+    strength: 0.28
+
+    # Portion of the consonant token affected (0..1).
+    transitionExtent: 0.35
+
+    # If true, slightly smooths consonant onsets into the following vowel.
+    fadeIntoConsonants: true
+
+    # F2 locus targets (Hz-like units) by place of articulation.
+    labialF2Locus: 800
+    alveolarF2Locus: 1800
+    velarF2Locus: 2200
+
+    # Velar pinch (/k,g,ŋ/ before front vowels): bring F2/F3 closer.
+    velarPinch:
+      enabled: true
+      thresholdF2: 1800
+      f2Scale: 0.90
+      f3Target: 2400
+```
+
+### Phrase-final lengthening
+
+Duration matters as much as pitch for prosody. Phrase-final lengthening scales the last (and optionally the penultimate) syllable/token durations near clause boundaries.
+
+```yaml
+settings:
+  phraseFinalLengthening:
+    enabled: true
+
+    finalSyllableScale: 1.35
+    penultimateSyllableScale: 1.12
+
+    # Optional clause-type tuning (multipliers applied on top).
+    statementScale: 1.00
+    questionScale: 0.92
+
+    # If true, apply mostly to the “nucleus” (vowel-like) portion.
+    nucleusOnlyMode: true
+```
+
+### Microprosody
+
+Microprosody adds small F0 perturbations around consonant→vowel boundaries (e.g. voiceless consonants slightly raise the following vowel onset). This is subtle but can add a more “human” feel.
+
+```yaml
+settings:
+  microprosody:
+    enabled: true
+
+    voicelessF0Raise:
+      enabled: true
+      deltaHz: 12
+      endDeltaHz: 0
+
+    voicedF0Lower:
+      enabled: true
+      deltaHz: 6
+
+    # Avoid overdoing this on very short vowels.
+    minVowelMs: 25
+```
+
+### Rate-dependent reduction
+
+At high speech rates, some distinctions are better represented as reduction rather than “perfect” articulation. Start conservative.
+
+```yaml
+settings:
+  rateReduction:
+    enabled: true
+
+    # Schwas become shorter/weaker beyond this speed multiplier.
+    schwaReductionThreshold: 2.5
+    schwaMinDurationMs: 15
+    schwaScale: 0.80
+```
+
+### Anticipatory nasalization
+
+Anticipatory nasalization partially nasalizes a vowel shortly before a nasal consonant. This is optional and language-dependent.
+
+```yaml
+settings:
+  nasalization:
+    anticipatory:
+      enabled: false
+      ms: 30
+      amplitude: 0.35
+      blend: 0.50
+```
+
+### Liquid dynamics
+
+Liquid/glide tokens can have internal movement rather than a static steady-state target.
+
+```yaml
+settings:
+  liquidDynamics:
+    enabled: true
+
+    lateralOnglide:
+      f1Delta: -50
+      f2Delta: 200
+      durationPct: 0.30
+
+    rhoticF3Dip:
+      enabled: true
+      f3Minimum: 1600
+      dipDurationPct: 0.50
+
+    labialGlideTransition:
+      enabled: true
+      startF1: 300
+      startF2: 700
+      transitionPct: 0.60
+```
+
+### Length contrast and gemination
+
+For languages with phonemic length, it helps to enforce floors/ceilings and make geminates behave like closures rather than just “slightly longer consonants”.
+
+```yaml
+settings:
+  lengthContrast:
+    enabled: true
+
+    # Vowel duration constraints (ms, at speed=1.0).
+    shortVowelCeilingMs: 80
+    longVowelFloorMs: 120
+
+    # Geminate shaping.
+    geminateClosureScale: 1.80
+    geminateReleaseScale: 0.90
+    preGeminateVowelScale: 0.85
+```
+
+### Positional allophones
+
+Systematic, position-based allophones (aspiration scaling, /l/ darkness, optional glottal reinforcement of final stops).
+
+```yaml
+settings:
+  positionalAllophones:
+    enabled: false
+
+    stopAspiration:
+      wordInitialStressed: 0.80
+      wordInitial: 0.50
+      intervocalic: 0.20
+      wordFinal: 0.10
+
+    lateralDarkness:
+      preVocalic: 0.20
+      postVocalic: 0.80
+      syllabic: 0.90
+
+    # Optional /l/ darkness target (F2 pull).
+    lateralDarkF2Target: 900
+
+    glottalReinforcement:
+      enabled: true
+      contexts: ["#_#", "V_#"]
+      durationMs: 18
+```
 
 ## Legacy Python files (kept for reference)
 `ipa.py` and `data.py` still live alongside the repo for now, but they are no longer the runtime path for NVDA.
