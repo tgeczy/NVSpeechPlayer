@@ -1,47 +1,106 @@
-# Hungarian.
-
 settings:
-  # Stressed syllables: lighter slow-down than English.
-  primaryStressDiv: 1.25
-  secondaryStressDiv: 1.07
+  legacyPitchMode: false
 
-  # Trill modulation (rolled R). Applied only when the phoneme has _isTrill: true.
-  trillModulationMs: 40
-  trillModulationFadeMs: 2
+  # Hungarian stress is fixed (word-initial) and is less "English-like" in timing.
+  # Keep this very subtle so short vs long vowel length contrast stays clear.
+  primaryStressDiv: 1.10
+  secondaryStressDiv: 1.00
 
-  # Keep stops audible in nasal+stop clusters (e.g. "pont" -> n+t).
-  # This adds a short closure before stops after nasals, which helps at higher rates.
+  # Make sure ː actually creates a clear long/short contrast in Hungarian.
+  # (We set both the generic and HU compat keys so whichever path the frontend uses, it behaves.)
+  lengthenedScale: 1.60
+  lengthenedScaleHu: 1.60
+  lengthenedVowelFinalCodaScale: 0.90
+  applyLengthenedScaleToVowelsOnly: true
+
+  # Hungarian occlusives are often softer; avoid clickiness:
+  stopClosureMode: vowel-and-cluster
   stopClosureAfterNasalsEnabled: true
+  stopClosureVowelGapMs: 30.0
+  stopClosureVowelFadeMs: 7.0
+  stopClosureClusterGapMs: 24.0
+  stopClosureClusterFadeMs: 5.0
 
-  # Hungarian has phonemic length (short vs long vowels).
-  # Use a larger scale when we see ː on Hungarian phonemes.
-  # NOTE: 1.5 was a bit too long in practice; 1.45 keeps contrast but avoids
-  # over-holding long vowels like /eː/ ("é").
-  lengthenedScaleHu: 1.45
+  trillModulationMs: 30.0
+  trillModulationFadeMs: 0.0
 
-  # Hungarian short 'a' (written "a") tends to sound over-held if left at the
-  # global vowel timing. The frontend has a legacy compat switch for this.
+  # Hungarian short "a" timing helper (legacy compat)
   huShortAVowelEnabled: true
   huShortAVowelKey: "ᴒ"
-  huShortAVowelScale: 0.80
+  huShortAVowelScale: 0.85
 
 normalization:
+  preReplacements:
+    # Convert consonant length marks to explicit doubling (since we only lengthen vowels with ː).
+    - from: "tː"
+      to: "tt"
+    - from: "dː"
+      to: "dd"
+    - from: "kː"
+      to: "kk"
+    - from: "pː"
+      to: "pp"
+    - from: "bː"
+      to: "bb"
+    - from: "sː"
+      to: "ss"
+    - from: "mː"
+      to: "mm"
+    - from: "nː"
+      to: "nn"
+    - from: "lː"
+      to: "ll"
+    - from: "rː"
+      to: "rr"
+    - from: "ɲː"
+      to: "ɲɲ"
+
+    # Hungarian palatals /c/ /ɟ/ can also be geminated in real words:
+    # eSpeak often emits these in cases like "fogadják" -> ... ɟː ...
+    - from: "cː"
+      to: "cc"
+    - from: "ɟː"
+      to: "ɟɟ"
+    - from: "ʎː"
+      to: "ʎʎ"
+
   replacements:
-    # Hungarian short 'a' (written "a") is closer to /ɒ/ than /ɑ/.
-    # eSpeak's hu voice often outputs "ɑ" here; route it to NVSP's
-    # dedicated short-a vowel key.
+    # --- Hungarian long vowel quality helpers ---
+    # Keep long vowels as stable monophthongs, but with a slightly more Hungarian vowel space,
+    # so the result is less "English / American slant" while staying conservative.
+
+    - from: "aː"
+      to: "áː"
+    - from: "eː"
+      to: "éː"
+    - from: "iː"
+      to: "íː"
+    - from: "oː"
+      to: "óː"
+    - from: "øː"
+      to: "őː"
+    - from: "uː"
+      to: "úː"
+    - from: "yː"
+      to: "űː"
+
+    # Hungarian short "a" is more /ɒ/ than /ɑ/ for many speakers.
     - from: "ɑ"
       to: "ᴒ"
 
-    # Hungarian "é" is a long /eː/ that should be a clean monophthong.
-    # Map it to a slightly more open internal variant so it doesn't drift toward
-    # an English "A"-like quality.
-    - from: "eː"
-      to: "ᴇː"
+    
+    - from: "ɒ"
+      to: "ᴒ"
+# Hungarian "ny" (/ɲ/) can get lost in consonant clusters (e.g. "könyvtár").
+    # Nudge it slightly toward a palatalized nasal variant with a touch more mid energy.
+    - from: "ɲ"
+      to: "ɲʲ"
 
-    # eSpeak can emit palatal stops for Hungarian "ty" (/c/) and "gy" (/ɟ/).
-    # NVSP doesn't model these as distinct consonants yet, so fall back.
-    - from: "c"
-      to: "k"
+    
+
+    # Hungarian "gy" (/ɟ/) needs a true palatal stop quality (not an Englishy affricate).
     - from: "ɟ"
-      to: "g"
+      to: "ɟʲ"
+# Remove secondary stress marks to avoid English-like stressing of later syllables.
+    - from: "ˌ"
+      to: ""

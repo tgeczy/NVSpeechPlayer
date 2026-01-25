@@ -28,6 +28,7 @@ settings:
   spellingDiphthongMode: monophthong
   autoTieDiphthongs: false
   autoDiphthongOffglideToSemivowel: false
+  legacyPitchMode: false
 normalization:
   preReplacements:
     # Protect PRICE/MOUTH diphthongs from broad TRAP rules (e.g. five/nine/out).
