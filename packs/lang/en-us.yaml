@@ -5,9 +5,9 @@ settings:
   # US can sound overly "clicky" / separated in clusters (e.g. "start", "smart")
   # if we insert stop closures everywhere.
   stopClosureMode: vowel-and-cluster
-  stopClosureVowelGapMs: 22
+  stopClosureVowelGapMs: 24
   stopClosureVowelFadeMs: 6
-  stopClosureClusterGapMs: 14
+  stopClosureClusterGapMs: 16
   stopClosureClusterFadeMs: 3
 
   # Helps "bank" / "think" / "thanks" etc feel less "boxy" by giving nasal+stop
@@ -28,12 +28,6 @@ settings:
   spellingDiphthongMode: monophthong
   autoTieDiphthongs: false
   autoDiphthongOffglideToSemivowel: false
-
-  # Shorten semivowel offglides inside words (helps "player", "layer", etc.).
-  semivowelOffglideScale: 0.01
-  stressedVowelHiatusGapMs: 0
-  stressedVowelHiatusFadeMs: 0
-  legacyPitchMode: false
 normalization:
   preReplacements:
     # Protect PRICE/MOUTH diphthongs from broad TRAP rules (e.g. five/nine/out).
@@ -47,11 +41,7 @@ normalization:
     # Vowels (including schwa/r-colored and extra internal keys used by English packs).
     VOWELS: ["a", "e", "i", "o", "u", "ɐ", "ə", "ɜ", "ɝ", "ɑ", "ɒ", "ɔ", "ɛ", "æ", "ʊ", "ɪ", "ᵾ", "ᵿ", "ᴏ", "ᴐ", "ᴒ", "ã", "ẽ", "ĩ", "õ", "ũ", "ᴜ"]
 
-    # Used for a narrow "d+m" cluster tweak (administrator, etc.).
-    D_ONLY: ["d"]
-
   replacements:
-
     # eSpeak (classic) en-us has a dictionary entry for "Microsoft" that produces
     # an "-soft" syllable with /ɑː/ ("microsaft"). "soft" by itself is /sɔft/.
     # Normalize the compound to use the same vowel as "soft".
@@ -95,27 +85,10 @@ normalization:
         atWordStart: true
         atWordEnd: true
 
-    # FACE before an American flap (ɾ) can sound overly separated if we insert a
-    # standalone glide segment. Tie the vowel+glide so it behaves like one movement.
-    - from: "eɪɾ"
-      to:   "e͡ᴊɾ"
-    - from: "e͡ɪɾ"
-      to:   "e͡ᴊɾ"
-
     # Make FACE (eɪ) sound like a real diphthong instead of a flat "e".
     # Using a semivowel offglide gives a clearer movement in our formant table.
-    # But when FACE is followed by a consonant (e.g. donate = ...eɪt), a full-strength /j/
-    # can sound a bit too "sung". Use a softer glide there.
     - from: "eɪ"
-      to:   "e͡ᴊ"
-      when:
-        atWordEnd: false
-    - from: "e͡ɪ"
-      to:   "e͡ᴊ"
-      when:
-        atWordEnd: false
-    - from: "eɪ"
-      to:   "e͡j"
+      to:   "ej"
     - from: "e͡ɪ"
       to:   "e͡j"
 
@@ -129,6 +102,7 @@ normalization:
       to:   "ˈo"
     - from: "ˈo͡ʊ"
       to:   "ˈo"
+
 
     # Treat GOAT (oʊ) as vowel+glide so it doesn't split into two vowel beats.
     # But in many common words GOAT is an unstressed prefix followed by a consonant
@@ -167,18 +141,6 @@ normalization:
     - from: "ᵾ"
       to:   "ᵿ"
 
-    # US FOOT (ʊ) can drift too far back/rounded and sound like "o"
-    # in words like "put" and "output". Use a slightly more central variant.
-    - from: "ʊ"
-      to:   "ᵁ"
-
-    # ʊ also appears as the offglide in diphthongs (e.g. oʊ, aʊ).
-    # Keep diphthong offglides as the base ʊ so words like "window" don't change.
-    - from: "ᵁ"
-      to:   "ʊ"
-      when:
-        afterClass: VOWELS
-
     # US GOAT (oʊ) can sound oddly "midwestern" if the /o/ start is too back.
     # Use a slightly more fronted internal variant for en-us.
     - from: "o"
@@ -196,9 +158,7 @@ normalization:
     - from: "ɜː"
       to:   "ɝː"
     - from: "ɜ"
-      to:   "ɝ"
-
-    # In many common words ending in -art (start/smart/cart/apart/depart...),
+      to:   "ɝ"    # In many common words ending in -art (start/smart/cart/apart/depart...),
     # /ɑːɹt/ can sound overly open as a separate "ah" + "r" segment in a formant synth.
     # Nudge it toward a more central "uh" before word-final /t/.
     - from: "ɑːɹt"
@@ -210,7 +170,23 @@ normalization:
       when:
         atWordEnd: true
 
+
+
     # Use a dedicated US /r/ variant.
+
+    # NEAR / "ear" words in en-us (fear/hear/dear/ear):
+    # Base en.yaml may brighten word-final /ɪɹ/ toward /iɹ/, which can make these sound too strong.
+    # Undo that brightening only at word end, so fear/hear stay softer (ɪɹ), then r→ɻ below applies.
+    - from: "iɹ"
+      to:   "ɪɹ"
+      when:
+        atWordEnd: true
+    # Safety: if /r/ is already mapped to ɻ earlier in the chain, still undo at word end.
+    - from: "iɻ"
+      to:   "ɪɻ"
+      when:
+        atWordEnd: true
+
     - from: "ɹ"
       to:   "ɻ"
 
@@ -218,21 +194,7 @@ normalization:
     - from: "ᴏ"
       to:   "ɔ"
 
-    # --- Word-final NEAR: keep US softer ---
-    # Base en.yaml rewrites ɪɹ -> iɹ at word end. That can make "fear/hear" too bright
-    # (closer to "feer") once US maps ɹ->ɻ.
-    # For en-us, keep the nucleus as KIT (ɪ) so the vowel feels softer and less "pronounced".
-    # This runs after we swap ɹ -> ɻ, so match the US rhotic form.
-    - from: "iɻ"
-      to:   "ɪɻ"
-      when:
-        atWordEnd: true
-
     # NOTE:
     # We intentionally *do not* undo the base English fronting of long /uː/.
     # eSpeak's en-us still outputs uː in many common words (rules, do, you),
     # and the backer multilingual "u" vowel can make them sound like "roo".
-    # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
-    - from: "d͡ʒ"
-      to:   "dʒ"
-

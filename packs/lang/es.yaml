@@ -10,8 +10,10 @@ settings:
 
 normalization:
   replacements:
-    # eSpeak Spanish uses ʝ for "y" at word start (e.g. "yo").
-    # Our ʝ definition tends to sound too fricative (Rioplatense/Argentinian-like).
-    # Map it to the palatal approximant/glide j for a more neutral Spanish "y".
+    # eSpeak Spanish often emits "ʝ" for initial <y> (e.g. "yo").
+    # Our base phoneme table doesn't include ʝ, so map it to the glide /j/ to keep the consonant audible.
     - from: "ʝ"
+      to:   "j"
+    # Some voices use the affricate ɟʝ; map it to /j/ as well.
+    - from: "ɟʝ"
       to:   "j"

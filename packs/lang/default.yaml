@@ -54,20 +54,6 @@ settings:
   stressedVowelHiatusFadeMs: 0
   semivowelOffglideScale: 1.0
 normalization:
-  aliases:
-    "E": "ɛ"
-    "I": "ɪ"
-    "O": "ɔ"
-    "U": "ʊ"
-    "V": "ʌ"
-    "@": "ə"
-    "3": "ɜ"
-    "0": "ɜ"
-    "N": "ŋ"
-    "S": "ʃ"
-    "Z": "ʒ"
-    "T": "θ"
-    "D": "ð"
   preReplacements:
     # Tie common affricate spellings into the single phonemes in Phonemes.yaml.
     - from: "tʃ"
@@ -93,8 +79,8 @@ normalization:
     - from: "d͡Z"
       to: "d͡ʒ"
 
-    # eSpeak sometimes inserts zero-width joiners in IPA output (e.g. ɑː‍ɹ, t‍ʃ, a‍ɪ).
-    # Strip zero-width joiners/non-joiners so string-based rules match reliably.
+    # eSpeak sometimes inserts zero-width joiners in IPA output (e.g. ɑː‍ɹ).
+    # Strip them so string-based normalization rules match reliably.
     - from: "\u200d"
       to: ""
     - from: "\u200c"

@@ -54,6 +54,8 @@ normalization:
     # Nasal vowels we normalize to (used to detect nasal-coda "m" cases like "amplo").
     PT_NASAL_VOWELS:
       - ã
+
+      - Ã
       - ẽ
       - ĩ
       - õ
@@ -76,6 +78,7 @@ normalization:
       - ɔ
       - ɛ
       - ã
+      - Ã
       - ẽ
       - ĩ
       - õ

@@ -1,28 +1,15 @@
+# Edited by nvspPhonemeEditor (Win32)
+# Note: YAML comments are not preserved by this editor.
+
 phonemes:
-  "0":
+  0:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 110
     cb2: 45
     cb3: 82.5
@@ -31,18 +18,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 60
-    pb3: 110
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -50,22 +34,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "3":
+    pb1: 100
+    pb2: 60
+    pb3: 110
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  3:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.85
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 110
+    cb2: 45
+    cb3: 82.5
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 330
     cf2: 1480
     cf3: 2300
@@ -74,26 +71,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 110
-    cb2: 45
-    cb3: 82.5
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 60
-    pb3: 110
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -101,30 +79,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 60
+    pb3: 110
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.85
   "?":
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0.7
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.935
-    outputGain: 1.5
     caNP: 0
-    cf1: 100
-    cf2: 150
-    cf3: 200
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 66
     cb2: 67.5
     cb3: 90
@@ -133,18 +108,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 100
-    pf2: 150
-    pf3: 200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 90
-    pb3: 120
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 100
+    cf2: 150
+    cf3: 200
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -152,30 +124,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "@":
+    pb1: 60
+    pb2: 90
+    pb3: 120
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 100
+    pf2: 150
+    pf3: 200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  @:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 110
     cb2: 45
     cb3: 82.5
@@ -184,18 +153,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 60
-    pb3: 110
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -203,22 +169,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "E":
+    pb1: 100
+    pb2: 60
+    pb3: 110
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  E:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 66
+    cb2: 67.5
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 530
     cf2: 1680
     cf3: 2500
@@ -227,26 +206,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 66
-    cb2: 67.5
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 530
-    pf2: 1680
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 90
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -254,30 +214,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "I":
+    pb1: 60
+    pb2: 90
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 530
+    pf2: 1680
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  I:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 400
-    cf2: 1800
-    cf3: 2570
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 55
     cb2: 75
     cb3: 105
@@ -286,18 +243,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 400
-    pf2: 1800
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 100
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 400
+    cf2: 1800
+    cf3: 2570
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -305,30 +259,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "O":
+    pb1: 50
+    pb2: 100
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 1800
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  O:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 450
-    cf2: 870
-    cf3: 2570
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 99
     cb2: 75
     cb3: 60
@@ -337,18 +288,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 600
-    pf2: 990
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 90
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 450
+    cf2: 870
+    cf3: 2570
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -356,30 +304,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "U":
+    pb1: 90
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 600
+    pf2: 990
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  U:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 405
-    cf2: 900
-    cf3: 2420
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 88
     cb2: 75
     cb3: 60
@@ -388,18 +333,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 450
-    pf2: 1100
-    pf3: 2350
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 405
+    cf2: 900
+    cf3: 2420
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -407,30 +349,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "V":
+    pb1: 80
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1100
+    pf3: 2350
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  V:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 620
-    cf2: 1220
-    cf3: 2550
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 88
     cb2: 37.5
     cb3: 105
@@ -439,18 +378,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 620
-    pf2: 1220
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 50
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 620
+    cf2: 1220
+    cf3: 2550
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -458,22 +394,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "a":
+    pb1: 80
+    pb2: 50
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 620
+    pf2: 1220
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  a:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 116.6
+    cb2: 76.5
+    cb3: 178
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 600
     cf2: 1430
     cf3: 2500
@@ -482,26 +431,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 116.6
-    cb2: 76.5
-    cb3: 178
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 650
-    pf2: 1220
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 70
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -509,30 +439,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "b":
+    pb1: 130
+    pb2: 70
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 650
+    pf2: 1220
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  b:
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 1
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
-    cf1: 200
-    cf2: 1100
-    cf3: 2150
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 66
     cb2: 75
     cb3: 97.5
@@ -541,18 +468,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 200
-    pf2: 1100
-    pf3: 2150
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 100
-    pb3: 130
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 200
+    cf2: 1100
+    cf3: 2150
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -560,30 +484,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0.9
-  "d":
+    pb1: 60
+    pb2: 100
+    pb3: 130
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1100
+    pf3: 2150
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  d:
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.7
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.9
-    outputGain: 1.5
     caNP: 0
-    cf1: 200
-    cf2: 1600
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 66
     cb2: 75
     cb3: 127.5
@@ -592,18 +513,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 200
-    pf2: 1600
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 100
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 200
+    cf2: 1600
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.7
     pa1: 0
     pa2: 0.3333333333
     pa3: 0.3333333333
@@ -611,6 +529,19 @@ phonemes:
     pa5: 0
     pa6: 0.8333333333
     parallelBypass: 0
+    pb1: 60
+    pb2: 100
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1600
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "d͡z":
     _isAfricate: true
     _isLiquid: false
@@ -618,24 +549,8 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.88
-    outputGain: 1.5
     caNP: 0
-    cf1: 240
-    cf2: 1390
-    cf3: 2530
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 77
     cb2: 45
     cb3: 135
@@ -644,18 +559,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 240
-    pf2: 1390
-    pf3: 2530
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 60
-    pb3: 180
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    cf1: 240
+    cf2: 1390
+    cf3: 2530
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -663,6 +575,19 @@ phonemes:
     pa5: 0
     pa6: 0.8666666667
     parallelBypass: 0
+    pb1: 70
+    pb2: 60
+    pb3: 180
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 240
+    pf2: 1390
+    pf3: 2530
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "d͡ʐ":
     _isAfricate: true
     _isLiquid: false
@@ -670,16 +595,16 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.88
-    outputGain: 1.5
     caNP: 0
+    cb1: 77
+    cb2: 45
+    cb3: 210
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 300
     cf2: 1650
     cf3: 2550
@@ -688,6 +613,36 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 1650
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "d͡ʑ":
+    _isAfricate: true
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 77
     cb2: 45
     cb3: 210
@@ -696,42 +651,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1650
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "d͡ʑ":
-    _isAfricate: true
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.88
-    outputGain: 1.5
-    caNP: 0
     cf1: 300
     cf2: 2100
     cf3: 3100
@@ -740,6 +659,36 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 2100
+    pf3: 3100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "d͡ʒ":
+    _isAfricate: true
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 77
     cb2: 45
     cb3: 210
@@ -748,42 +697,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 2100
-    pf3: 3100
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "d͡ʒ":
-    _isAfricate: true
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.665
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.91
-    outputGain: 1.5
-    caNP: 0
     cf1: 300
     cf2: 1840
     cf3: 2750
@@ -792,26 +705,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 77
-    cb2: 45
-    cb3: 210
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 1840
-    pf3: 2750
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 340
-    pb4: 300
-    pb5: 340
-    pb6: 1430
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0.4666666667
@@ -819,30 +713,27 @@ phonemes:
     pa5: 0.4
     pa6: 0.3833333333
     parallelBypass: 0
-  "e":
+    pb1: 200
+    pb2: 100
+    pb3: 340
+    pb4: 300
+    pb5: 340
+    pb6: 1430
+    pf1: 300
+    pf2: 1840
+    pf3: 2750
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  e:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 430
-    cf2: 1900
-    cf3: 2700
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 77
     cb2: 75
     cb3: 150
@@ -851,18 +742,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 430
-    pf2: 1900
-    pf3: 2700
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 430
+    cf2: 1900
+    cf3: 2700
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -870,30 +758,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "f":
+    pb1: 70
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 430
+    pf2: 1900
+    pf3: 2700
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  f:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 1
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
-    cf1: 340
-    cf2: 1100
-    cf3: 2080
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 220
     cb2: 90
     cb3: 112.5
@@ -902,18 +787,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 340
-    pf2: 1100
-    pf3: 2080
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 120
-    pb3: 150
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 340
+    cf2: 1100
+    cf3: 2080
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -921,30 +803,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0.9
-  "g":
+    pb1: 200
+    pb2: 120
+    pb3: 150
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 340
+    pf2: 1100
+    pf3: 2080
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  g:
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.7
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.9
-    outputGain: 1.5
     caNP: 0
-    cf1: 200
-    cf2: 1990
-    cf3: 2850
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 66
     cb2: 112.5
     cb3: 210
@@ -953,18 +832,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 200
-    pf2: 1990
-    pf3: 2650
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 150
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 200
+    cf2: 1990
+    cf3: 2850
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.7
     pa1: 0
     pa2: 0.8
     pa3: 0.65
@@ -972,44 +848,35 @@ phonemes:
     pa5: 0.3833333333
     pa6: 0.3833333333
     parallelBypass: 0
-  "h":
+    pb1: 60
+    pb2: 150
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1990
+    pf3: 2650
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  h:
     _copyAdjacent: true
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0.9
     fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.955
-    outputGain: 1.5
-  "i":
+    voiceAmplitude: 0
+  i:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 310
-    cf2: 2020
-    cf3: 2960
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 49.5
     cb2: 150
     cb3: 300
@@ -1018,18 +885,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 310
-    pf2: 2020
-    pf3: 2960
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 45
-    pb2: 200
-    pb3: 400
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 310
+    cf2: 2020
+    cf3: 2960
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1037,23 +901,36 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "j":
+    pb1: 45
+    pb2: 200
+    pb3: 400
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 310
+    pf2: 2020
+    pf3: 2960
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  j:
     _isLiquid: false
     _isNasal: false
     _isSemivowel: true
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 44
+    cb2: 187.5
+    cb3: 375
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 260
     cf2: 2070
     cf3: 3020
@@ -1062,6 +939,36 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 40
+    pb2: 250
+    pb3: 500
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 260
+    pf2: 2070
+    pf3: 3020
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  ᴊ:
+    _isLiquid: false
+    _isNasal: false
+    _isSemivowel: true
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 44
     cb2: 187.5
     cb3: 375
@@ -1070,42 +977,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 260
-    pf2: 2070
-    pf3: 3020
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 40
-    pb2: 250
-    pb3: 500
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᴊ":
-    _isLiquid: false
-    _isNasal: false
-    _isSemivowel: true
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.35
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
     cf1: 360
     cf2: 1850
     cf3: 2650
@@ -1114,26 +985,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 44
-    cb2: 187.5
-    cb3: 375
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 360
-    pf2: 1850
-    pf3: 2650
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 40
-    pb2: 250
-    pb3: 500
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1141,30 +993,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "k":
+    pb1: 40
+    pb2: 250
+    pb3: 500
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 360
+    pf2: 1850
+    pf3: 2650
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.35
+  k:
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.85
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 1990
-    cf3: 2850
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 275
     cb2: 120
     cb3: 247.5
@@ -1173,18 +1022,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1990
-    pf3: 2650
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 250
-    pb2: 130
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 300
+    cf2: 1990
+    cf3: 2850
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0.8
     pa3: 0.6333333333
@@ -1192,30 +1038,27 @@ phonemes:
     pa5: 0.3833333333
     pa6: 0.3833333333
     parallelBypass: 0
-  "l":
+    pb1: 250
+    pb2: 130
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 300
+    pf2: 1990
+    pf3: 2650
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  l:
     _isLiquid: true
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 310
-    cf2: 1050
-    cf3: 2880
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 55
     cb2: 75
     cb3: 210
@@ -1224,18 +1067,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 310
-    pf2: 1050
-    pf3: 2880
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 100
-    pb3: 280
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 310
+    cf2: 1050
+    cf3: 2880
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1243,22 +1083,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "m":
+    pb1: 50
+    pb2: 100
+    pb3: 280
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 310
+    pf2: 1050
+    pf3: 2880
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  m:
     _isLiquid: false
     _isNasal: true
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.95
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 1
+    cb1: 90
+    cb2: 200
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 170
     cf1: 472
     cf2: 1100
     cf3: 2130
@@ -1267,26 +1120,7 @@ phonemes:
     cf6: 4900
     cfN0: 450
     cfNP: 240
-    cb1: 90
-    cb2: 200
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 170
-    pf1: 480
-    pf2: 1270
-    pf3: 2130
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 40
-    pb2: 200
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1294,22 +1128,36 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "n":
+    pb1: 40
+    pb2: 200
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 480
+    pf2: 1270
+    pf3: 2130
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+
+  n:
     _isLiquid: false
     _isNasal: true
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.95
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 1
+    cb1: 90
+    cb2: 260
+    cb3: 225
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 170
     cf1: 280
     cf2: 1700
     cf3: 2740
@@ -1318,57 +1166,35 @@ phonemes:
     cf6: 4900
     cfN0: 450
     cfNP: 240
-    cb1: 90
-    cb2: 260
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 170
-    pf1: 480
-    pf2: 1340
-    pf3: 2470
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
     pb1: 40
     pb2: 300
     pb3: 300
     pb4: 250
     pb5: 200
     pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "o":
+    pf1: 480
+    pf2: 1340
+    pf3: 2470
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  o:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 540
-    cf2: 1000
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 120
     cb2: 120
     cb3: 120
@@ -1377,18 +1203,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 540
-    pf2: 1000
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 120
-    pb2: 120
-    pb3: 120
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 540
+    cf2: 1000
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1396,30 +1219,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 120
+    pb2: 120
+    pb3: 120
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 540
+    pf2: 1000
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "oː":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 540
-    cf2: 1000
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 120
     cb2: 120
     cb3: 120
@@ -1428,18 +1248,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 540
-    pf2: 1000
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 120
-    pb2: 120
-    pb3: 120
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 540
+    cf2: 1000
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1447,30 +1264,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "p":
+    pb1: 120
+    pb2: 120
+    pb3: 120
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 540
+    pf2: 1000
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  p:
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.85
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
     caNP: 0
-    cf1: 400
-    cf2: 1100
-    cf3: 2150
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 330
     cb2: 112.5
     cb3: 165
@@ -1479,18 +1293,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 400
-    pf2: 1100
-    pf3: 2150
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 300
-    pb2: 150
-    pb3: 220
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 400
+    cf2: 1100
+    cf3: 2150
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1498,7 +1309,20 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0.9
-  "r":
+    pb1: 300
+    pb2: 150
+    pb3: 220
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 1100
+    pf3: 2150
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  r:
     _isLiquid: false
     _isNasal: false
     _isSemivowel: false
@@ -1507,24 +1331,8 @@ phonemes:
     _isTrill: true
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.08
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.992
-    outputGain: 1.5
     caNP: 0
-    cf1: 200
-    cf2: 1600
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 66
     cb2: 75
     cb3: 127.5
@@ -1533,18 +1341,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 200
-    pf2: 1600
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 100
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 200
+    cf2: 1600
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.08
     pa1: 0
     pa2: 0.3333333333
     pa3: 0.3333333333
@@ -1552,30 +1357,27 @@ phonemes:
     pa5: 0
     pa6: 0.8333333333
     parallelBypass: 0
-  "s":
+    pb1: 60
+    pb2: 100
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1600
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  s:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.712
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.895
-    outputGain: 1.5
     caNP: 0
-    cf1: 320
-    cf2: 1390
-    cf3: 2530
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 220
     cb2: 60
     cb3: 150
@@ -1584,18 +1386,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 320
-    pf2: 1390
-    pf3: 2530
-    pf4: 3300
-    pf5: 3750
-    pf6: 5250
-    pb1: 200
-    pb2: 80
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1210
+    cf1: 320
+    cf2: 1390
+    cf3: 2530
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.9
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1603,30 +1402,27 @@ phonemes:
     pa5: 0
     pa6: 0.75
     parallelBypass: 0
-  "t":
+    pb1: 200
+    pb2: 80
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1210
+    pf1: 320
+    pf2: 1390
+    pf3: 2530
+    pf4: 3300
+    pf5: 3750
+    pf6: 5250
+    voiceAmplitude: 0
+  t:
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.85
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
     caNP: 0
-    cf1: 400
-    cf2: 1600
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 330
     cb2: 90
     cb3: 187.5
@@ -1635,18 +1431,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 400
-    pf2: 1600
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 300
-    pb2: 120
-    pb3: 250
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 400
+    cf2: 1600
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0.4166666667
     pa3: 0.4166666667
@@ -1654,22 +1447,35 @@ phonemes:
     pa5: 0
     pa6: 1
     parallelBypass: 0
-  "t(3":
+    pb1: 300
+    pb2: 120
+    pb3: 250
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 1600
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  t(3:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
+    cb1: 220
+    cb2: 67.5
+    cb3: 225
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 350
     cf2: 1800
     cf3: 2820
@@ -1678,26 +1484,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 220
-    cb2: 67.5
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 350
-    pf2: 1800
-    pf3: 2820
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 90
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0.3666666667
@@ -1705,6 +1492,19 @@ phonemes:
     pa5: 0.4333333333
     pa6: 0.4333333333
     parallelBypass: 0
+    pb1: 200
+    pb2: 90
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 350
+    pf2: 1800
+    pf3: 2820
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
   "t͡s":
     _isAfricate: true
     _isLiquid: false
@@ -1712,24 +1512,8 @@ phonemes:
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.88
-    outputGain: 1.5
     caNP: 0
-    cf1: 320
-    cf2: 1390
-    cf3: 2530
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 220
     cb2: 60
     cb3: 150
@@ -1738,18 +1522,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 320
-    pf2: 1390
-    pf3: 2530
-    pf4: 3300
-    pf5: 3750
-    pf6: 5250
-    pb1: 200
-    pb2: 80
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    cf1: 320
+    cf2: 1390
+    cf3: 2530
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1757,6 +1538,19 @@ phonemes:
     pa5: 0
     pa6: 0.8666666667
     parallelBypass: 0
+    pb1: 200
+    pb2: 80
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 320
+    pf2: 1390
+    pf3: 2530
+    pf4: 3300
+    pf5: 3750
+    pf6: 5250
+    voiceAmplitude: 0
   "t͡ɕ":
     _isAfricate: true
     _isLiquid: false
@@ -1764,16 +1558,16 @@ phonemes:
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.88
-    outputGain: 1.5
     caNP: 0
+    cb1: 220
+    cb2: 75
+    cb3: 225
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 300
     cf2: 2100
     cf3: 3100
@@ -1782,6 +1576,36 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 2100
+    pf3: 3100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  "t͡ʂ":
+    _isAfricate: true
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 220
     cb2: 75
     cb3: 225
@@ -1790,42 +1614,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 2100
-    pf3: 3100
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "t͡ʂ":
-    _isAfricate: true
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.88
-    outputGain: 1.5
-    caNP: 0
     cf1: 300
     cf2: 1650
     cf3: 2550
@@ -1834,6 +1622,36 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 1650
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  "t͡ʃ":
+    _isAfricate: true
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 220
     cb2: 75
     cb3: 225
@@ -1842,42 +1660,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1650
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "t͡ʃ":
-    _isAfricate: true
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.76
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.9
-    outputGain: 1.5
-    caNP: 0
     cf1: 300
     cf2: 1840
     cf3: 2750
@@ -1886,26 +1668,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 220
-    cb2: 75
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 1840
-    pf3: 2750
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 320
-    pb4: 280
-    pb5: 320
-    pb6: 1320
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0.4666666667
@@ -1913,30 +1676,27 @@ phonemes:
     pa5: 0.4
     pa6: 0.3833333333
     parallelBypass: 0
-  "u":
+    pb1: 200
+    pb2: 100
+    pb3: 320
+    pb4: 280
+    pb5: 320
+    pb6: 1320
+    pf1: 300
+    pf2: 1840
+    pf3: 2750
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  u:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 290
-    cf2: 950
-    cf3: 2280
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 71.5
     cb2: 82.5
     cb3: 105
@@ -1945,18 +1705,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 350
-    pf2: 900
-    pf3: 2200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 65
-    pb2: 110
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 290
+    cf2: 950
+    cf3: 2280
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -1964,22 +1721,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "v":
+    pb1: 65
+    pb2: 110
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 900
+    pf3: 2200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  v:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 1
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
+    cb1: 66
+    cb2: 67.5
+    cb3: 90
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 220
     cf2: 1100
     cf3: 2080
@@ -1988,26 +1758,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 66
-    cb2: 67.5
-    cb3: 90
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 220
-    pf2: 1100
-    pf3: 2080
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 90
-    pb3: 120
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2015,83 +1766,28 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0.9
-  "w":
-    _isLiquid: false
-    _isNasal: false
-    _isSemivowel: true
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
+    pb1: 60
+    pb2: 90
+    pb3: 120
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 220
+    pf2: 1100
+    pf3: 2080
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
     voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 290
-    cf2: 610
-    cf3: 2150
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 55
-    cb2: 60
-    cb3: 45
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 290
-    pf2: 610
-    pf3: 2150
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 80
-    pb3: 60
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵂ":
+  w:
     _isLiquid: false
     _isNasal: false
     _isSemivowel: true
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.35
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 290
-    cf2: 610
-    cf3: 2150
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 55
     cb2: 60
     cb3: 45
@@ -2100,18 +1796,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 290
-    pf2: 610
-    pf3: 2150
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 80
-    pb3: 60
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 290
+    cf2: 610
+    cf3: 2150
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2119,31 +1812,76 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "x":
+    pb1: 50
+    pb2: 80
+    pb3: 60
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 290
+    pf2: 610
+    pf3: 2150
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᵂ":
+    # Soft /w/ offglide used for diphthongs (e.g. oʊ -> oᵂ) where the full "w"
+    # can sound too prominent ("oww").
+    _isLiquid: false
+    _isNasal: false
+    _isSemivowel: true
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 55
+    cb2: 60
+    cb3: 45
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 290
+    cf2: 610
+    cf3: 2150
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 50
+    pb2: 80
+    pb3: 60
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 290
+    pf2: 610
+    pf3: 2150
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.35
+  x:
     _isAfricate: false
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0.2
-    fricationAmplitude: 0.712
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1500
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 200
     cb2: 250
     cb3: 300
@@ -2152,18 +1890,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1500
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 150
-    pb2: 200
-    pb3: 250
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    cf1: 500
+    cf2: 1500
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.75
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2171,31 +1906,28 @@ phonemes:
     pa5: 0
     pa6: 0.8
     parallelBypass: 0
-  "y":
+    pb1: 150
+    pb2: 200
+    pb3: 250
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 500
+    pf2: 1500
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  y:
     _isAfricate: false
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.7
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 270
-    cf2: 1750
-    cf3: 2150
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 80
     cb2: 100
     cb3: 150
@@ -2204,18 +1936,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 270
-    pf2: 1750
-    pf3: 2150
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 100
-    pb3: 150
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 270
+    cf2: 1750
+    cf3: 2150
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2223,30 +1952,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 80
+    pb2: 100
+    pb3: 150
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 270
+    pf2: 1750
+    pf3: 2150
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.7
   "yː":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 1800
-    cf3: 2700
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 49.5
     cb2: 150
     cb3: 300
@@ -2255,18 +1981,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1800
-    pf3: 2700
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 45
-    pb2: 200
-    pb3: 400
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 300
+    cf2: 1800
+    cf3: 2700
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2274,22 +1997,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "z":
+    pb1: 45
+    pb2: 200
+    pb3: 400
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 300
+    pf2: 1800
+    pf3: 2700
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  z:
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.712
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.895
-    outputGain: 1.5
     caNP: 0
+    cb1: 77
+    cb2: 45
+    cb3: 135
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 240
     cf2: 1390
     cf3: 2530
@@ -2298,26 +2034,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 77
-    cb2: 45
-    cb3: 135
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 240
-    pf2: 1390
-    pf3: 2530
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 60
-    pb3: 180
-    pb4: 250
-    pb5: 200
-    pb6: 1210
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2325,6 +2042,19 @@ phonemes:
     pa5: 0
     pa6: 0.75
     parallelBypass: 0
+    pb1: 70
+    pb2: 60
+    pb3: 180
+    pb4: 250
+    pb5: 200
+    pb6: 1210
+    pf1: 240
+    pf2: 1390
+    pf3: 2530
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ã":
     _isAfricate: false
     _isLiquid: true
@@ -2332,16 +2062,16 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.75
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0.6
+    cb1: 100
+    cb2: 150
+    cb3: 200
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 150
+    cbNP: 150
     cf1: 650
     cf2: 1150
     cf3: 2400
@@ -2350,6 +2080,36 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 250
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 100
+    pb2: 150
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 650
+    pf2: 1150
+    pf3: 2400
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.75
+  "Ã":
+    _isAfricate: false
+    _isLiquid: true
+    _isNasal: true
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0.6
     cb1: 100
     cb2: 150
     cb3: 200
@@ -2358,42 +2118,6 @@ phonemes:
     cb6: 1000
     cbN0: 150
     cbNP: 150
-    pf1: 650
-    pf2: 1150
-    pf3: 2400
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 150
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "Ã":
-    _isAfricate: false
-    _isLiquid: true
-    _isNasal: true
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.75
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0.6
     cf1: 550
     cf2: 1150
     cf3: 2400
@@ -2402,26 +2126,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 250
-    cb1: 100
-    cb2: 150
-    cb3: 200
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 150
-    cbNP: 150
-    pf1: 550
-    pf2: 1150
-    pf3: 2400
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 150
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2429,30 +2134,28 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 150
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 550
+    pf2: 1150
+    pf3: 2400
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.75
+
   "æ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 620
-    cf2: 1660
-    cf3: 2430
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 77
     cb2: 112.5
     cb3: 240
@@ -2461,18 +2164,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 620
-    pf2: 1660
-    pf3: 2430
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 150
-    pb3: 320
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 620
+    cf2: 1660
+    cf3: 2430
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2480,22 +2180,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 70
+    pb2: 150
+    pb3: 320
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 620
+    pf2: 1660
+    pf3: 2430
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ç":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.807
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
     caNP: 0
+    cb1: 220
+    cb2: 75
+    cb3: 225
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 350
     cf2: 2100
     cf3: 3200
@@ -2504,26 +2217,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 220
-    cb2: 75
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 2100
-    pf3: 3200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    fricationAmplitude: 0.85
     pa1: 0
     pa2: 0
     pa3: 0.4666666667
@@ -2531,22 +2225,35 @@ phonemes:
     pa5: 0.4
     pa6: 0.3833333333
     parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 2100
+    pf3: 3200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
   "ð":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.57
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.91
-    outputGain: 1.5
     caNP: 0
+    cb1: 66
+    cb2: 60
+    cb3: 127.5
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 270
     cf2: 1290
     cf3: 2540
@@ -2555,26 +2262,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 66
-    cb2: 60
-    cb3: 127.5
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 270
-    pf2: 1290
-    pf3: 2540
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 80
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2582,22 +2270,35 @@ phonemes:
     pa5: 0
     pa6: 0.4666666667
     parallelBypass: 0.6333333333
+    pb1: 60
+    pb2: 80
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 270
+    pf2: 1290
+    pf3: 2540
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "õ":
     _isLiquid: false
     _isNasal: true
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.8
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0.6
+    cb1: 120
+    cb2: 120
+    cb3: 120
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 150
+    cbNP: 150
     cf1: 440
     cf2: 1000
     cf3: 2300
@@ -2606,57 +2307,35 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 250
-    cb1: 120
-    cb2: 120
-    cb3: 120
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 150
-    cbNP: 150
-    pf1: 440
-    pf2: 1000
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
     pb1: 120
     pb2: 120
     pb3: 120
     pb4: 250
     pb5: 200
     pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
+    pf1: 440
+    pf2: 1000
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.8
   "ø":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 450
-    cf2: 1400
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 77
     cb2: 75
     cb3: 150
@@ -2665,18 +2344,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 450
-    pf2: 1400
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 450
+    cf2: 1400
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2684,30 +2360,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1400
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "øː":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 450
-    cf2: 1400
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 77
     cb2: 75
     cb3: 150
@@ -2716,18 +2389,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 450
-    pf2: 1400
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 450
+    cf2: 1400
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2735,30 +2405,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1400
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ĩ":
     _isLiquid: false
     _isNasal: true
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.8
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0.6
-    cf1: 310
-    cf2: 2020
-    cf3: 2960
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 250
     cb1: 49.5
     cb2: 150
     cb3: 300
@@ -2767,18 +2434,15 @@ phonemes:
     cb6: 1000
     cbN0: 150
     cbNP: 150
-    pf1: 310
-    pf2: 2020
-    pf3: 2960
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 45
-    pb2: 200
-    pb3: 400
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 310
+    cf2: 2020
+    cf3: 2960
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 250
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2786,30 +2450,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 45
+    pb2: 200
+    pb3: 400
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 310
+    pf2: 2020
+    pf3: 2960
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.8
   "ŋ":
     _isLiquid: false
     _isNasal: true
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.95
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 1
-    cf1: 480
-    cf2: 2000
-    cf3: 2900
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 450
-    cfNP: 240
     cb1: 90
     cb2: 260
     cb3: 225
@@ -2818,18 +2479,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 170
-    pf1: 480
-    pf2: 2000
-    pf3: 2900
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 40
-    pb2: 300
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 480
+    cf2: 2000
+    cf3: 2900
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 450
+    cfNP: 240
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2837,22 +2495,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 40
+    pb2: 300
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 480
+    pf2: 2000
+    pf3: 2900
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "œ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 66
+    cb2: 67.5
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 530
     cf2: 1500
     cf3: 2350
@@ -2861,26 +2532,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 66
-    cb2: 67.5
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 530
-    pf2: 1500
-    pf3: 2350
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 90
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2888,22 +2540,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 60
+    pb2: 90
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 530
+    pf2: 1500
+    pf3: 2350
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ũ":
     _isLiquid: false
     _isNasal: true
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.8
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0.6
+    cb1: 71.5
+    cb2: 82.5
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 150
+    cbNP: 150
     cf1: 290
     cf2: 950
     cf3: 2280
@@ -2912,26 +2577,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 250
-    cb1: 71.5
-    cb2: 82.5
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 150
-    cbNP: 150
-    pf1: 350
-    pf2: 900
-    pf3: 2200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 65
-    pb2: 110
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2939,6 +2585,19 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 65
+    pb2: 110
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 900
+    pf3: 2200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.8
   "ɐ":
     _isAfricate: false
     _isLiquid: false
@@ -2946,16 +2605,16 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 88
+    cb2: 37.5
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 530
     cf2: 1310
     cf3: 2400
@@ -2964,26 +2623,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 88
-    cb2: 37.5
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 620
-    pf2: 1220
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 50
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -2991,30 +2631,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 80
+    pb2: 50
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 620
+    pf2: 1220
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɑ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 700
-    cf2: 1330
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 170
     cb2: 120
     cb3: 150
@@ -3023,18 +2660,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 700
-    pf2: 1330
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 170
-    pb2: 120
-    pb3: 150
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 700
+    cf2: 1330
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3042,22 +2676,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 170
+    pb2: 120
+    pb3: 150
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 700
+    pf2: 1330
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɑj":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 110
+    cb2: 52.5
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 660
     cf2: 1200
     cf3: 2550
@@ -3066,26 +2713,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 110
-    cb2: 52.5
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 660
-    pf2: 1200
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 70
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3093,22 +2721,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 70
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 660
+    pf2: 1200
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɑw":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 88
+    cb2: 52.5
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 640
     cf2: 1230
     cf3: 2550
@@ -3117,26 +2758,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 88
-    cb2: 52.5
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 640
-    pf2: 1230
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 70
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3144,6 +2766,19 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 80
+    pb2: 70
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 640
+    pf2: 1230
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɑ̃":
     _isAfricate: false
     _isLiquid: false
@@ -3151,24 +2786,8 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.7
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0.6
-    cf1: 580
-    cf2: 1050
-    cf3: 2400
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 250
     cb1: 150
     cb2: 200
     cb3: 250
@@ -3177,18 +2796,15 @@ phonemes:
     cb6: 1000
     cbN0: 150
     cbNP: 150
-    pf1: 580
-    pf2: 1050
-    pf3: 2400
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 150
-    pb2: 200
-    pb3: 250
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 580
+    cf2: 1050
+    cf3: 2400
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 250
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3196,30 +2812,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 150
+    pb2: 200
+    pb3: 250
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 580
+    pf2: 1050
+    pf3: 2400
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.7
   "ɒ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 620
-    cf2: 1100
-    cf3: 2520
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 115.5
     cb2: 52.5
     cb3: 86.25
@@ -3228,18 +2841,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 700
-    pf2: 1220
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 70
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 620
+    cf2: 1100
+    cf3: 2520
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3247,30 +2857,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 130
+    pb2: 70
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 700
+    pf2: 1220
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɔ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 450
-    cf2: 870
-    cf3: 2570
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 99
     cb2: 75
     cb3: 60
@@ -3279,18 +2886,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 600
-    pf2: 990
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 90
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 450
+    cf2: 870
+    cf3: 2570
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3298,30 +2902,26 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 90
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 600
+    pf2: 990
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɔ_r":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.95
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 620
-    cf2: 1050
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 140
     cb2: 180
     cb3: 220
@@ -3330,18 +2930,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 620
-    pf2: 1050
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 140
-    pb2: 180
-    pb3: 220
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 620
+    cf2: 1050
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3349,30 +2946,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 140
+    pb2: 180
+    pb3: 220
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 620
+    pf2: 1050
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.95
   "ɔj":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 550
-    cf2: 960
-    cf3: 2400
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 88
     cb2: 37.5
     cb3: 97.5
@@ -3381,18 +2975,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 550
-    pf2: 960
-    pf3: 2400
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 50
-    pb3: 130
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 550
+    cf2: 960
+    cf3: 2400
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3400,30 +2991,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 80
+    pb2: 50
+    pb3: 130
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 550
+    pf2: 960
+    pf3: 2400
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɕ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 2100
-    cf3: 3100
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 220
     cb2: 75
     cb3: 225
@@ -3432,18 +3020,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 2100
-    pf3: 3100
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    cf1: 300
+    cf2: 2100
+    cf3: 3100
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
     pa3: 0.4666666667
@@ -3451,30 +3036,27 @@ phonemes:
     pa5: 0.4
     pa6: 0.3833333333
     parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 2100
+    pf3: 3100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
   "ɘ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 110
     cb2: 45
     cb3: 82.5
@@ -3483,49 +3065,43 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
     pb1: 100
     pb2: 60
     pb3: 110
     pb4: 250
     pb5: 200
     pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ə":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 130
     cb2: 100
     cb3: 160
@@ -3534,18 +3110,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 100
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3553,30 +3126,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 130
+    pb2: 100
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ᵊ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.006
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 130
     cb2: 100
     cb3: 160
@@ -3585,18 +3155,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 100
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3604,22 +3171,36 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 130
+    pb2: 100
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+
   "ᵊᵉ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.006
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 130
+    cb2: 100
+    cb3: 160
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 480
     cf2: 1600
     cf3: 2500
@@ -3628,26 +3209,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 130
-    cb2: 100
-    cb3: 160
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 480
-    pf2: 1600
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 100
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3655,30 +3217,28 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 130
+    pb2: 100
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 480
+    pf2: 1600
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+
   "ə͡l":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 110
     cb2: 45
     cb3: 82.5
@@ -3687,18 +3247,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 60
-    pb3: 110
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3706,22 +3263,35 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 60
+    pb3: 110
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɚ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.95
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
+    cb1: 110
+    cb2: 70
+    cb3: 120
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 500
     cf2: 1300
     cf3: 1800
@@ -3730,26 +3300,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 110
-    cb2: 70
-    cb3: 120
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 500
-    pf2: 1300
-    pf3: 1800
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 80
-    pb3: 130
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3757,30 +3308,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 80
+    pb3: 130
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1300
+    pf3: 1800
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.95
   "ɛ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 530
-    cf2: 1750
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 90
     cb2: 110
     cb3: 170
@@ -3789,18 +3337,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 530
-    pf2: 1750
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 90
-    pb2: 110
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 530
+    cf2: 1750
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3808,30 +3353,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 90
+    pb2: 110
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 530
+    pf2: 1750
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɜ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 500
-    cf2: 1400
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 110
     cb2: 45
     cb3: 82.5
@@ -3840,18 +3382,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 500
-    pf2: 1400
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 60
-    pb3: 110
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 500
+    cf2: 1400
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3859,30 +3398,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 60
+    pb3: 110
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 500
+    pf2: 1400
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɝ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 460
-    cf2: 1300
-    cf3: 1700
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 110
     cb2: 70
     cb3: 120
@@ -3891,18 +3427,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 460
-    pf2: 1300
-    pf3: 1700
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 80
-    pb3: 130
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 460
+    cf2: 1300
+    cf3: 1700
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -3910,30 +3443,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 80
+    pb3: 130
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 460
+    pf2: 1300
+    pf3: 1700
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɡ":
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 1
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
-    cf1: 200
-    cf2: 1990
-    cf3: 2850
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 66
     cb2: 112.5
     cb3: 210
@@ -3942,18 +3472,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 200
-    pf2: 1990
-    pf3: 2850
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 150
-    pb3: 280
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 200
+    cf2: 1990
+    cf3: 2850
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0.5
     pa3: 0.45
@@ -3961,6 +3488,19 @@ phonemes:
     pa5: 0.3833333333
     pa6: 0.3833333333
     parallelBypass: 0
+    pb1: 60
+    pb2: 150
+    pb3: 280
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1990
+    pf3: 2850
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
   "ɣ":
     _isAfricate: false
     _isLiquid: true
@@ -3968,24 +3508,8 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.55
     aspirationAmplitude: 0.05
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.998
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 1500
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 120
     cb2: 150
     cb3: 200
@@ -3994,18 +3518,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1500
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 150
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 300
+    cf2: 1500
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -4013,30 +3534,27 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 100
+    pb2: 150
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 300
+    pf2: 1500
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.55
   "ɤ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: true
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 620
-    cf2: 1220
-    cf3: 2550
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 88
     cb2: 37.5
     cb3: 105
@@ -4045,914 +3563,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 620
-    pf2: 1220
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 50
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɧ":
-    _isAfricate: false
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0.2
-    fricationAmplitude: 0.712
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
-    caNP: 0
-    cf1: 400
-    cf2: 1200
-    cf3: 2200
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 200
-    cb2: 250
-    cb3: 300
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 500
-    pf2: 1500
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 150
-    pb2: 200
-    pb3: 250
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0.8
-    parallelBypass: 0
-  "ɨ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.88
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 320
-    cf2: 1300
-    cf3: 2300
-    cf4: 3200
-    cf5: 3600
-    cf6: 4800
-    cfN0: 250
-    cfNP: 200
-    cb1: 70
-    cb2: 110
-    cb3: 140
-    cb4: 260
-    cb5: 220
-    cb6: 1100
-    cbN0: 100
-    cbNP: 100
-    pf1: 320
-    pf2: 1200
-    pf3: 2300
-    pf4: 3200
-    pf5: 3600
-    pf6: 4800
-    pb1: 70
-    pb2: 110
-    pb3: 140
-    pb4: 260
-    pb5: 220
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɯ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 330
-    cf2: 1150
-    cf3: 2400
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 55
-    cb2: 75
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 330
-    pf2: 1150
-    pf3: 2400
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 100
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɪ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 360
-    cf2: 1800
-    cf3: 2570
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 55
-    cb2: 75
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 400
-    pf2: 1800
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 100
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɫ":
-    _isLiquid: true
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 310
-    cf2: 1050
-    cf3: 2880
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 55
-    cb2: 75
-    cb3: 210
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 310
-    pf2: 1050
-    pf3: 2880
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 100
-    pb3: 280
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɲ":
-    _isLiquid: false
-    _isNasal: true
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 1
-    cf1: 280
-    cf2: 1900
-    cf3: 2900
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 450
-    cfNP: 216
-    cb1: 44
-    cb2: 225
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 280
-    pf2: 1900
-    pf3: 2900
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 40
-    pb2: 300
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɵ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 450
-    cf2: 1400
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 77
-    cb2: 75
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 450
-    pf2: 1400
-    pf3: 2500
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɹ":
-    _isLiquid: true
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 310
-    cf2: 1300
-    cf3: 1650
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 77
-    cb2: 80
-    cb3: 135
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 310
-    pf2: 1100
-    pf3: 2050
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 150
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɻ":
-    _isLiquid: true
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 250
-    cf2: 1200
-    cf3: 1750
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 77
-    cb2: 80
-    cb3: 135
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 250
-    pf2: 1100
-    pf3: 2100
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 150
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ɽ":
-    _isLiquid: false
-    _isNasal: false
-    _isSemivowel: false
-    _isStop: false
-    _isTap: true
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.35
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.965
-    outputGain: 1.5
-    caNP: 0
-    cf1: 200
-    cf2: 1600
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 66
-    cb2: 75
-    cb3: 127.5
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 200
-    pf2: 1600
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 100
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0.3333333333
-    pa3: 0.3333333333
-    pa4: 0
-    pa5: 0
-    pa6: 0.8333333333
-    parallelBypass: 0
-  "ɾ":
-    _isLiquid: false
-    _isNasal: false
-    _isSemivowel: false
-    _isStop: false
-    _isTap: true
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.08
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.992
-    outputGain: 1.5
-    caNP: 0
-    cf1: 200
-    cf2: 1600
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 66
-    cb2: 75
-    cb3: 127.5
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 200
-    pf2: 1600
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 100
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0.3333333333
-    pa3: 0.3333333333
-    pa4: 0
-    pa5: 0
-    pa6: 0.8333333333
-    parallelBypass: 0
-  "ʁ":
-    _isAfricate: false
-    _isLiquid: true
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.55
-    aspirationAmplitude: 0.1
-    fricationAmplitude: 0.2
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.975
-    outputGain: 1.5
-    caNP: 0
-    cf1: 400
-    cf2: 1100
-    cf3: 1600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 120
-    cb2: 150
-    cb3: 200
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 400
-    pf2: 1100
-    pf3: 1600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 120
-    pb2: 150
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ʂ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
-    caNP: 0
-    cf1: 300
-    cf2: 1650
-    cf3: 2550
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 220
-    cb2: 75
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 1650
-    pf3: 2550
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "ʃ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.807
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.885
-    outputGain: 1.5
-    caNP: 0
-    cf1: 300
-    cf2: 1840
-    cf3: 2750
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 220
-    cb2: 75
-    cb3: 225
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 1840
-    pf3: 2750
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 100
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1210
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.33
-    parallelBypass: 0
-  "ʉ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 320
-    cf2: 1500
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 71.5
-    cb2: 82.5
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 350
-    pf2: 1500
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 65
-    pb2: 110
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ʊ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 405
-    cf2: 900
-    cf3: 2420
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 88
-    cb2: 75
-    cb3: 60
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 450
-    pf2: 1100
-    pf3: 2350
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵁ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 405
-    cf2: 1150
-    cf3: 2420
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 88
-    cb2: 75
-    cb3: 60
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 450
-    pf2: 1250
-    pf3: 2350
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ʌ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
     cf1: 620
     cf2: 1220
     cf3: 2550
@@ -4961,77 +3571,98 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 110
-    cb2: 110
-    cb3: 170
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 80
+    pb2: 50
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
     pf1: 620
     pf2: 1220
     pf3: 2550
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    pb1: 110
-    pb2: 110
-    pb3: 170
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ʍ":
+    voiceAmplitude: 0.9
+  "ɧ":
+    _isAfricate: false
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0.75
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.962
-    outputGain: 1.5
+    aspirationAmplitude: 0.2
     caNP: 0
-    cf1: 290
-    cf2: 610
-    cf3: 2150
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 55
-    cb2: 60
-    cb3: 45
+    cb1: 200
+    cb2: 250
+    cb3: 300
     cb4: 250
     cb5: 200
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 290
-    pf2: 610
-    pf3: 2150
+    cf1: 400
+    cf2: 1200
+    cf3: 2200
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.75
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0.8
+    parallelBypass: 0
+    pb1: 150
+    pb2: 200
+    pb3: 250
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 500
+    pf2: 1500
+    pf3: 2500
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    pb1: 50
-    pb2: 80
-    pb3: 60
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    voiceAmplitude: 0
+  "ɨ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 70
+    cb2: 110
+    cb3: 140
+    cb4: 260
+    cb5: 220
+    cb6: 1100
+    cbN0: 100
+    cbNP: 100
+    cf1: 320
+    cf2: 1300
+    cf3: 2300
+    cf4: 3200
+    cf5: 3600
+    cf6: 4800
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -5039,30 +3670,117 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "ʎ":
-    _isLiquid: true
+    pb1: 70
+    pb2: 110
+    pb3: 140
+    pb4: 260
+    pb5: 220
+    pb6: 1100
+    pf1: 320
+    pf2: 1200
+    pf3: 2300
+    pf4: 3200
+    pf5: 3600
+    pf6: 4800
+    voiceAmplitude: 0.88
+  "ɯ":
+    _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
+    _isVowel: true
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 1800
-    cf3: 3000
+    cb1: 55
+    cb2: 75
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 330
+    cf2: 1150
+    cf3: 2400
     cf4: 3300
     cf5: 3750
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 50
+    pb2: 100
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 330
+    pf2: 1150
+    pf3: 2400
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɪ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 55
+    cb2: 75
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 360
+    cf2: 1800
+    cf3: 2570
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 50
+    pb2: 100
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 1800
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɫ":
+    _isLiquid: true
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 55
     cb2: 75
     cb3: 210
@@ -5071,70 +3789,60 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1800
-    pf3: 3000
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
+    cf1: 310
+    cf2: 1050
+    cf3: 2880
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
     pb1: 50
     pb2: 100
     pb3: 280
     pb4: 250
     pb5: 200
     pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ʏ":
-    _isAfricate: false
+    pf1: 310
+    pf2: 1050
+    pf3: 2880
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɲ":
     _isLiquid: false
-    _isNasal: false
+    _isNasal: true
     _isStop: false
     _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.75
+    _isVowel: false
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 350
-    cf2: 1650
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 100
-    cb2: 180
-    cb3: 250
+    caNP: 1
+    cb1: 44
+    cb2: 225
+    cb3: 225
     cb4: 250
     cb5: 200
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 350
-    pf2: 1650
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 180
-    pb3: 250
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 280
+    cf2: 1900
+    cf3: 2900
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 450
+    cfNP: 216
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -5142,22 +3850,310 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-  "ʐ":
+    pb1: 40
+    pb2: 300
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 280
+    pf2: 1900
+    pf3: 2900
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɵ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
     _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
+    _isVowel: true
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
+    cb1: 77
+    cb2: 75
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 450
+    cf2: 1400
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1400
+    pf3: 2500
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɹ":
+    _isLiquid: true
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 77
+    cb2: 80
+    cb3: 135
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 310
+    cf2: 1300
+    cf3: 1650
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 150
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 310
+    pf2: 1100
+    pf3: 2050
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɻ":
+    _isLiquid: true
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 77
+    cb2: 80
+    cb3: 135
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 250
+    cf2: 1200
+    cf3: 1750
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 150
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 250
+    pf2: 1100
+    pf3: 2100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɽ":
+    _isLiquid: false
+    _isNasal: false
+    _isSemivowel: false
+    _isStop: false
+    _isTap: true
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 66
+    cb2: 75
+    cb3: 127.5
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 200
+    cf2: 1600
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.35
+    pa1: 0
+    pa2: 0.3333333333
+    pa3: 0.3333333333
+    pa4: 0
+    pa5: 0
+    pa6: 0.8333333333
+    parallelBypass: 0
+    pb1: 60
+    pb2: 100
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1600
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ɾ":
+    _isLiquid: false
+    _isNasal: false
+    _isSemivowel: false
+    _isStop: false
+    _isTap: true
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 66
+    cb2: 75
+    cb3: 127.5
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 200
+    cf2: 1600
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.08
+    pa1: 0
+    pa2: 0.3333333333
+    pa3: 0.3333333333
+    pa4: 0
+    pa5: 0
+    pa6: 0.8333333333
+    parallelBypass: 0
+    pb1: 60
+    pb2: 100
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 200
+    pf2: 1600
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʁ":
+    _isAfricate: false
+    _isLiquid: true
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0.1
+    caNP: 0
+    cb1: 120
+    cb2: 150
+    cb3: 200
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 400
+    cf2: 1100
+    cf3: 1600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.2
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 120
+    pb2: 150
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 1100
+    pf3: 1600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.55
+  "ʂ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 220
+    cb2: 75
+    cb3: 225
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
     cf1: 300
     cf2: 1650
     cf3: 2550
@@ -5166,100 +4162,43 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 77
-    cb2: 45
-    cb3: 210
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
     pf1: 300
     pf2: 1650
     pf3: 2550
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    pb1: 70
-    pb2: 60
-    pb3: 280
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "ʑ":
+    voiceAmplitude: 0
+  "ʃ":
     _isLiquid: false
     _isNasal: false
     _isStop: false
-    _isVoiced: true
+    _isVoiced: false
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0.95
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.87
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 2100
-    cf3: 3100
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 77
-    cb2: 45
-    cb3: 210
+    cb1: 220
+    cb2: 75
+    cb3: 225
     cb4: 250
     cb5: 200
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 2100
-    pf3: 3100
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 60
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
-  "ʒ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.665
-    voiceTurbulenceAmplitude: 0.004
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.9
-    outputGain: 1.5
-    caNP: 0
     cf1: 300
     cf2: 1840
     cf3: 2750
@@ -5268,6 +4207,262 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.33
+    parallelBypass: 0
+    pb1: 200
+    pb2: 100
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1210
+    pf1: 300
+    pf2: 1840
+    pf3: 2750
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  "ʉ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 71.5
+    cb2: 82.5
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 320
+    cf2: 1500
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 65
+    pb2: 110
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 1500
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʊ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 88
+    cb2: 75
+    cb3: 60
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 405
+    cf2: 900
+    cf3: 2420
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 80
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1100
+    pf3: 2350
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+
+  "ᵁ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 88
+    cb2: 75
+    cb3: 60
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 405
+    cf2: 1150
+    cf3: 2420
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 80
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1250
+    pf3: 2350
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʌ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 110
+    cb2: 110
+    cb3: 170
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 620
+    cf2: 1220
+    cf3: 2550
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 110
+    pb2: 110
+    pb3: 170
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 620
+    pf2: 1220
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʍ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0.75
+    caNP: 0
+    cb1: 55
+    cb2: 60
+    cb3: 45
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 290
+    cf2: 610
+    cf3: 2150
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 50
+    pb2: 80
+    pb3: 60
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 290
+    pf2: 610
+    pf3: 2150
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  "ʝ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    _isSemivowel: true
+    aspirationAmplitude: 0
+    caNP: 0
     cb1: 77
     cb2: 45
     cb3: 210
@@ -5276,808 +4471,6 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1840
-    pf3: 2750
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 60
-    pb3: 280
-    pb4: 250
-    pb5: 200
-    pb6: 1210
-    pa1: 0
-    pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.28
-    parallelBypass: 0
-  "ʔ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: true
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0.7
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.935
-    outputGain: 1.5
-    caNP: 0
-    cf1: 100
-    cf2: 150
-    cf3: 200
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 66
-    cb2: 67.5
-    cb3: 90
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 100
-    pf2: 150
-    pf3: 200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 60
-    pb2: 90
-    pb3: 120
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "β":
-    _isAfricate: false
-    _isLiquid: true
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    voiceAmplitude: 0.6
-    aspirationAmplitude: 0.05
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.998
-    outputGain: 1.5
-    caNP: 0
-    cf1: 300
-    cf2: 1000
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 120
-    cb2: 100
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 1000
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 100
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "θ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: false
-    _isVowel: false
-    voiceAmplitude: 0
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.712
-    voiceTurbulenceAmplitude: 0
-    glottalOpenQuotient: 0
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.895
-    outputGain: 1.5
-    caNP: 0
-    cf1: 320
-    cf2: 1290
-    cf3: 2540
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 220
-    cb2: 67.5
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 320
-    pf2: 1290
-    pf3: 2540
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 200
-    pb2: 90
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1100
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0.42
-    parallelBypass: 0.6
-  "ᴀ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 800
-    cf2: 1250
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 150.6
-    cb2: 110
-    cb3: 178
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 350
-    pf2: 1350
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 70
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᴇ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 350
-    cf2: 2150
-    cf3: 2950
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 77
-    cb2: 85
-    cb3: 165
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 400
-    pf2: 2200
-    pf3: 2950
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᴏ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 610
-    cf2: 1000
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 120
-    cb2: 160
-    cb3: 200
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 600
-    pf2: 990
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 90
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᴐ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 580
-    cf2: 1100
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 120
-    cb2: 160
-    cb3: 200
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 560
-    pf2: 990
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 90
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᴒ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.85
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 780
-    cf2: 1100
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 220
-    cb2: 150
-    cb3: 160
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 660
-    pf2: 990
-    pf3: 2570
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 180
-    pb2: 120
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᴜ":
-    _isLiquid: false
-    _isNasal: true
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.8
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0.6
-    cf1: 405
-    cf2: 900
-    cf3: 2420
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 250
-    cb1: 88
-    cb2: 75
-    cb3: 60
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 150
-    cbNP: 150
-    pf1: 450
-    pf2: 1100
-    pf3: 2350
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 80
-    pb2: 100
-    pb3: 80
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵃ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.35
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 650
-    cf2: 1430
-    cf3: 2500
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 116.6
-    cb2: 76.5
-    cb3: 178
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 700
-    pf2: 1220
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 130
-    pb2: 70
-    pb3: 160
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵒ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 540
-    cf2: 1100
-    cf3: 2300
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 120
-    cb2: 120
-    cb3: 120
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 540
-    pf2: 1100
-    pf3: 2300
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 120
-    pb2: 120
-    pb3: 120
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵻ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 360
-    cf2: 1650
-    cf3: 2450
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 55
-    cb2: 75
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 400
-    pf2: 1650
-    pf3: 2450
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 100
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵾ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 1
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 290
-    cf2: 1350
-    cf3: 2280
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 71.5
-    cb2: 82.5
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 350
-    pf2: 1250
-    pf3: 2200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 65
-    pb2: 110
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ᵿ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0
-    cf1: 290
-    cf2: 1250
-    cf3: 2280
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    cb1: 71.5
-    cb2: 82.5
-    cb3: 105
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 350
-    pf2: 1200
-    pf3: 2200
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 65
-    pb2: 110
-    pb3: 140
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ẽ":
-    _isLiquid: false
-    _isNasal: true
-    _isStop: false
-    _isVoiced: true
-    _isVowel: true
-    voiceAmplitude: 0.8
-    aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.012
-    glottalOpenQuotient: 0.37
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
-    caNP: 0.6
-    cf1: 430
-    cf2: 1900
-    cf3: 2700
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 250
-    cb1: 77
-    cb2: 75
-    cb3: 150
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 150
-    cbNP: 150
-    pf1: 430
-    pf2: 1900
-    pf3: 2700
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 100
-    pb3: 200
-    pb4: 250
-    pb5: 200
-    pb6: 1000
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-  "ʝ":
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    _isSemivowel: true
-    voiceAmplitude: 0.9
-    aspirationAmplitude: 0
-    fricationAmplitude: 0.15
-    voiceTurbulenceAmplitude: 0.008
-    glottalOpenQuotient: 0.4
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 1.9
-    outputGain: 1.5
-    caNP: 0
     cf1: 300
     cf2: 2100
     cf3: 3100
@@ -6086,26 +4479,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    cb1: 77
-    cb2: 45
-    cb3: 210
-    cb4: 250
-    cb5: 200
-    cb6: 1000
-    cbN0: 100
-    cbNP: 100
-    pf1: 300
-    pf2: 2100
-    pf3: 3100
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 70
-    pb2: 60
-    pb3: 300
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    fricationAmplitude: 0.15
     pa1: 0
     pa2: 0
     pa3: 0
@@ -6113,6 +4487,19 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
+    pb1: 70
+    pb2: 60
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 2100
+    pf3: 3100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
 
   "ʎ":
     _isLiquid: true
@@ -6120,24 +4507,8 @@ phonemes:
     _isStop: false
     _isVoiced: true
     _isVowel: false
-    voiceAmplitude: 0.9
     aspirationAmplitude: 0
-    fricationAmplitude: 0
-    voiceTurbulenceAmplitude: 0.01
-    glottalOpenQuotient: 0.39
-    vibratoPitchOffset: 0
-    vibratoSpeed: 0
-    preFormantGain: 2
-    outputGain: 1.5
     caNP: 0
-    cf1: 300
-    cf2: 1800
-    cf3: 3020
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
     cb1: 55
     cb2: 120
     cb3: 210
@@ -6146,18 +4517,15 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    pf1: 300
-    pf2: 1800
-    pf3: 3020
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    pb1: 50
-    pb2: 150
-    pb3: 280
-    pb4: 250
-    pb5: 200
-    pb6: 1000
+    cf1: 300
+    cf2: 1800
+    cf3: 3020
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
     pa1: 0
     pa2: 0
     pa3: 0
@@ -6165,4 +4533,873 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-
+    pb1: 50
+    pb2: 150
+    pb3: 280
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 300
+    pf2: 1800
+    pf3: 3020
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʏ":
+    _isAfricate: false
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 100
+    cb2: 180
+    cb3: 250
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 350
+    cf2: 1650
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 100
+    pb2: 180
+    pb3: 250
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 1650
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.75
+  "ʐ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 77
+    cb2: 45
+    cb3: 210
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 300
+    cf2: 1650
+    cf3: 2550
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 70
+    pb2: 60
+    pb3: 280
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 1650
+    pf3: 2550
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʑ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 77
+    cb2: 45
+    cb3: 210
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 300
+    cf2: 2100
+    cf3: 3100
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.3833333333
+    parallelBypass: 0
+    pb1: 70
+    pb2: 60
+    pb3: 300
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 300
+    pf2: 2100
+    pf3: 3100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʒ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 77
+    cb2: 45
+    cb3: 210
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 300
+    cf2: 1840
+    cf3: 2750
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 1
+    pa1: 0
+    pa2: 0
+    pa3: 0.4666666667
+    pa4: 0.4
+    pa5: 0.4
+    pa6: 0.28
+    parallelBypass: 0
+    pb1: 70
+    pb2: 60
+    pb3: 280
+    pb4: 250
+    pb5: 200
+    pb6: 1210
+    pf1: 300
+    pf2: 1840
+    pf3: 2750
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ʔ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: true
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0.7
+    caNP: 0
+    cb1: 66
+    cb2: 67.5
+    cb3: 90
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 100
+    cf2: 150
+    cf3: 200
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 60
+    pb2: 90
+    pb3: 120
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 100
+    pf2: 150
+    pf3: 200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  "β":
+    _isAfricate: false
+    _isLiquid: true
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0.05
+    caNP: 0
+    cb1: 120
+    cb2: 100
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 300
+    cf2: 1000
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 100
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 300
+    pf2: 1000
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.6
+  "θ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 220
+    cb2: 67.5
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 320
+    cf2: 1290
+    cf3: 2540
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.9
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0.42
+    parallelBypass: 0.6
+    pb1: 200
+    pb2: 90
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1100
+    pf1: 320
+    pf2: 1290
+    pf3: 2540
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  "ᴀ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 150.6
+    cb2: 110
+    cb3: 178
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 800
+    cf2: 1250
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 130
+    pb2: 70
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 1350
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᴇ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 77
+    cb2: 85
+    cb3: 165
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 350
+    cf2: 2150
+    cf3: 2950
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 2200
+    pf3: 2950
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᴏ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 120
+    cb2: 160
+    cb3: 200
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 610
+    cf2: 1000
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 90
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 600
+    pf2: 990
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᴐ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 120
+    cb2: 160
+    cb3: 200
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 580
+    cf2: 1100
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 90
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 560
+    pf2: 990
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᴒ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 220
+    cb2: 150
+    cb3: 160
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 780
+    cf2: 1100
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 180
+    pb2: 120
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 660
+    pf2: 990
+    pf3: 2570
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.85
+  "ᴜ":
+    _isLiquid: false
+    _isNasal: true
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0.6
+    cb1: 88
+    cb2: 75
+    cb3: 60
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 150
+    cbNP: 150
+    cf1: 405
+    cf2: 900
+    cf3: 2420
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 250
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 80
+    pb2: 100
+    pb3: 80
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 450
+    pf2: 1100
+    pf3: 2350
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.8
+  "ᵃ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 116.6
+    cb2: 76.5
+    cb3: 178
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 650
+    cf2: 1430
+    cf3: 2500
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 130
+    pb2: 70
+    pb3: 160
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 700
+    pf2: 1220
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᵒ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 120
+    cb2: 120
+    cb3: 120
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 540
+    cf2: 1100
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 120
+    pb2: 120
+    pb3: 120
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 540
+    pf2: 1100
+    pf3: 2300
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᵻ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 55
+    cb2: 75
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 360
+    cf2: 1650
+    cf3: 2450
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 50
+    pb2: 100
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 400
+    pf2: 1650
+    pf3: 2450
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ᵾ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 71.5
+    cb2: 82.5
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 290
+    cf2: 1350
+    cf3: 2280
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 65
+    pb2: 110
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 1250
+    pf3: 2200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 1
+  "ᵿ":
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 71.5
+    cb2: 82.5
+    cb3: 105
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 290
+    cf2: 1250
+    cf3: 2280
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 65
+    pb2: 110
+    pb3: 140
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 350
+    pf2: 1200
+    pf3: 2200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.9
+  "ẽ":
+    _isLiquid: false
+    _isNasal: true
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0.6
+    cb1: 77
+    cb2: 75
+    cb3: 150
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 150
+    cbNP: 150
+    cf1: 430
+    cf2: 1900
+    cf3: 2700
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 250
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 70
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 430
+    pf2: 1900
+    pf3: 2700
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.8

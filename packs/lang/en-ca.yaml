@@ -47,7 +47,6 @@ normalization:
     VOWELS: ["a", "e", "i", "o", "u", "ɐ", "ə", "ɜ", "ɝ", "ɑ", "ɒ", "ɔ", "ɛ", "æ", "ʊ", "ɪ", "ᵾ", "ᵿ", "ᴏ", "ᴐ", "ᴒ", "ã", "ẽ", "ĩ", "õ", "ũ", "ᴜ"]
 
   replacements:
-
     # Letter name "A" can sound too much like a strong "ay" when FACE is rewritten
     # to a vowel+glide (eɪ -> ej). For the *standalone* letter token only, keep it
     # as a long monophthong.
@@ -86,16 +85,6 @@ normalization:
 
     # Make FACE (eɪ) sound like a real diphthong instead of a flat "e".
     # Using a semivowel offglide gives a clearer movement in our formant table.
-    # But when FACE is followed by a consonant (e.g. donate = ...eɪt), a full-strength /j/
-    # can sound a bit too "sung". Use a softer glide there.
-    - from: "eɪ"
-      to:   "eᴊ"
-      when:
-        atWordEnd: false
-    - from: "e͡ɪ"
-      to:   "e͡ᴊ"
-      when:
-        atWordEnd: false
     - from: "eɪ"
       to:   "ej"
     - from: "e͡ɪ"
@@ -106,14 +95,6 @@ normalization:
       to:   "oʊ"
     - from: "ə͡ʊ"
       to:   "o͡ʊ"
-
-    # Word-final NEAR: keep the nucleus softer (KIT) in North American speech.
-    # Base en.yaml rewrites ɪɹ -> iɹ at word end, which can make "fear/hear" too bright.
-    # This pack also swaps ɹ -> ɻ later, so just match the pre-swap form here.
-    - from: "iɹ"
-      to:   "ɪɹ"
-      when:
-        atWordEnd: true
 
     # Treat GOAT (oʊ) as vowel+glide so it doesn't split into two vowel beats
     # (e.g. "colon" sounding like "coh-oh-len").
@@ -186,22 +167,6 @@ normalization:
     - from: "ɜ"
       to: "ɝ"
 
-    # In many common words ending in -art (start/smart/cart/apart/depart...),
-    # /ɑːɹt/ can sound overly open as a separate "ah" + "r" segment in a formant synth.
-    # Nudge it toward a more central "uh" before word-final /t/.
-    - from: "ɑːɹt"
-      to:   "ʌɹt"
-      when:
-        atWordEnd: true
-    - from: "ɑɹt"
-      to:   "ʌɹt"
-      when:
-        atWordEnd: true
-
     # Use the dedicated US/CA /r/ variant.
     - from: "ɹ"
       to: "ɻ"
-    # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
-    - from: "d͡ʒ"
-      to:   "dʒ"
-
