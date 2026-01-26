@@ -436,17 +436,74 @@ Recent versions of the frontend can optionally run **modular “passes”** over
 
 All settings below live under `settings:` in a language YAML (for example `packs/lang/en.yaml`). Passes are **disabled by default** unless `enabled: true` is set for that pass.
 
-\1
+### Coarticulation
 
-Coarticulation can also run in a **graduated** mode where the strength is scaled by how close the nearest vowel is (instead of treating “has adjacent vowel” as an on/off switch). This helps clusters stay clearer at high speed without making consonants feel “edgy”.
+The coarticulation pass makes consonants “aim” toward a vowel-dependent locus instead of snapping to a single fixed consonant target. In practice this reduces edgy segment boundaries (especially in stop clusters) while keeping consonants intelligible at high speech rates.
 
-Optional knobs (flat keys under `settings:`):
+```yaml
+settings:
+  # Master switch for this pass.
+  coarticulationEnabled: true
+
+  # Overall amount of locus pull (0.0–1.0). Higher = stronger vowel influence on consonants.
+  coarticulationStrength: 0.25
+
+  # How far into the consonant we allow the transition to extend (0.0–1.0 of the token).
+  # Higher = the consonant spends more time “moving” toward the vowel target.
+  coarticulationTransitionExtent: 0.35
+
+  # If true, the coarticulation blend is allowed to start inside the consonant,
+  # not only at the consonant→vowel boundary.
+  coarticulationFadeIntoConsonants: true
+
+  # Optional scaling for word-initial consonants (often useful to keep word onsets crisp).
+  coarticulationWordInitialFadeScale: 1.0
+```
+
+#### Graduated coarticulation
+
+When `coarticulationGraduated` is enabled, the vowel influence is **scaled by vowel proximity** rather than being treated as an on/off switch. Adjacent vowels get the strongest pull; the effect tapers off as you move through consonant clusters.
 
 ```yaml
 settings:
   coarticulationGraduated: true
   coarticulationAdjacencyMaxConsonants: 2   # 0=only immediate neighbors, 1=allow C_V, 2=allow CC_V
 ```
+
+#### Locus targets
+
+These define the vowel-independent “anchor” targets the pass pulls toward for common places of articulation. Think of them as the baseline F2 goals for labial / alveolar / velar stops and related consonants.
+
+```yaml
+settings:
+  coarticulationLabialF2Locus: 800
+  coarticulationAlveolarF2Locus: 1800
+  coarticulationVelarF2Locus: 2200
+```
+
+#### Velar pinch (optional)
+
+Velars often sound more natural when F2 and F3 move closer (“pinch”) near high-front vowel contexts. This option applies a controlled pinch when the adjacent vowel’s F2 suggests a fronting context.
+
+```yaml
+settings:
+  coarticulationVelarPinchEnabled: true
+
+  # Only apply pinch when the neighboring vowel’s F2 is at/above this threshold.
+  coarticulationVelarPinchThreshold: 1800
+
+  # Scales F2 during pinch (values < 1.0 pull it down toward the pinch band).
+  coarticulationVelarPinchF2Scale: 0.9
+
+  # Target F3 to blend toward during pinch.
+  coarticulationVelarPinchF3: 2400
+```
+
+Tuning notes:
+- If consonants start feeling “too vowel-y”, lower `coarticulationStrength` or `coarticulationTransitionExtent`.
+- If clusters get mushy at speed, keep `coarticulationGraduated: true` and reduce `coarticulationAdjacencyMaxConsonants` to `1`.
+- If word onsets lose bite, lower `coarticulationWordInitialFadeScale`.
+
 
 ### Boundary smoothing
 
@@ -494,7 +551,7 @@ Tuning notes:
 - Larger `windowMs` = the limiter has more room to soften big jumps (try 30–40ms if you want fewer “corners”).
 - If you want the effect only inside words, keep `applyAcrossWordBoundary: false`.
 
-\2
+### Phrase-final lengthening
 
 Duration matters as much as pitch for prosody. Phrase-final lengthening scales the last (and optionally the penultimate) syllable/token durations near clause boundaries.
 
