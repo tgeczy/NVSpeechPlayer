@@ -436,38 +436,65 @@ Recent versions of the frontend can optionally run **modular “passes”** over
 
 All settings below live under `settings:` in a language YAML (for example `packs/lang/en.yaml`). Passes are **disabled by default** unless `enabled: true` is set for that pass.
 
-### Coarticulation
+\1
 
-Coarticulation modifies consonants based on adjacent vowels (F2/F3 locus targets, and optional velar pinch). This can improve intelligibility and reduce the “separate chunks” feeling at high rates.
+Coarticulation can also run in a **graduated** mode where the strength is scaled by how close the nearest vowel is (instead of treating “has adjacent vowel” as an on/off switch). This helps clusters stay clearer at high speed without making consonants feel “edgy”.
+
+Optional knobs (flat keys under `settings:`):
 
 ```yaml
 settings:
-  coarticulation:
-    enabled: true
-
-    # Overall intensity of locus nudges (0..1-ish). Start conservative.
-    strength: 0.28
-
-    # Portion of the consonant token affected (0..1).
-    transitionExtent: 0.35
-
-    # If true, slightly smooths consonant onsets into the following vowel.
-    fadeIntoConsonants: true
-
-    # F2 locus targets (Hz-like units) by place of articulation.
-    labialF2Locus: 800
-    alveolarF2Locus: 1800
-    velarF2Locus: 2200
-
-    # Velar pinch (/k,g,ŋ/ before front vowels): bring F2/F3 closer.
-    velarPinch:
-      enabled: true
-      thresholdF2: 1800
-      f2Scale: 0.90
-      f3Target: 2400
+  coarticulationGraduated: true
+  coarticulationAdjacencyMaxConsonants: 2   # 0=only immediate neighbors, 1=allow C_V, 2=allow CC_V
 ```
 
-### Phrase-final lengthening
+### Boundary smoothing
+
+Boundary smoothing increases crossfade time only at “harsh” boundaries (for example vowel→stop, stop→vowel, vowel→fricative). It’s a simple way to reduce micro-clicks and make syllables feel less separated without changing phoneme targets.
+
+```yaml
+settings:
+  boundarySmoothing:
+    enabled: true
+
+    # Milliseconds at speed=1.0
+    vowelToStopFadeMs: 12
+    stopToVowelFadeMs: 10
+    vowelToFricFadeMs: 6
+```
+
+Tuning notes:
+- If speech starts sounding “mushy”, reduce `stopToVowelFadeMs` first.
+- If you still hear sharp releases on stops, raise `vowelToStopFadeMs` a little (2–4ms steps).
+
+### Trajectory limiting
+
+Trajectory limiting caps how fast key formants are allowed to move across token boundaries (best applied to **F2/F3** first). If a transition would require an extremely fast jump, the frontend spreads the change by increasing the boundary crossfade (up to `windowMs`).
+
+```yaml
+settings:
+  trajectoryLimit:
+    enabled: true
+    applyTo: [cf2, cf3]     # start here (F2/F3)
+
+    # Maximum allowed change rate in Hz per ms (at speed=1.0)
+    maxHzPerMs:
+      cf2: 18
+      cf3: 22
+
+    # Upper cap on how much we are allowed to “spread” a change (ms at speed=1.0)
+    windowMs: 25
+
+    # If false, do not apply the limiter across word boundaries.
+    applyAcrossWordBoundary: false
+```
+
+Tuning notes:
+- Smaller `maxHzPerMs` = smoother transitions (but too small can blur consonant identity).
+- Larger `windowMs` = the limiter has more room to soften big jumps (try 30–40ms if you want fewer “corners”).
+- If you want the effect only inside words, keep `applyAcrossWordBoundary: false`.
+
+\2
 
 Duration matters as much as pitch for prosody. Phrase-final lengthening scales the last (and optionally the penultimate) syllable/token durations near clause boundaries.
 
