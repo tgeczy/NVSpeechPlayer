@@ -718,6 +718,38 @@ static void calculateTimes(std::vector<Token>& tokens, const PackSet& pack, doub
     }
 
     t.durationMs = dur;
+
+    // ============================================
+    // BOUNDARY SMOOTHING
+    // ============================================
+    // Apply longer fade times at phoneme type transitions
+    // to reduce "clicky" consonant boundaries.
+    if (lang.boundarySmoothingEnabled && last && !t.silence && !last->silence) {
+      const bool lastIsVowel = tokenIsVowel(*last);
+      const bool currIsStop = tokenIsStop(t);
+      const bool currIsAfricate = tokenIsAfricate(t);
+      const bool currIsFric = (!tokenIsVoiced(t) && !currIsStop && !currIsAfricate && !tokenIsVowel(t));
+      const bool currIsVowel = tokenIsVowel(t);
+      const bool lastIsStop = tokenIsStop(*last);
+      const bool lastIsAfricate = tokenIsAfricate(*last);
+      
+      // Vowel -> Stop/Affricate transition
+      if (lastIsVowel && (currIsStop || currIsAfricate)) {
+        double smoothFade = lang.boundarySmoothingVowelToStopFadeMs / curSpeed;
+        if (smoothFade > fade) fade = smoothFade;
+      }
+      // Stop/Affricate -> Vowel transition
+      else if ((lastIsStop || lastIsAfricate) && currIsVowel) {
+        double smoothFade = lang.boundarySmoothingStopToVowelFadeMs / curSpeed;
+        if (smoothFade > fade) fade = smoothFade;
+      }
+      // Vowel -> Fricative transition
+      else if (lastIsVowel && currIsFric) {
+        double smoothFade = lang.boundarySmoothingVowelToFricFadeMs / curSpeed;
+        if (smoothFade > fade) fade = smoothFade;
+      }
+    }
+
     t.fadeMs = fade;
     last = &t;
   }
@@ -1828,6 +1860,19 @@ void emitFrames(
   // very fast modulation settings (e.g. 2ms cycles) still behave as expected.
   constexpr double kMinPhaseMs = 0.25;
 
+
+  // ============================================
+  // TRAJECTORY LIMITING STATE
+  // ============================================
+  // Track previous frame formant values for rate-of-change limiting.
+  // This reduces harsh transitions between vowels and consonants.
+  const LanguagePack& lang = pack.lang;
+  static double prevCf2 = 0.0, prevCf3 = 0.0, prevPf2 = 0.0, prevPf3 = 0.0;
+  static bool hasPrevFrame = false;
+  
+  // Reset state at start of each utterance
+  hasPrevFrame = false;
+
   for (const Token& t : tokens) {
     if (t.silence || !t.def) {
       cb(userData, nullptr, t.durationMs, t.fadeMs, userIndexBase);
@@ -1945,6 +1990,66 @@ void emitFrames(
 
     nvspFrontend_Frame frame;
     std::memcpy(&frame, base, sizeof(frame));
+
+
+    // ============================================
+    // TRAJECTORY LIMITING
+    // ============================================
+    // Limit how fast formant frequencies can change to reduce harsh transitions.
+    if (lang.trajectoryLimitEnabled && hasPrevFrame && t.durationMs > 0.0) {
+      double maxDelta;
+      
+      // cf2 limiting
+      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::cf2))) != 0) {
+        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::cf2));
+        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
+          maxDelta = it->second * t.durationMs;
+          double delta = frame.cf2 - prevCf2;
+          if (delta > maxDelta) frame.cf2 = prevCf2 + maxDelta;
+          else if (delta < -maxDelta) frame.cf2 = prevCf2 - maxDelta;
+        }
+      }
+      
+      // cf3 limiting
+      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::cf3))) != 0) {
+        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::cf3));
+        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
+          maxDelta = it->second * t.durationMs;
+          double delta = frame.cf3 - prevCf3;
+          if (delta > maxDelta) frame.cf3 = prevCf3 + maxDelta;
+          else if (delta < -maxDelta) frame.cf3 = prevCf3 - maxDelta;
+        }
+      }
+      
+      // pf2 limiting
+      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::pf2))) != 0) {
+        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::pf2));
+        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
+          maxDelta = it->second * t.durationMs;
+          double delta = frame.pf2 - prevPf2;
+          if (delta > maxDelta) frame.pf2 = prevPf2 + maxDelta;
+          else if (delta < -maxDelta) frame.pf2 = prevPf2 - maxDelta;
+        }
+      }
+      
+      // pf3 limiting
+      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::pf3))) != 0) {
+        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::pf3));
+        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
+          maxDelta = it->second * t.durationMs;
+          double delta = frame.pf3 - prevPf3;
+          if (delta > maxDelta) frame.pf3 = prevPf3 + maxDelta;
+          else if (delta < -maxDelta) frame.pf3 = prevPf3 - maxDelta;
+        }
+      }
+    }
+    
+    // Update previous frame values for next iteration
+    prevCf2 = frame.cf2;
+    prevCf3 = frame.cf3;
+    prevPf2 = frame.pf2;
+    prevPf3 = frame.pf3;
+    hasPrevFrame = true;
 
     cb(userData, &frame, t.durationMs, t.fadeMs, userIndexBase);
   }

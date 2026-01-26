@@ -2,6 +2,7 @@
 #define NVSP_FRONTEND_PACK_H
 
 #include <cstdint>
+#include <array>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -344,6 +345,21 @@ double lengthContrastPreGeminateVowelScale = 0.85;
   bool coarticulationFadeIntoConsonants = true;
   double coarticulationWordInitialFadeScale = 1.0;
 
+  // If true, scale coarticulation strength down when the nearest vowel is not
+  // directly adjacent (e.g. consonant clusters). This makes the effect more
+  // graded instead of "all-or-nothing".
+  bool coarticulationGraduated = true;
+
+  // Maximum number of intervening consonants to look through when estimating
+  // vowel adjacency for graduated coarticulation.
+  //
+  // 0 = only immediate vowel neighbors
+  // 1 = allow one consonant in between (CCV/VC C)
+  // 2+ = allow deeper clusters
+  //
+  // Stored as a double for YAML simplicity; treated as an int in code.
+  double coarticulationAdjacencyMaxConsonants = 2.0;
+
   double coarticulationLabialF2Locus = 800.0;
   double coarticulationAlveolarF2Locus = 1800.0;
   double coarticulationVelarF2Locus = 2200.0;
@@ -352,6 +368,36 @@ double lengthContrastPreGeminateVowelScale = 0.85;
   double coarticulationVelarPinchThreshold = 1800.0;
   double coarticulationVelarPinchF2Scale = 0.9;
   double coarticulationVelarPinchF3 = 2400.0;
+
+  // Boundary crossfade / smoothing (optional).
+  //
+  // This is a simple way to soften harsh segment joins by increasing the fade
+  // time only for certain boundary types.
+  bool boundarySmoothingEnabled = false;
+  double boundarySmoothingVowelToStopFadeMs = 12.0;
+  double boundarySmoothingStopToVowelFadeMs = 10.0;
+  double boundarySmoothingVowelToFricFadeMs = 6.0;
+
+  // Trajectory limiting (optional).
+  //
+  // Caps how quickly selected formant targets are allowed to change at token
+  // boundaries by increasing the incoming token's fade (crossfade) time.
+  //
+  // - applyMask selects which fields are limited (bits by FieldId index).
+  // - maxHzPerMs gives per-field max slope.
+  // - windowMs caps how far we will extend a boundary fade (ms at speed=1.0).
+  bool trajectoryLimitEnabled = false;
+  std::uint64_t trajectoryLimitApplyMask =
+      (1ULL << static_cast<int>(FieldId::cf2)) |
+      (1ULL << static_cast<int>(FieldId::cf3));
+  std::array<double, kFrameFieldCount> trajectoryLimitMaxHzPerMs = [] {
+    std::array<double, kFrameFieldCount> a{};
+    a[static_cast<int>(FieldId::cf2)] = 18.0;
+    a[static_cast<int>(FieldId::cf3)] = 22.0;
+    return a;
+  }();
+  double trajectoryLimitWindowMs = 25.0;
+  bool trajectoryLimitApplyAcrossWordBoundary = false;
 
   
 

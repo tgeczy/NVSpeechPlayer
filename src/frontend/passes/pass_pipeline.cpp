@@ -8,6 +8,8 @@
 #include "reduction.h"
 #include "liquid_dynamics.h"
 #include "length_contrast.h"
+#include "boundary_smoothing.h"
+#include "trajectory_limit.h"
 
 namespace nvsp_frontend {
 
@@ -22,6 +24,9 @@ const PassDesc kPasses[] = {
     {"reduction", PassStage::PostTiming, &passes::runReduction},
     {"liquid_dynamics", PassStage::PostTiming, &passes::runLiquidDynamics},
     {"length_contrast", PassStage::PostTiming, &passes::runLengthContrast},
+
+    {"boundary_smoothing", PassStage::PostTiming, &passes::runBoundarySmoothing},
+    {"trajectory_limit", PassStage::PostTiming, &passes::runTrajectoryLimit},
 
     {"microprosody", PassStage::PostPitch, &passes::runMicroprosody},
 };

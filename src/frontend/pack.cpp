@@ -396,6 +396,8 @@ getNum("primaryStressDiv", lp.primaryStressDiv);
   getNum("coarticulationTransitionExtent", lp.coarticulationTransitionExtent);
   getBool("coarticulationFadeIntoConsonants", lp.coarticulationFadeIntoConsonants);
   getNum("coarticulationWordInitialFadeScale", lp.coarticulationWordInitialFadeScale);
+  getBool("coarticulationGraduated", lp.coarticulationGraduated);
+  getNum("coarticulationAdjacencyMaxConsonants", lp.coarticulationAdjacencyMaxConsonants);
   getNum("coarticulationLabialF2Locus", lp.coarticulationLabialF2Locus);
   getNum("coarticulationAlveolarF2Locus", lp.coarticulationAlveolarF2Locus);
   getNum("coarticulationVelarF2Locus", lp.coarticulationVelarF2Locus);
@@ -403,6 +405,59 @@ getNum("primaryStressDiv", lp.primaryStressDiv);
   getNum("coarticulationVelarPinchThreshold", lp.coarticulationVelarPinchThreshold);
   getNum("coarticulationVelarPinchF2Scale", lp.coarticulationVelarPinchF2Scale);
   getNum("coarticulationVelarPinchF3", lp.coarticulationVelarPinchF3);
+
+  // Boundary smoothing / crossfade (optional)
+  getBool("boundarySmoothingEnabled", lp.boundarySmoothingEnabled);
+  getNum("boundarySmoothingVowelToStopFadeMs", lp.boundarySmoothingVowelToStopFadeMs);
+  getNum("boundarySmoothingStopToVowelFadeMs", lp.boundarySmoothingStopToVowelFadeMs);
+  getNum("boundarySmoothingVowelToFricFadeMs", lp.boundarySmoothingVowelToFricFadeMs);
+
+  // Trajectory limiting (optional)
+  getBool("trajectoryLimitEnabled", lp.trajectoryLimitEnabled);
+  getNum("trajectoryLimitWindowMs", lp.trajectoryLimitWindowMs);
+  getBool("trajectoryLimitApplyAcrossWordBoundary", lp.trajectoryLimitApplyAcrossWordBoundary);
+
+  // Flat-key parsing for trajectoryLimit fields (NVDA settings panel compatibility)
+  {
+    std::string applyToStr;
+    getStr("trajectoryLimitApplyTo", applyToStr);
+    if (!applyToStr.empty()) {
+      std::uint64_t mask = 0;
+      std::string cleaned;
+      for (char c : applyToStr) {
+        if (c == '[' || c == ']') continue;
+        cleaned += c;
+      }
+      size_t pos = 0;
+      while (pos < cleaned.size()) {
+        size_t end = cleaned.find(',', pos);
+        if (end == std::string::npos) end = cleaned.size();
+        std::string field = cleaned.substr(pos, end - pos);
+        size_t start = field.find_first_not_of(" \t");
+        if (start != std::string::npos) {
+          size_t last = field.find_last_not_of(" \t");
+          field = field.substr(start, last - start + 1);
+        }
+        if (!field.empty()) {
+          FieldId fid;
+          if (parseFieldId(field, fid)) {
+            mask |= (1ULL << static_cast<int>(fid));
+          }
+        }
+        pos = end + 1;
+      }
+      if (mask != 0) lp.trajectoryLimitApplyMask = mask;
+    }
+    double valCf2 = 0.0, valCf3 = 0.0, valPf2 = 0.0, valPf3 = 0.0;
+    getNum("trajectoryLimitMaxHzPerMsCf2", valCf2);
+    getNum("trajectoryLimitMaxHzPerMsCf3", valCf3);
+    getNum("trajectoryLimitMaxHzPerMsPf2", valPf2);
+    getNum("trajectoryLimitMaxHzPerMsPf3", valPf3);
+    if (valCf2 > 0.0) lp.trajectoryLimitMaxHzPerMs[static_cast<size_t>(FieldId::cf2)] = valCf2;
+    if (valCf3 > 0.0) lp.trajectoryLimitMaxHzPerMs[static_cast<size_t>(FieldId::cf3)] = valCf3;
+    if (valPf2 > 0.0) lp.trajectoryLimitMaxHzPerMs[static_cast<size_t>(FieldId::pf2)] = valPf2;
+    if (valPf3 > 0.0) lp.trajectoryLimitMaxHzPerMs[static_cast<size_t>(FieldId::pf3)] = valPf3;
+  }
 
 // Liquid dynamics (optional)
 getBool("liquidDynamicsEnabled", lp.liquidDynamicsEnabled);
@@ -467,6 +522,53 @@ getBool("positionalAllophonesGlottalReinforcementEnabled", lp.positionalAllophon
 getNum("positionalAllophonesGlottalReinforcementDurationMs", lp.positionalAllophonesGlottalReinforcementDurationMs);
 
 // Nested settings blocks inside `settings:` (optional; override flat keys)
+if (const yaml_min::Node* bs = settings.get("boundarySmoothing"); bs && bs->isMap()) {
+  getBoolFrom(*bs, "enabled", lp.boundarySmoothingEnabled);
+  getNumFrom(*bs, "vowelToStopFadeMs", lp.boundarySmoothingVowelToStopFadeMs);
+  getNumFrom(*bs, "stopToVowelFadeMs", lp.boundarySmoothingStopToVowelFadeMs);
+  getNumFrom(*bs, "vowelToFricFadeMs", lp.boundarySmoothingVowelToFricFadeMs);
+}
+
+if (const yaml_min::Node* tl = settings.get("trajectoryLimit"); tl && tl->isMap()) {
+  getBoolFrom(*tl, "enabled", lp.trajectoryLimitEnabled);
+  getNumFrom(*tl, "windowMs", lp.trajectoryLimitWindowMs);
+  getBoolFrom(*tl, "applyAcrossWordBoundary", lp.trajectoryLimitApplyAcrossWordBoundary);
+
+  // applyTo: [cf2, cf3, ...]
+  {
+    std::vector<std::string> fields;
+    getStrListFrom(*tl, "applyTo", fields);
+    if (!fields.empty()) {
+      std::uint64_t mask = 0;
+      for (const std::string& name : fields) {
+        FieldId fid;
+        if (parseFieldId(name, fid)) {
+          mask |= (1ULL << static_cast<int>(fid));
+        }
+      }
+      if (mask != 0) lp.trajectoryLimitApplyMask = mask;
+    }
+  }
+
+  // maxHzPerMs:
+  //   cf2: 18
+  //   cf3: 22
+  if (const yaml_min::Node* mh = tl->get("maxHzPerMs"); mh && mh->isMap()) {
+    for (const auto& kv : mh->map) {
+      const std::string& key = kv.first;
+      const yaml_min::Node& v = kv.second;
+      double hzPerMs = 0.0;
+      if (!v.asNumber(hzPerMs)) continue;
+      FieldId fid;
+      if (!parseFieldId(key, fid)) continue;
+      const int idx = static_cast<int>(fid);
+      if (idx >= 0 && idx < static_cast<int>(kFrameFieldCount)) {
+        lp.trajectoryLimitMaxHzPerMs[static_cast<size_t>(idx)] = hzPerMs;
+      }
+    }
+  }
+}
+
 if (const yaml_min::Node* ld = settings.get("liquidDynamics"); ld && ld->isMap()) {
   getBoolFrom(*ld, "enabled", lp.liquidDynamicsEnabled);
 
