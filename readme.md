@@ -100,6 +100,37 @@ This also makes it easier to share improvements:
 - phoneme tuning in `phonemes.yaml`,
 - language and dialect behavior in `packs/lang/<lang>.yaml` and `packs/lang/<lang-region>.yaml`.
 
+## Advanced Multilingual Tokenization
+
+The C++ frontend features a **greedy longest-match tokenizer** designed for robust multilingual support. This allows language packs to define multi-character phonemes of arbitrary length without requiring tie bars in the phoneme keys.
+
+### Why This Matters
+
+Different languages represent sounds in fundamentally different ways:
+
+| Language | Challenge | Solution |
+|----------|-----------|----------|
+| **Russian** | Palatalized consonants (`nʲ`, `lʲ`, `mʲ`) are single phonemic units | Greedy matching finds `nʲ` as one token, not `n` + `ʲ` |
+| **Polish** | Complex affricates and palatalization | Multi-character keys like `t͡ɕ`, `d͡ʑ` match correctly |
+| **Hungarian** | Geminate consonants, unique vowels | Proper handling of length marks and diacritics |
+| **English** | Syllabic L/R in words like "bottle", "butter" | Normalization splits `ə͡l` → `ə` + `l` for proper lateral quality |
+
+### Directional Tie-Bar Flexibility
+
+The tokenizer intelligently handles IPA tie bars (◌͡◌) with **directional matching**:
+
+- ✅ Input `n͡ʲ` matches pack key `nʲ` — extra tie bars in input are ignored
+- ✅ Input `nʲ` matches pack key `nʲ` — exact matches always work  
+- ❌ Input `əl` won't match pack key `ə͡l` — respects normalization decisions
+
+This means:
+- **Pack authors** can define phonemes with or without tie bars as they prefer
+- **eSpeak variations** in tie bar usage are handled gracefully
+- **Normalization rules** (like splitting syllabic L for English) are respected
+
+### Thread-Safe Design
+
+The sorted phoneme key list is computed once during pack loading and stored immutably in the `PackSet` structure, making the tokenizer fully thread-safe for concurrent speech synthesis.
 ### Language pack loading and inheritance
 The loader merges packs in this order:
 1. `packs/lang/default.yaml`
