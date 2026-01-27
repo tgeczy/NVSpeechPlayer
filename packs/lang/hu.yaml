@@ -21,7 +21,7 @@ settings:
   lengthenedVowelFinalCodaScale: 0.90
   applyLengthenedScaleToVowelsOnly: false
   # Hungarian occlusives are often softer; avoid clickiness:
-  stopClosureMode: vowel-and-cluster
+  stopClosureMode: always
   stopClosureAfterNasalsEnabled: true
   stopClosureVowelGapMs: 30.0
   stopClosureVowelFadeMs: 7.0
@@ -37,15 +37,17 @@ settings:
   huShortAVowelScale: 0.85
 
   phraseFinalLengtheningNucleusOnlyMode: true
-  phraseFinalLengtheningEnabled: true
+  phraseFinalLengtheningEnabled: false
   coarticulationVelarPinchEnabled: false
   coarticulationFadeIntoConsonants: false
   coarticulationEnabled: false
   microprosodyEnabled: true
-  microprosodyVoicelessF0RaiseEnabled: false
+  microprosodyVoicelessF0RaiseEnabled: true
   microprosodyVoicedF0LowerEnabled: true
-  nasalizationAnticipatoryEnabled: true
+  nasalizationAnticipatoryEnabled: false
   positionalAllophonesGlottalReinforcementEnabled: false
+  autoTieDiphthongs: false
+  liquidDynamicsEnabled: false
 normalization:
   preReplacements:
     - from: "aː"

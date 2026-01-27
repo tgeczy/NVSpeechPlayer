@@ -41,7 +41,13 @@ settings:
   # Over-lengthening can make clusters (like "-dcast") sound overly separated.
 
   spellingDiphthongMode: none
+  liquidDynamicsEnabled: false
+  lengthContrastEnabled: false
+  positionalAllophonesEnabled: false
+  positionalAllophonesGlottalReinforcementEnabled: true
 normalization:
+  classes:
+    SYLLABIC_L_PREV_CONSONANT: ["p", "b", "t", "d", "k", "ɡ", "g", "f", "v", "θ", "ð", "s", "z", "ʃ", "ʒ", "h", "m", "n", "ŋ", "ɹ", "r", "ɾ", "j", "w", "l", "ɫ", "t͡ʃ", "d͡ʒ", "t͡s", "d͡z", "ʔ"]
   replacements:
     # eSpeak sometimes emits plain 'a' for TRAP. Your Python normalized that to 'æ'.
     - from: "a"
@@ -61,10 +67,6 @@ normalization:
     # Accent-specific vowel set tweaks live in per-region packs:
     #  - en-gb.yaml (BATH broadening, UK THOUGHT rounding, non-rhotic NURSE)
     #  - en-us.yaml (rhotic NURSE, narrow BATH, etc.)
-    # Make /d͡ʒ/ a little less 'soft' by keeping the stop+fricative components explicit.
-    - from: "d͡ʒ"
-      to:   "dʒ"
-
     # FOOT vowel: eSpeak uses /ʊ/ in many common words ("book", "good", "could").
     # Our English-tuned variant opens it slightly so it doesn't collapse into GOOSE-like "boo".
     - from: "ʊ"
@@ -89,6 +91,28 @@ normalization:
       when:
         atWordEnd: true
 
+
+
+    # Word-final /ɛɹ/ (square, fair, dare, where, there...):
+    # In a formant synth, the vowel can get pulled into /r/ too quickly,
+    # making it sound a bit "short" and overly rounded.
+    # Add a very short schwa-like transition (ᵊ) before /r/.
+    - from: "ɛɹ"
+      to:   "ɛᵊɹ"
+      when:
+        atWordEnd: true
+
+    # Word-final -teen/-tein "...tiːn" (thirteen, fourteen, fifteen, protein):
+    # eSpeak often stresses the first syllable, which can make the /tiːn/ tail
+    # sound clipped in our timing model.
+    # Give the final syllable a light secondary stress so the vowel doesn't collapse.
+    - from: "tiːn"
+      # In en-us we shorten length-marked vowels in final codas.
+      # If we keep ː here, the net timing can become too clipped ("tihn").
+      # Removing the length mark keeps the vowel quality, but avoids the extra final-coda shortening.
+      to:   "tˌin"
+      when:
+        atWordEnd: true
     # Word-final syllabic /l/ (able, google, poodle, people, etc.)
     # eSpeak usually emits these as schwa+L (ə l) or sometimes syllabic l (l̩).
     #
@@ -103,23 +127,29 @@ normalization:
       to:   "ol"
       when:
         atWordEnd: true
+        afterClass: SYLLABIC_L_PREV_CONSONANT
     - from: "əɫ"
       to:   "ol"
       when:
         atWordEnd: true
+        afterClass: SYLLABIC_L_PREV_CONSONANT
     - from: "@l"
       to:   "ol"
       when:
         atWordEnd: true
+        afterClass: SYLLABIC_L_PREV_CONSONANT
     - from: "@ɫ"
       to:   "ol"
       when:
         atWordEnd: true
+        afterClass: SYLLABIC_L_PREV_CONSONANT
     - from: "l̩"
       to:   "ol"
       when:
         atWordEnd: true
+        afterClass: SYLLABIC_L_PREV_CONSONANT
     - from: "ɫ̩"
       to:   "ol"
       when:
         atWordEnd: true
+        afterClass: SYLLABIC_L_PREV_CONSONANT

@@ -521,20 +521,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.9
     pa1: 0
-    pa2: 0.8
-    pa3: 0.6333333333
-    pa4: 0.3666666667
-    pa5: 0.3833333333
-    pa6: 0.3833333333
-    parallelBypass: 0
+    pa2: 0.7
+    pa3: 0.58
+    pa4: 0.33
+    pa5: 0.3
+    pa6: 0.24
+    parallelBypass: 0.18
     pb1: 250
-    pb2: 130
-    pb3: 200
+    pb2: 150
+    pb3: 240
     pb4: 250
     pb5: 200
-    pb6: 1000
+    pb6: 1200
     pf1: 300
     pf2: 2200
     pf3: 2800
@@ -566,20 +566,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.7
+    fricationAmplitude: 0.6
     pa1: 0
-    pa2: 0.3333333333
-    pa3: 0.3333333333
-    pa4: 0
-    pa5: 0
-    pa6: 0.8333333333
-    parallelBypass: 0
+    pa2: 0.28
+    pa3: 0.28
+    pa4: 0.15
+    pa5: 0.12
+    pa6: 0.45
+    parallelBypass: 0.12
     pb1: 60
-    pb2: 100
-    pb3: 170
+    pb2: 110
+    pb3: 190
     pb4: 250
     pb5: 200
-    pb6: 1000
+    pb6: 1200
     pf1: 200
     pf2: 1600
     pf3: 2600
@@ -750,20 +750,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.95
     pa1: 0
     pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
+    pa3: 0.44
+    pa4: 0.36
+    pa5: 0.34
+    pa6: 0.22
+    parallelBypass: 0.15
     pb1: 200
     pb2: 100
-    pb3: 340
+    pb3: 360
     pb4: 300
     pb5: 340
-    pb6: 1430
+    pb6: 1500
     pf1: 300
     pf2: 1840
     pf3: 2750
@@ -843,16 +843,16 @@ phonemes:
     fricationAmplitude: 1
     pa1: 0
     pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
+    pa3: 0.22
+    pa4: 0.18
+    pa5: 0.12
     pa6: 0
-    parallelBypass: 0.9
+    parallelBypass: 0.45
     pb1: 200
     pb2: 120
-    pb3: 150
-    pb4: 250
-    pb5: 200
+    pb3: 300
+    pb4: 400
+    pb5: 450
     pb6: 1000
     pf1: 340
     pf2: 1100
@@ -885,20 +885,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.7
+    fricationAmplitude: 0.65
     pa1: 0
     pa2: 0.8
     pa3: 0.65
     pa4: 0.3666666667
-    pa5: 0.3833333333
-    pa6: 0.3833333333
-    parallelBypass: 0
+    pa5: 0.33
+    pa6: 0.27
+    parallelBypass: 0.14
     pb1: 60
     pb2: 150
     pb3: 200
     pb4: 250
-    pb5: 200
-    pb6: 1000
+    pb5: 220
+    pb6: 1200
     pf1: 200
     pf2: 1990
     pf3: 2650
@@ -1029,20 +1029,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.9
     pa1: 0
-    pa2: 0.8
-    pa3: 0.6333333333
-    pa4: 0.3666666667
-    pa5: 0.3833333333
-    pa6: 0.3833333333
-    parallelBypass: 0
+    pa2: 0.7
+    pa3: 0.55
+    pa4: 0.32
+    pa5: 0.3
+    pa6: 0.24
+    parallelBypass: 0.18
     pb1: 250
-    pb2: 130
-    pb3: 200
+    pb2: 150
+    pb3: 240
     pb4: 250
     pb5: 200
-    pb6: 1000
+    pb6: 1200
     pf1: 300
     pf2: 1990
     pf3: 2650
@@ -1392,26 +1392,26 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.9
+    fricationAmplitude: 0.92
     pa1: 0
     pa2: 0
     pa3: 0
     pa4: 0
-    pa5: 0
-    pa6: 0.75
-    parallelBypass: 0
+    pa5: 0.04
+    pa6: 0.68
+    parallelBypass: 0.26
     pb1: 200
     pb2: 80
     pb3: 200
     pb4: 250
-    pb5: 200
-    pb6: 1210
+    pb5: 360
+    pb6: 1700
     pf1: 320
     pf2: 1390
     pf3: 2530
     pf4: 3300
-    pf5: 3750
-    pf6: 5250
+    pf5: 3900
+    pf6: 5100
     voiceAmplitude: 0
   t:
     _isLiquid: false
@@ -1437,20 +1437,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.9
     pa1: 0
-    pa2: 0.4166666667
-    pa3: 0.4166666667
-    pa4: 0
-    pa5: 0
-    pa6: 1
-    parallelBypass: 0
+    pa2: 0.35
+    pa3: 0.35
+    pa4: 0.22
+    pa5: 0.18
+    pa6: 0.55
+    parallelBypass: 0.18
     pb1: 300
-    pb2: 120
-    pb3: 250
+    pb2: 150
+    pb3: 280
     pb4: 250
     pb5: 200
-    pb6: 1000
+    pb6: 1200
     pf1: 400
     pf2: 1600
     pf3: 2600
@@ -1533,21 +1533,21 @@ phonemes:
     pa2: 0
     pa3: 0
     pa4: 0
-    pa5: 0
-    pa6: 0.8666666667
-    parallelBypass: 0
+    pa5: 0.015
+    pa6: 0.82
+    parallelBypass: 0.12
     pb1: 200
     pb2: 80
     pb3: 200
     pb4: 250
-    pb5: 200
-    pb6: 1100
+    pb5: 300
+    pb6: 1500
     pf1: 320
     pf2: 1390
     pf3: 2530
     pf4: 3300
-    pf5: 3750
-    pf6: 5250
+    pf5: 3900
+    pf6: 5200
     voiceAmplitude: 0
   "t͡ɕ":
     _isAfricate: true
@@ -1666,20 +1666,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.95
     pa1: 0
     pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.3833333333
-    parallelBypass: 0
+    pa3: 0.44
+    pa4: 0.36
+    pa5: 0.34
+    pa6: 0.26
+    parallelBypass: 0.15
     pb1: 200
     pb2: 100
-    pb3: 320
+    pb3: 340
     pb4: 280
     pb5: 320
-    pb6: 1320
+    pb6: 1500
     pf1: 300
     pf2: 1840
     pf3: 2750
@@ -1848,26 +1848,26 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.75
+    fricationAmplitude: 1
     pa1: 0
     pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0.8
-    parallelBypass: 0
+    pa3: 0.4
+    pa4: 0.22
+    pa5: 0.08
+    pa6: 0.04
+    parallelBypass: 0.5
     pb1: 150
     pb2: 200
-    pb3: 250
-    pb4: 250
-    pb5: 200
-    pb6: 1100
+    pb3: 450
+    pb4: 500
+    pb5: 550
+    pb6: 1200
     pf1: 500
     pf2: 1500
     pf3: 2500
     pf4: 3300
     pf5: 3750
-    pf6: 4900
+    pf6: 4600
     voiceAmplitude: 0
   y:
     _isAfricate: false
@@ -2067,9 +2067,9 @@ phonemes:
     cb6: 1000
     cbN0: 100
     cbNP: 100
-    cf1: 820
-    cf2: 1550
-    cf3: 2750
+    cf1: 800
+    cf2: 1400
+    cf3: 2600
     cf4: 3300
     cf5: 3750
     cf6: 4900
@@ -2089,9 +2089,9 @@ phonemes:
     pb4: 250
     pb5: 200
     pb6: 1000
-    pf1: 820
-    pf2: 1500
-    pf3: 2800
+    pf1: 800
+    pf2: 1400
+    pf3: 2600
     pf4: 3300
     pf5: 3750
     pf6: 4900
@@ -3743,20 +3743,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.85
     pa1: 0
     pa2: 0.5
     pa3: 0.45
     pa4: 0.3666666667
-    pa5: 0.3833333333
-    pa6: 0.3833333333
-    parallelBypass: 0
+    pa5: 0.33
+    pa6: 0.27
+    parallelBypass: 0.14
     pb1: 60
     pb2: 150
     pb3: 280
     pb4: 250
-    pb5: 200
-    pb6: 1000
+    pb5: 220
+    pb6: 1200
     pf1: 200
     pf2: 1990
     pf3: 2850
@@ -4525,20 +4525,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.95
     pa1: 0
     pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.33
-    parallelBypass: 0
+    pa3: 0.44
+    pa4: 0.36
+    pa5: 0.34
+    pa6: 0.25
+    parallelBypass: 0.12
     pb1: 200
     pb2: 100
-    pb3: 300
+    pb3: 340
     pb4: 250
     pb5: 200
-    pb6: 1210
+    pb6: 1500
     pf1: 300
     pf2: 1840
     pf3: 2750
@@ -4977,20 +4977,20 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 1
+    fricationAmplitude: 0.9
     pa1: 0
     pa2: 0
-    pa3: 0.4666666667
-    pa4: 0.4
-    pa5: 0.4
-    pa6: 0.28
-    parallelBypass: 0
+    pa3: 0.44
+    pa4: 0.36
+    pa5: 0.34
+    pa6: 0.18
+    parallelBypass: 0.12
     pb1: 70
     pb2: 60
-    pb3: 280
+    pb3: 320
     pb4: 250
     pb5: 200
-    pb6: 1210
+    pb6: 1500
     pf1: 300
     pf2: 1840
     pf3: 2750

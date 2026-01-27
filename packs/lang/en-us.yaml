@@ -2,48 +2,44 @@
 # English (US) overrides layered on top of default.yaml + en.yaml
 
 settings:
-  # US can sound overly "clicky" / separated in clusters (e.g. "start", "smart")
-  # if we insert stop closures everywhere.
+  # Keep stop closures for clarity, but avoid the overly-clicky "always" mode
+  # (helps clusters like "adjust" and "change" feel less springy).
   stopClosureMode: vowel-and-cluster
-  stopClosureVowelGapMs: 24
-  stopClosureVowelFadeMs: 6
-  stopClosureClusterGapMs: 16
-  stopClosureClusterFadeMs: 3
-
-  # Helps "bank" / "think" / "thanks" etc feel less "boxy" by giving nasal+stop
-  # clusters a tiny bit of separation.
+  # If a word ends in a consonant and the next word starts with a stop,
+  # that word-initial stop can get swallowed (e.g. "... applications toolbar").
+  # Turn on cluster gaps, and make *word-boundary* cluster gaps slightly longer
+  # than in-word clusters for clarity, without going full "always".
+  stopClosureClusterGapsEnabled: true
   stopClosureAfterNasalsEnabled: true
 
-  postStopAspirationEnabled: true
+  # Allow gaps after nasals too, so phrases like "column two" don't swallow the /t/.
+  stopClosureVowelGapMs: 22
+  stopClosureVowelFadeMs: 6
+  stopClosureClusterGapMs: 16
+  stopClosureClusterFadeMs: 4
+  stopClosureWordBoundaryClusterGapMs: 24
+  stopClosureWordBoundaryClusterFadeMs: 4
 
-  englishLongUShortenEnabled: true
-  englishLongUWordFinalScale: 0.95
+  # US: smoother overall, less breath noise on stop releases.
+  postStopAspirationEnabled: false
+
+  # US tends to shorten length-marked vowels in word-final closed syllables
+  # (e.g. "tools", "smooth").
+  lengthenedVowelFinalCodaScale: 0.80
 
   # Use the US/CA GOOSE vowel variant.
+  englishLongUShortenEnabled: true
+  englishLongUWordFinalScale: 0.95
   englishLongUKey: "ᵿ"
 
-  # US vowels tend to be shorter than the UK baseline in en.yaml.
-  lengthenedScale: 1.05
-
   spellingDiphthongMode: monophthong
-  autoTieDiphthongs: false
-  autoDiphthongOffglideToSemivowel: true
-  legacyPitchMode: false
-  coarticulationEnabled: true
-  coarticulationFadeIntoConsonants: true
-  coarticulationVelarPinchEnabled: true
-  phraseFinalLengtheningEnabled: false
-  phraseFinalLengtheningNucleusOnlyMode: true
-  microprosodyEnabled: true
-  microprosodyVoicelessF0RaiseEnabled: false
-  microprosodyVoicedF0LowerEnabled: true
-  rateReductionEnabled: true
-  nasalizationAnticipatoryEnabled: false
-  segmentBoundarySkipVowelToLiquid: false
-  lengthContrastEnabled: false
-  positionalAllophonesEnabled: false
-  positionalAllophonesGlottalReinforcementEnabled: true
-  liquidDynamicsEnabled: false
+
+  # Keep defaults conservative: avoid heavy cross-phoneme shaping here.
+  coarticulationEnabled: false
+  boundarySmoothingEnabled: false
+  trajectoryLimitEnabled: false
+  microprosodyEnabled: false
+  rateReductionEnabled: false
 normalization:
   preReplacements:
     # Protect PRICE/MOUTH diphthongs from broad TRAP rules (e.g. five/nine/out).
@@ -146,6 +142,19 @@ normalization:
     # Keep TRAP normalization consistent with the old Python behavior.
     - from: "a"
       to:   "æ"
+
+    # "vowel", "towel" (and similar -owel words):
+    # In US screen-reader speech it often sounds clearer to render the final "-el" nucleus
+    # more like "-ol" (Eloquence-ish), rather than a distinct schwa+L.
+    # Keep this US-only; en-gb keeps the darker /əl/ ending.
+    - from: "æʊəl"
+      to:   "æʊol"
+      when:
+        atWordEnd: true
+    - from: "æʊəɫ"
+      to:   "æʊol"
+      when:
+        atWordEnd: true
 
     # eSpeak emits ɐ for a lot of reduced vowels (e.g. "apply" starts with ɐ-).
     # In US speech this can sound a bit "boxy" in our formant table.
