@@ -107,8 +107,34 @@ static const PhonemeDef* greedyMatchPhoneme(
       }
     }
     
-    // Loose tie-bar match: skip tie bars in both text and key
-    // This allows "nʲ" in the key to match "n͡ʲ" in text (and vice versa)
+    // Loose tie-bar match: skip tie bars in both text and key.
+    // This allows "nʲ" in the key to match "n͡ʲ" in text.
+    // 
+    // IMPORTANT: We only allow this matching when the TEXT contains tie bars
+    // that the KEY lacks. We do NOT allow matching when the KEY contains tie bars
+    // that the TEXT lacks. This prevents "əl" in text from matching "ə͡l" in the key,
+    // which would cause syllabic L to lose its lateral quality.
+    //
+    // Rationale: The normalization pass intentionally removes tie bars from
+    // sequences like "ə͡l" -> "əl" so they tokenize as separate phonemes.
+    // The greedy tokenizer should not undo this normalization.
+    
+    // First, check if the key contains tie bars. If so, and exact match failed,
+    // then we should NOT try loose matching (the text doesn't have the tie bar).
+    bool keyHasTieBar = false;
+    for (char32_t kc : key) {
+      if (isTieBar(kc)) {
+        keyHasTieBar = true;
+        break;
+      }
+    }
+    
+    // Only do loose tie-bar matching if the key does NOT have tie bars.
+    // This allows text "n͡ʲ" to match key "nʲ", but NOT text "əl" to match key "ə͡l".
+    if (keyHasTieBar) {
+      continue;
+    }
+    
     size_t t = pos;
     size_t k = 0;
     size_t consumed = 0;
@@ -116,7 +142,7 @@ static const PhonemeDef* greedyMatchPhoneme(
     char32_t firstNonTie = 0;
     
     while (k < key.size() && matched) {
-      // Skip tie bars in key
+      // Skip tie bars in key (though there shouldn't be any if keyHasTieBar is false)
       while (k < key.size() && isTieBar(key[k])) ++k;
       if (k >= key.size()) break;
       
