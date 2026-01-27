@@ -1997,47 +1997,47 @@ void emitFrames(
     // ============================================
     // Limit how fast formant frequencies can change to reduce harsh transitions.
     if (lang.trajectoryLimitEnabled && hasPrevFrame && t.durationMs > 0.0) {
-      double maxDelta;
+      const size_t idx_cf2 = static_cast<size_t>(FieldId::cf2);
+      const size_t idx_cf3 = static_cast<size_t>(FieldId::cf3);
+      const size_t idx_pf2 = static_cast<size_t>(FieldId::pf2);
+      const size_t idx_pf3 = static_cast<size_t>(FieldId::pf3);
+      double maxDelta, delta;
       
       // cf2 limiting
-      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::cf2))) != 0) {
-        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::cf2));
-        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
-          maxDelta = it->second * t.durationMs;
-          double delta = frame.cf2 - prevCf2;
+      if ((lang.trajectoryLimitApplyMask & (1ULL << idx_cf2)) != 0) {
+        if (lang.trajectoryLimitMaxHzPerMs[idx_cf2] > 0.0) {
+          maxDelta = lang.trajectoryLimitMaxHzPerMs[idx_cf2] * t.durationMs;
+          delta = frame.cf2 - prevCf2;
           if (delta > maxDelta) frame.cf2 = prevCf2 + maxDelta;
           else if (delta < -maxDelta) frame.cf2 = prevCf2 - maxDelta;
         }
       }
       
       // cf3 limiting
-      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::cf3))) != 0) {
-        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::cf3));
-        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
-          maxDelta = it->second * t.durationMs;
-          double delta = frame.cf3 - prevCf3;
+      if ((lang.trajectoryLimitApplyMask & (1ULL << idx_cf3)) != 0) {
+        if (lang.trajectoryLimitMaxHzPerMs[idx_cf3] > 0.0) {
+          maxDelta = lang.trajectoryLimitMaxHzPerMs[idx_cf3] * t.durationMs;
+          delta = frame.cf3 - prevCf3;
           if (delta > maxDelta) frame.cf3 = prevCf3 + maxDelta;
           else if (delta < -maxDelta) frame.cf3 = prevCf3 - maxDelta;
         }
       }
       
       // pf2 limiting
-      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::pf2))) != 0) {
-        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::pf2));
-        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
-          maxDelta = it->second * t.durationMs;
-          double delta = frame.pf2 - prevPf2;
+      if ((lang.trajectoryLimitApplyMask & (1ULL << idx_pf2)) != 0) {
+        if (lang.trajectoryLimitMaxHzPerMs[idx_pf2] > 0.0) {
+          maxDelta = lang.trajectoryLimitMaxHzPerMs[idx_pf2] * t.durationMs;
+          delta = frame.pf2 - prevPf2;
           if (delta > maxDelta) frame.pf2 = prevPf2 + maxDelta;
           else if (delta < -maxDelta) frame.pf2 = prevPf2 - maxDelta;
         }
       }
       
       // pf3 limiting
-      if ((lang.trajectoryLimitApplyMask & (1ULL << static_cast<int>(FieldId::pf3))) != 0) {
-        auto it = lang.trajectoryLimitMaxHzPerMs.find(static_cast<size_t>(FieldId::pf3));
-        if (it != lang.trajectoryLimitMaxHzPerMs.end()) {
-          maxDelta = it->second * t.durationMs;
-          double delta = frame.pf3 - prevPf3;
+      if ((lang.trajectoryLimitApplyMask & (1ULL << idx_pf3)) != 0) {
+        if (lang.trajectoryLimitMaxHzPerMs[idx_pf3] > 0.0) {
+          maxDelta = lang.trajectoryLimitMaxHzPerMs[idx_pf3] * t.durationMs;
+          delta = frame.pf3 - prevPf3;
           if (delta > maxDelta) frame.pf3 = prevPf3 + maxDelta;
           else if (delta < -maxDelta) frame.pf3 = prevPf3 - maxDelta;
         }
