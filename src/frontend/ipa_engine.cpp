@@ -62,10 +62,101 @@ static inline bool tokenIsFricativeLike(const Token& t) {
   return getFieldOrZero(t, FieldId::fricationAmplitude) > 0.05;
 }
 
+// Forward declaration for isTieBar (defined later).
+static inline bool isTieBar(char32_t c);
+
 static inline const PhonemeDef* findPhoneme(const PackSet& pack, const std::u32string& key) {
   auto it = pack.phonemes.find(key);
   if (it == pack.phonemes.end()) return nullptr;
   return &it->second;
+}
+
+// Build a sorted list of phoneme keys for greedy longest-match tokenization.
+// Keys are sorted by length descending so longer keys match first.
+static std::vector<std::u32string> buildSortedPhonemeKeys(const PackSet& pack) {
+  std::vector<std::u32string> keys;
+  keys.reserve(pack.phonemes.size());
+  for (const auto& kv : pack.phonemes) {
+    keys.push_back(kv.first);
+  }
+  std::sort(keys.begin(), keys.end(), [](const std::u32string& a, const std::u32string& b) {
+    // Sort by length descending; if equal, by lexicographic order for stability
+    if (a.size() != b.size()) return a.size() > b.size();
+    return a < b;
+  });
+  return keys;
+}
+
+// Greedy phoneme lookup: try to match the longest phoneme key starting at position `pos`.
+// Returns the PhonemeDef* and sets `outConsumed` to the number of codepoints matched.
+// If no match is found, returns nullptr and outConsumed is 0.
+static const PhonemeDef* greedyMatchPhoneme(
+    const PackSet& pack,
+    const std::vector<std::u32string>& sortedKeys,
+    const std::u32string& text,
+    size_t pos,
+    size_t& outConsumed) {
+  outConsumed = 0;
+  
+  for (const auto& key : sortedKeys) {
+    if (key.empty()) continue;
+    if (pos + key.size() > text.size()) continue;
+    
+    // Direct match (exact)
+    if (text.compare(pos, key.size(), key) == 0) {
+      const PhonemeDef* def = findPhoneme(pack, key);
+      if (def) {
+        outConsumed = key.size();
+        return def;
+      }
+    }
+    
+    // Loose tie-bar match: skip tie bars in both text and key
+    // This allows "nʲ" in the key to match "n͡ʲ" in text (and vice versa)
+    size_t t = pos;
+    size_t k = 0;
+    size_t consumed = 0;
+    bool matched = true;
+    
+    while (k < key.size() && matched) {
+      // Skip tie bars in key
+      while (k < key.size() && isTieBar(key[k])) ++k;
+      if (k >= key.size()) break;
+      
+      // Skip tie bars in text
+      while (t < text.size() && isTieBar(text[t])) {
+        ++t;
+        ++consumed;
+      }
+      if (t >= text.size()) {
+        matched = false;
+        break;
+      }
+      
+      // Compare characters
+      if (text[t] != key[k]) {
+        matched = false;
+        break;
+      }
+      
+      ++t;
+      ++k;
+      ++consumed;
+    }
+    
+    // Make sure we consumed the entire key
+    while (k < key.size() && isTieBar(key[k])) ++k;
+    
+    if (matched && k >= key.size() && consumed > 0) {
+      const PhonemeDef* def = findPhoneme(pack, key);
+      if (def) {
+        outConsumed = consumed;
+        return def;
+      }
+    }
+  }
+  
+  return nullptr;
 }
 
 static inline bool isToneLetter(char32_t c) {
@@ -1263,6 +1354,14 @@ static void setDefaultVoiceFields(const LanguagePack& lang, Token& t) {
 static bool parseToTokens(const PackSet& pack, const std::u32string& text, std::vector<Token>& outTokens, std::string& outError) {
   const LanguagePack& lang = pack.lang;
 
+  // Build sorted phoneme keys once for greedy matching (longest first).
+  static std::vector<std::u32string> sortedKeys;
+  static const PackSet* cachedPack = nullptr;
+  if (cachedPack != &pack) {
+    sortedKeys = buildSortedPhonemeKeys(pack);
+    cachedPack = &pack;
+  }
+
   bool newWord = true;
   int pendingStress = 0;
 
@@ -1293,21 +1392,24 @@ static bool parseToTokens(const PackSet& pack, const std::u32string& text, std::
   // Reserve a bit extra because we sometimes insert gaps/aspiration.
   outTokens.reserve(n * 2);
 
-  for (size_t i = 0; i < n; ++i) {
+  for (size_t i = 0; i < n; ) {
     const char32_t c = text[i];
 
     if (c == U' ') {
       newWord = true;
+      ++i;
       continue;
     }
 
     // Primary/secondary stress.
     if (c == U'\u02C8') { // ˈ
       pendingStress = 1;
+      ++i;
       continue;
     }
     if (c == U'\u02CC') { // ˌ
       pendingStress = 2;
+      ++i;
       continue;
     }
 
@@ -1317,67 +1419,101 @@ static bool parseToTokens(const PackSet& pack, const std::u32string& text, std::
         // Collect run of tone letters.
         std::u32string run;
         run.push_back(c);
-        while (i + 1 < n && isToneLetter(text[i + 1])) {
-          run.push_back(text[++i]);
+        ++i;
+        while (i < n && isToneLetter(text[i])) {
+          run.push_back(text[i++]);
         }
         attachToneStringToSyllable(run);
         continue;
       }
       if (lang.toneDigitsEnabled && (c >= U'1' && c <= U'5')) {
         attachToneToSyllable(c);
+        ++i;
         continue;
       }
     }
 
-    const bool isLengthened = (i + 1 < n && text[i + 1] == U'\u02D0'); // ː
-    const bool isTiedTo = (i + 1 < n && text[i + 1] == U'\u0361');     // ͡
-    const bool isTiedFrom = (i > 0 && text[i - 1] == U'\u0361');       // ͡
+    // Skip standalone tie bars (they should have been consumed by a phoneme match).
+    if (isTieBar(c)) {
+      ++i;
+      continue;
+    }
 
+    // === GREEDY MULTI-CHARACTER PHONEME MATCHING ===
+    // Try to match the longest phoneme key starting at position i.
+    // This handles multi-character phonemes like "ɲʲ", "t͡ʃ", "aː", etc.
+    
     const PhonemeDef* def = nullptr;
+    size_t consumed = 0;
     bool tiedTo = false;
     bool lengthened = false;
+    char32_t baseChar = c;
 
-    if (isTiedTo) {
-      // Try combined key (char + tie + next char).
-      if (i + 2 < n) {
-        std::u32string k;
-        k.push_back(text[i]);
-        k.push_back(text[i + 1]);
-        k.push_back(text[i + 2]);
-        def = findPhoneme(pack, k);
-        if (def) {
-          // consume tie + next
-          i += 2;
-          tiedTo = true;
+    // Use greedy longest-match tokenization.
+    def = greedyMatchPhoneme(pack, sortedKeys, text, i, consumed);
+    
+    if (def && consumed > 0) {
+      // Check if this match includes or is followed by a tie bar (for tiedTo flag).
+      // Also check for length mark.
+      for (size_t j = i; j < i + consumed; ++j) {
+        if (isTieBar(text[j])) tiedTo = true;
+        if (text[j] == U'\u02D0') lengthened = true; // ː
+      }
+      // Check if next char after match is a tie bar.
+      if (i + consumed < n && isTieBar(text[i + consumed])) {
+        tiedTo = true;
+      }
+      // Check if there's a length mark immediately after the match.
+      if (!lengthened && i + consumed < n && text[i + consumed] == U'\u02D0') {
+        // Try to find a lengthened version of this phoneme.
+        std::u32string lenKey = def->key;
+        lenKey.push_back(U'\u02D0');
+        const PhonemeDef* lenDef = findPhoneme(pack, lenKey);
+        if (lenDef) {
+          def = lenDef;
+          consumed += 1;
+          lengthened = true;
         } else {
-          // consume only tie (leave the next char to be parsed separately)
-          i += 1;
-          tiedTo = true;
+          // Just mark as lengthened without changing the phoneme.
+          lengthened = true;
         }
-      } else {
-        // dangling tie bar, ignore it
-        continue;
       }
-    } else if (isLengthened) {
-      std::u32string k;
-      k.push_back(text[i]);
-      k.push_back(text[i + 1]);
-      def = findPhoneme(pack, k);
-      if (def) {
-        i += 1;
-        lengthened = true;
-      }
-    }
-
-    if (!def) {
+    } else {
+      // No greedy match found - try single character as fallback.
       std::u32string k;
       k.push_back(c);
       def = findPhoneme(pack, k);
-      if (!def) {
+      if (def) {
+        consumed = 1;
+        // Check for length mark.
+        if (i + 1 < n && text[i + 1] == U'\u02D0') {
+          std::u32string lenKey = k;
+          lenKey.push_back(U'\u02D0');
+          const PhonemeDef* lenDef = findPhoneme(pack, lenKey);
+          if (lenDef) {
+            def = lenDef;
+            consumed = 2;
+            lengthened = true;
+          } else {
+            lengthened = true;
+          }
+        }
+        // Check for tie bar.
+        if (i + 1 < n && isTieBar(text[i + 1])) {
+          tiedTo = true;
+        }
+      } else {
         // Unknown char: drop it (safe default).
+        ++i;
         continue;
       }
     }
+
+    // Check if this token was preceded by a tie bar (for tiedFrom flag).
+    const bool isTiedFrom = (i > 0 && isTieBar(text[i - 1]));
+
+    // Advance the position by the number of codepoints consumed.
+    i += consumed;
 
     Token t;
     t.def = def;
@@ -1386,10 +1522,10 @@ static bool parseToTokens(const PackSet& pack, const std::u32string& text, std::
       t.field[f] = def->field[f];
     }
 
-    t.baseChar = c;
+    t.baseChar = baseChar;
     t.tiedFrom = isTiedFrom;
     t.tiedTo = tiedTo;
-    t.lengthened = (lengthened || isLengthened);
+    t.lengthened = lengthened;
 
     const int stress = pendingStress;
     pendingStress = 0;
