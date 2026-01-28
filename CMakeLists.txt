@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.21)
 
 project(speechPlayer)
 
+# Threads are needed on POSIX (LockableObject uses std::recursive_mutex).
+# On Windows this is not required.
+if(NOT WIN32)
+  find_package(Threads REQUIRED)
+endif()
+
 # ---------------------------------------
 # Global MSVC settings (lean + UTF-8)
 # ---------------------------------------
@@ -27,7 +33,13 @@ endif()
 # -------------------------
 file(GLOB SRC_CPP CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-add_library(speechPlayer SHARED ${SRC_CPP} "src/speechPlayer.def")
+set(SPEECHPLAYER_SOURCES ${SRC_CPP})
+if(WIN32)
+  # Export list for the legacy DLL ABI.
+  list(APPEND SPEECHPLAYER_SOURCES "src/speechPlayer.def")
+endif()
+
+add_library(speechPlayer SHARED ${SPEECHPLAYER_SOURCES})
 
 target_include_directories(speechPlayer PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/src"
@@ -38,6 +50,8 @@ target_compile_features(speechPlayer PRIVATE cxx_std_17)
 # Windows waveOut dependency (as in the original project).
 if(WIN32)
   target_link_libraries(speechPlayer PRIVATE winmm)
+else()
+  target_link_libraries(speechPlayer PRIVATE Threads::Threads)
 endif()
 
 # -------------------------
@@ -59,6 +73,20 @@ target_compile_definitions(nvspFrontend PRIVATE NVSP_FRONTEND_EXPORTS=1)
 
 # Optional: make the DLL name predictable.
 set_target_properties(nvspFrontend PROPERTIES OUTPUT_NAME "nvspFrontend")
+
+# -------------------------
+# Optional command-line tools
+# -------------------------
+option(NVSP_BUILD_TOOLS "Build optional command-line tools (e.g. Speech Dispatcher helpers)" OFF)
+if(NVSP_BUILD_TOOLS)
+  add_executable(nvspRender tools/nvspRender.cpp)
+  target_include_directories(nvspRender PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/frontend"
+  )
+  target_compile_features(nvspRender PRIVATE cxx_std_17)
+  target_link_libraries(nvspRender PRIVATE speechPlayer nvspFrontend)
+endif()
 
 # -------------------------
 # Win32 phoneme editor GUI
