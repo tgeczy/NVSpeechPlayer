@@ -217,9 +217,36 @@ Class scales are *multipliers*:
 
 **Scalar shorthand:** for `cf_mul` / `pf_mul` / `cb_mul` / `pb_mul`, you can provide a single number and it will be replicated across all 6 formants. Example: `cf_mul: 1.12` means `cf_mul: [1.12, 1.12, 1.12, 1.12, 1.12, 1.12]`.
 
-##### Per-phoneme overrides
-`phonemeOverrides` values are *absolute*, and they win over class scaling for that field. Use this sparingly for “this one vowel is odd” fixes.
+##### Per-phoneme overrides (`phonemeOverrides`)
 
+Use `phonemeOverrides` when your profile is *mostly* right, but **one specific phoneme** still sounds off.
+
+**What it does**
+- Values in `phonemeOverrides` are **absolute assignments** for that phoneme (not multipliers).
+- Overrides are applied **after** `classScales`.
+- If an override sets a field, it **wins for that field only**. Other fields still come from the base phoneme + any class scaling.
+
+**Effective order (per field)**
+1. Start with the phoneme’s base value from `phonemes:`
+2. Apply any matching `classScales` multipliers
+3. Apply `phonemeOverrides` (only for the fields you specify)
+
+**Tip**  
+Override the **smallest number of fields** you can (often just `cf2`, or `cf1 + cf2` on one vowel).  
+If you’re overriding lots of phonemes, it usually means your `classScales` need tuning.
+
+**Example**
+````yaml
+voiceProfiles:
+  female:
+    classScales:
+      vowel:
+        cf_mul: [1.12, 1.16, 1.18, 1.08, 1.04, 1.02]
+    phonemeOverrides:
+      "i":
+        cf2: 2550
+      "s":
+        fricationAmplitude: 40
 ##### How to enable a profile
 Preferred: select a profile at runtime via the frontend API:
 ```c
