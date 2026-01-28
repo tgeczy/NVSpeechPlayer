@@ -91,6 +91,41 @@ def _getInstalledAddonVersion() -> str:
         return ""
 
 
+def _parseVersionTuple(versionStr: str):
+    """Parse a version string into a tuple of integers for comparison.
+    
+    Handles versions like "170", "2026.1.27", "2026.1.27.2", etc.
+    Non-numeric parts are treated as 0.
+    """
+    if not versionStr:
+        return (0,)
+    parts = []
+    for part in versionStr.replace("-", ".").replace("_", ".").split("."):
+        try:
+            parts.append(int(part))
+        except ValueError:
+            # Non-numeric part (e.g., "beta"), treat as 0
+            parts.append(0)
+    return tuple(parts) if parts else (0,)
+
+
+def _isNewerVersion(remoteVersion: str, installedVersion: str) -> bool:
+    """Return True if remoteVersion is newer than installedVersion.
+    
+    Compares version tuples element by element. A shorter version is padded
+    with zeros for comparison (e.g., "2026.1.27" vs "2026.1.27.2").
+    """
+    remote = _parseVersionTuple(remoteVersion)
+    installed = _parseVersionTuple(installedVersion)
+    
+    # Pad shorter tuple with zeros
+    maxLen = max(len(remote), len(installed))
+    remote = remote + (0,) * (maxLen - len(remote))
+    installed = installed + (0,) * (maxLen - len(installed))
+    
+    return remote > installed
+
+
 _PANEL_CLS = None
 
 
@@ -798,7 +833,8 @@ def _getPanelClass():
                 # Compare versions
                 installedVersion = _getInstalledAddonVersion()
 
-                if installedVersion and remoteVersion and installedVersion == remoteVersion:
+                # Check if remote version is actually newer
+                if installedVersion and remoteVersion and not _isNewerVersion(remoteVersion, installedVersion):
                     wx.MessageBox(
                         _(
                             "You already have the latest version installed.\n\n"

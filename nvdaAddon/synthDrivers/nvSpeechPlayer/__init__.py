@@ -105,11 +105,11 @@ languages = OrderedDict([
     ("de", VoiceInfo("de", "German")),
     ("nl", VoiceInfo("nl", "Dutch")),
     ("sv", VoiceInfo("sv", "Swedish")),
+    ("cs", VoiceInfo("cs", "Czech")),
     ("hr", VoiceInfo("hr", "Croatian")),
     ("pl", VoiceInfo("pl", "Polish")),
-    ("sk", VoiceInfo("sk", "Slovak")),
-    ("cs", VoiceInfo("cs", "Czech")),
     ("ru", VoiceInfo("ru", "Russian")),
+    ("sk", VoiceInfo("sk", "Slovak")),
     ("uk", VoiceInfo("uk", "Ukrainian")),
 ])
 
