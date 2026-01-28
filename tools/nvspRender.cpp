@@ -10,7 +10,7 @@
 
   Notes:
     - This tool reads UTF-8 from stdin and writes raw 16-bit signed
-      little-endian PCM to stdout at 22050 Hz (the speechPlayer fixed rate).
+      little-endian PCM to stdout at a configurable sample rate (default 16000 Hz).
     - We deliberately keep the interface small and self-contained.
 */
 
@@ -49,6 +49,10 @@ struct Options {
   // volume is often mapped to 0.0..2.0 (default 1.0).
   double volume = 1.0;
 
+  // Output sample rate in Hz. Must match whatever plays the raw stream.
+  // Default is 16000 to match the NVDA driver.
+  int sampleRate = 16000;
+
   // Leave room for future tuning without having to change the speech-dispatcher config.
   double inflection = 0.5;
 
@@ -58,13 +62,14 @@ struct Options {
 static void printHelp(const char* argv0) {
   std::cerr
     << "Usage: " << (argv0 ? argv0 : "nvspRender") << " [options]\n\n"
-    << "Reads IPA text from stdin (UTF-8) and writes raw 16-bit PCM to stdout (22050 Hz).\n\n"
+    << "Reads IPA text from stdin (UTF-8) and writes raw 16-bit PCM to stdout (default 16000 Hz; configurable).\n\n"
     << "Options:\n"
     << "  --packdir <path>   Path to repo root or packs dir (default: .)\n"
     << "  --lang <tag>       Language tag for pack selection (default: en)\n"
     << "  --rate <int>       SSIP-style rate -100..100 (default: 0)\n"
     << "  --pitch <int>      Pitch 0..100 (default: 50)\n"
     << "  --volume <float>   Output gain multiplier (default: 1.0)\n"
+    << "  --samplerate <int> Output sample rate in Hz (default: 16000)\n"
     << "  --inflection <f>   Inflection (octaves across +/-50% pitch path) (default: 0.5)\n"
     << "  -h, --help         Show this help\n";
 }
@@ -151,6 +156,20 @@ static Options parseArgs(int argc, char** argv) {
       }
       continue;
     }
+
+    if (a == "--samplerate" || a == "--sample-rate") {
+      if (const char* v = requireValue(a.c_str())) {
+        int tmp = 16000;
+        if (!parseInt(v, tmp) || tmp < 8000 || tmp > 192000) {
+          std::cerr << "Bad --samplerate value: " << v << " (expected 8000..192000)\n";
+          opt.help = true;
+        } else {
+          opt.sampleRate = tmp;
+        }
+      }
+      continue;
+    }
+
     if (a == "--inflection") {
       if (const char* v = requireValue("--inflection")) {
         double tmp = 0.5;
@@ -187,7 +206,7 @@ static std::string readAllStdin() {
 
 struct CallbackCtx {
   speechPlayer_handle_t player = nullptr;
-  int sampleRate = 22050;
+  int sampleRate = 16000;
   double volume = 1.0;
 };
 
@@ -263,7 +282,7 @@ int main(int argc, char** argv) {
   }
 
   // Initialize speechPlayer.
-  const int sampleRate = 22050;
+  const int sampleRate = 16000;
   speechPlayer_handle_t player = speechPlayer_initialize(sampleRate);
   if (!player) {
     std::cerr << "speechPlayer_initialize failed\n";
