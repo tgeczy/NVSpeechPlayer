@@ -15,6 +15,8 @@ add_executable(nvspPhonemeEditor WIN32
   phonemizer_cli.h
   Dialogs.cpp
   Dialogs.h
+  VoiceProfileEditor.cpp
+  VoiceProfileEditor.h
   WinUtils.cpp
   WinUtils.h
   AccessibilityUtils.cpp

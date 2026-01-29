@@ -5,6 +5,7 @@
 
 #include "AccessibilityUtils.h"
 #include "Dialogs.h"
+#include "VoiceProfileEditor.h"
 #include "WinUtils.h"
 
 #include "process_util.h"
@@ -1643,6 +1644,38 @@ LRESULT AppController::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
           app.runtime.setSpeechSettings(st.settings);
           saveSpeechSettingsToIni(st.settings);
           app.setStatus(L"Updated speech settings.");
+        }
+        return 0;
+      }
+
+      if (id == IDM_SETTINGS_EDIT_VOICES) {
+        if (app.packsDir.empty()) {
+          msgBox(hWnd, L"Open a pack root first.", L"Voice Profiles", MB_ICONINFORMATION);
+          return 0;
+        }
+        
+        std::wstring yamlPath = app.packsDir;
+        if (!yamlPath.empty() && yamlPath.back() != L'\\' && yamlPath.back() != L'/') {
+          yamlPath += L'\\';
+        }
+        yamlPath += L"phonemes.yaml";
+        
+        nvsp_editor::VoiceProfilesDialogState vpst;
+        vpst.phonemesYamlPath = yamlPath;
+        
+        std::string loadErr;
+        if (!nvsp_editor::loadVoiceProfilesFromYaml(yamlPath, vpst.profiles, loadErr)) {
+          msgBox(hWnd, (L"Could not load voice profiles: " + utf8ToWide(loadErr)).c_str(), L"Voice Profiles", MB_ICONERROR);
+          return 0;
+        }
+        
+        if (nvsp_editor::ShowVoiceProfilesDialog(app.hInst, hWnd, vpst) && vpst.ok && vpst.modified) {
+          std::string saveErr;
+          if (nvsp_editor::saveVoiceProfilesToYaml(yamlPath, vpst.profiles, saveErr)) {
+            app.setStatus(L"Saved voice profiles to phonemes.yaml.");
+          } else {
+            msgBox(hWnd, (L"Could not save voice profiles: " + utf8ToWide(saveErr)).c_str(), L"Voice Profiles", MB_ICONERROR);
+          }
         }
         return 0;
       }

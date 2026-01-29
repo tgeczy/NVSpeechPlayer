@@ -135,3 +135,47 @@
 #define IDC_PHONEMIZER_ARGS_STDIN    2805
 #define IDC_PHONEMIZER_ARGS_CLI      2806
 #define IDC_PHONEMIZER_MAXCHUNK      2807
+
+// -----------------
+// Dialog: Voice profile list (main editor)
+// -----------------
+#define IDD_VOICE_PROFILES           209
+#define IDC_VP_LIST                  2901
+#define IDC_VP_ADD                   2902
+#define IDC_VP_EDIT                  2903
+#define IDC_VP_DELETE                2904
+#define IDC_VP_DUPLICATE             2905
+
+// -----------------
+// Dialog: Edit voice profile
+// -----------------
+#define IDD_EDIT_VOICE_PROFILE       210
+#define IDC_EVP_NAME                 3001
+#define IDC_EVP_CLASS_COMBO          3002
+#define IDC_EVP_CLASS_REMOVE         3004
+#define IDC_EVP_SCALES_LIST          3005
+#define IDC_EVP_SCALE_FIELD          3006
+#define IDC_EVP_SCALE_VALUE          3007
+#define IDC_EVP_SCALE_SET            3008
+#define IDC_EVP_SCALE_REMOVE         3009
+#define IDC_EVP_OVERRIDES_LIST       3010
+#define IDC_EVP_OVERRIDE_PHONEME     3011
+#define IDC_EVP_OVERRIDE_ADD         3012
+#define IDC_EVP_OVERRIDE_EDIT        3013
+#define IDC_EVP_OVERRIDE_REMOVE      3014
+
+// -----------------
+// Dialog: Edit phoneme override (for voice profile)
+// -----------------
+#define IDD_EDIT_PHONEME_OVERRIDE    211
+#define IDC_EPO_PHONEME              3101
+#define IDC_EPO_FIELDS_LIST          3102
+#define IDC_EPO_FIELD_COMBO          3103
+#define IDC_EPO_FIELD_VALUE          3104
+#define IDC_EPO_FIELD_SET            3105
+#define IDC_EPO_FIELD_REMOVE         3106
+
+// -----------------
+// Menu command: Edit Voices
+// -----------------
+#define IDM_SETTINGS_EDIT_VOICES     40105
