@@ -1633,6 +1633,10 @@ LRESULT AppController::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         if (st.settings.frameParams.size() != st.paramNames.size()) {
           st.settings.frameParams.assign(st.paramNames.size(), 50);
         }
+        st.runtime = &app.runtime;
+        
+        // Discover voice profiles from phonemes.yaml
+        st.voiceProfiles = app.runtime.discoverVoiceProfiles();
 
         ShowSpeechSettingsDialog(app.hInst, hWnd, st);
         if (st.ok) {

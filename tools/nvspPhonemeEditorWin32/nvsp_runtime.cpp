@@ -5,7 +5,9 @@
 #include <cmath>
 #include <cstring>
 #include <cctype>
+#include <fstream>
 #include <sstream>
+#include <unordered_set>
 
 namespace nvsp_editor {
 
@@ -203,7 +205,9 @@ static const FieldMap* findField(const char* name) {
 
 void NvspRuntime::applySpeechSettingsToFrame(speechPlayer_frame_t& frame) const {
   // 1) Voice preset (from NVDA driver's __init__.py)
+  // Skip Python presets if using a C++ voice profile (formant transforms already applied by frontend)
   const std::string voice = m_speech.voiceName.empty() ? "Adam" : m_speech.voiceName;
+  const bool usingProfile = isVoiceProfile(voice);
 
   auto mulByName = [&](const char* field, double mul) {
     const FieldMap* f = findField(field);
@@ -214,35 +218,85 @@ void NvspRuntime::applySpeechSettingsToFrame(speechPlayer_frame_t& frame) const 
     if (f) applyAbs(frame, f->member, val);
   };
 
-  if (voice == "Adam") {
-    mulByName("cb1", 1.3);
-    mulByName("pa6", 1.3);
-    mulByName("fricationAmplitude", 0.85);
-  } else if (voice == "Benjamin") {
-    mulByName("cf1", 1.01);
-    mulByName("cf2", 1.02);
-    absByName("cf4", 3770);
-    absByName("cf5", 4100);
-    absByName("cf6", 5000);
-    mulByName("cfNP", 0.9);
-    mulByName("cb1", 1.3);
-    mulByName("fricationAmplitude", 0.7);
-    mulByName("pa6", 1.3);
-  } else if (voice == "Caleb") {
-    absByName("aspirationAmplitude", 1);
-    absByName("voiceAmplitude", 0);
-  } else if (voice == "David") {
-    mulByName("voicePitch", 0.75);
-    mulByName("endVoicePitch", 0.75);
-    mulByName("cf1", 0.75);
-    mulByName("cf2", 0.85);
-    mulByName("cf3", 0.85);
-  } else {
-    // Unknown voice name: fall back to Adam behavior.
-    mulByName("cb1", 1.3);
-    mulByName("pa6", 1.3);
-    mulByName("fricationAmplitude", 0.85);
+  if (!usingProfile) {
+    // Apply Python voice presets only when NOT using a C++ voice profile
+    if (voice == "Adam") {
+      mulByName("cb1", 1.3);
+      mulByName("pa6", 1.3);
+      mulByName("fricationAmplitude", 0.85);
+    } else if (voice == "Benjamin") {
+      mulByName("cf1", 1.01);
+      mulByName("cf2", 1.02);
+      absByName("cf4", 3770);
+      absByName("cf5", 4100);
+      absByName("cf6", 5000);
+      mulByName("cfNP", 0.9);
+      mulByName("cb1", 1.3);
+      mulByName("fricationAmplitude", 0.7);
+      mulByName("pa6", 1.3);
+    } else if (voice == "Caleb") {
+      absByName("aspirationAmplitude", 1);
+      absByName("voiceAmplitude", 0);
+    } else if (voice == "David") {
+      mulByName("voicePitch", 0.75);
+      mulByName("endVoicePitch", 0.75);
+      mulByName("cf1", 0.75);
+      mulByName("cf2", 0.85);
+      mulByName("cf3", 0.85);
+    } else if (voice == "Robert") {
+      // Slightly higher pitch for brighter character
+      mulByName("voicePitch", 1.10);
+      mulByName("endVoicePitch", 1.10);
+      // Moderate formant scaling
+      mulByName("cf1", 1.02);
+      mulByName("cf2", 1.06);
+      mulByName("cf3", 1.08);
+      mulByName("cf4", 1.08);
+      mulByName("cf5", 1.10);
+      mulByName("cf6", 1.05);
+      // Narrow bandwidths for buzzy synthetic sound
+      mulByName("cb1", 0.65);
+      mulByName("cb2", 0.68);
+      mulByName("cb3", 0.72);
+      mulByName("cb4", 0.75);
+      mulByName("cb5", 0.78);
+      mulByName("cb6", 0.80);
+      // Pressed glottis: sharp, precise attack
+      absByName("glottalOpenQuotient", 0.30);
+      // Minimal breathiness - clean synthetic sound
+      mulByName("voiceTurbulenceAmplitude", 0.20);
+      // Increased frication to preserve C, S, F consonants
+      mulByName("fricationAmplitude", 0.75);
+      // Moderate bypass for consonant clarity
+      mulByName("parallelBypass", 0.70);
+      // Moderate high parallel formant boost
+      mulByName("pa3", 1.08);
+      mulByName("pa4", 1.15);
+      mulByName("pa5", 1.20);
+      mulByName("pa6", 1.25);
+      // Moderate parallel bandwidths
+      mulByName("pb1", 0.72);
+      mulByName("pb2", 0.75);
+      mulByName("pb3", 0.78);
+      mulByName("pb4", 0.80);
+      mulByName("pb5", 0.82);
+      mulByName("pb6", 0.85);
+      // Match parallel formants to cascade
+      mulByName("pf3", 1.06);
+      mulByName("pf4", 1.08);
+      mulByName("pf5", 1.10);
+      mulByName("pf6", 1.05);
+      // No vibrato - steady synthetic pitch
+      absByName("vibratoPitchOffset", 0.0);
+      absByName("vibratoSpeed", 0.0);
+    } else {
+      // Unknown voice name: fall back to Adam behavior.
+      mulByName("cb1", 1.3);
+      mulByName("pa6", 1.3);
+      mulByName("fricationAmplitude", 0.85);
+    }
   }
+  // When using a profile, the frontend has already applied formant transforms
 
   // 2) Per-field multipliers (0..100, 50 => neutral)
   if (m_speech.frameParams.size() == kFieldCount()) {
@@ -274,6 +328,9 @@ void NvspRuntime::unload() {
   m_feSetLanguage = nullptr;
   m_feQueueIPA = nullptr;
   m_feGetLastError = nullptr;
+  m_feSetVoiceProfile = nullptr;
+  m_feGetVoiceProfile = nullptr;
+  m_feGetPackWarnings = nullptr;
 
   if (m_frontend) {
     FreeLibrary(m_frontend);
@@ -331,6 +388,11 @@ bool NvspRuntime::setDllDirectory(const std::wstring& dllDir, std::string& outEr
   m_feSetLanguage = reinterpret_cast<fe_setLanguage_fn>(GetProcAddress(m_frontend, "nvspFrontend_setLanguage"));
   m_feQueueIPA = reinterpret_cast<fe_queueIPA_fn>(GetProcAddress(m_frontend, "nvspFrontend_queueIPA"));
   m_feGetLastError = reinterpret_cast<fe_getLastError_fn>(GetProcAddress(m_frontend, "nvspFrontend_getLastError"));
+  
+  // Voice profile API (optional - may not be present in older DLLs)
+  m_feSetVoiceProfile = reinterpret_cast<fe_setVoiceProfile_fn>(GetProcAddress(m_frontend, "nvspFrontend_setVoiceProfile"));
+  m_feGetVoiceProfile = reinterpret_cast<fe_getVoiceProfile_fn>(GetProcAddress(m_frontend, "nvspFrontend_getVoiceProfile"));
+  m_feGetPackWarnings = reinterpret_cast<fe_getPackWarnings_fn>(GetProcAddress(m_frontend, "nvspFrontend_getPackWarnings"));
 
   if (!m_feCreate || !m_feDestroy || !m_feSetLanguage || !m_feQueueIPA || !m_feGetLastError) {
     outError = "nvspFrontend.dll is missing expected exports";
@@ -705,6 +767,18 @@ bool NvspRuntime::synthIpa(
       return false;
     }
   }
+  
+  // Set voice profile if using one
+  if (m_feSetVoiceProfile) {
+    const std::string& voice = m_speech.voiceName;
+    if (isVoiceProfile(voice)) {
+      std::string profileName = getProfileNameFromVoice(voice);
+      m_feSetVoiceProfile(m_feHandle, profileName.c_str());
+    } else {
+      // Clear any active profile when using Python presets
+      m_feSetVoiceProfile(m_feHandle, "");
+    }
+  }
 
   speechPlayer_handle_t player = m_spInitialize(sampleRate);
   if (!player) {
@@ -791,6 +865,149 @@ if (!ok) {
   synthesizeAll(m_spSynthesize, player, outSamples);
   m_spTerminate(player);
   return true;
+}
+
+// -----------------------------------------------------------------------------
+// Voice profile support
+// -----------------------------------------------------------------------------
+
+bool NvspRuntime::isVoiceProfile(const std::string& voiceName) {
+  return voiceName.rfind(kVoiceProfilePrefix, 0) == 0;
+}
+
+std::string NvspRuntime::getProfileNameFromVoice(const std::string& voiceName) {
+  if (!isVoiceProfile(voiceName)) return "";
+  return voiceName.substr(std::strlen(kVoiceProfilePrefix));
+}
+
+std::vector<std::string> NvspRuntime::discoverVoiceProfiles() const {
+  std::vector<std::string> profiles;
+  
+  if (m_packRoot.empty()) return profiles;
+  
+  // Build path to phonemes.yaml
+  // Note: m_packRoot is the 'packs' directory itself (set via runtimePackDir)
+  std::wstring yamlPath = m_packRoot;
+  if (!yamlPath.empty() && yamlPath.back() != L'\\' && yamlPath.back() != L'/') {
+    yamlPath += L'\\';
+  }
+  yamlPath += L"phonemes.yaml";
+  
+  // Simple line-based parser to extract profile names from voiceProfiles: section
+  // Supports both nested format and dotted-key format:
+  //   Nested:  female:
+  //              classScales:
+  //   Dotted:  female.classScales.vowel.cf_mul: [...]
+  std::ifstream f(yamlPath);
+  if (!f.is_open()) return profiles;
+  
+  bool inVoiceProfiles = false;
+  int baseIndent = -1;
+  std::unordered_set<std::string> seenProfiles;  // Avoid duplicates
+  std::string line;
+  
+  while (std::getline(f, line)) {
+    // Strip trailing CR if present (Windows line endings)
+    if (!line.empty() && line.back() == '\r') {
+      line.pop_back();
+    }
+    
+    // Skip empty lines
+    std::string stripped = line;
+    size_t firstNonSpace = stripped.find_first_not_of(" \t");
+    if (firstNonSpace == std::string::npos) continue;
+    stripped = stripped.substr(firstNonSpace);
+    
+    // Skip comments
+    if (!stripped.empty() && stripped[0] == '#') continue;
+    
+    // Check for voiceProfiles: at column 0
+    if (line[0] != ' ' && line[0] != '\t') {
+      if (stripped.rfind("voiceProfiles:", 0) == 0) {
+        inVoiceProfiles = true;
+        baseIndent = -1;
+        continue;
+      } else if (inVoiceProfiles) {
+        // Left the section (back to column 0)
+        break;
+      }
+    }
+    
+    if (inVoiceProfiles) {
+      // Count indent
+      int indent = 0;
+      for (char c : line) {
+        if (c == ' ') indent++;
+        else if (c == '\t') indent += 2;
+        else break;
+      }
+      
+      if (baseIndent < 0) {
+        baseIndent = indent;
+      }
+      
+      // Profile names are at base indent level and end with ':'
+      if (indent == baseIndent) {
+        size_t colonPos = stripped.find(':');
+        if (colonPos != std::string::npos) {
+          std::string key = stripped.substr(0, colonPos);
+          // Trim whitespace from key
+          size_t keyEnd = key.find_last_not_of(" \t");
+          if (keyEnd != std::string::npos) {
+            key = key.substr(0, keyEnd + 1);
+          }
+          
+          if (!key.empty() && key[0] != '#') {
+            // For dotted keys like "female.classScales.vowel.cf_mul",
+            // extract just the first part "female" as the profile name
+            size_t dotPos = key.find('.');
+            if (dotPos != std::string::npos) {
+              key = key.substr(0, dotPos);
+            }
+            
+            // Only add if we haven't seen this profile yet
+            if (!key.empty() && seenProfiles.find(key) == seenProfiles.end()) {
+              seenProfiles.insert(key);
+              profiles.push_back(key);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return profiles;
+}
+
+bool NvspRuntime::setVoiceProfile(const std::string& profileName, std::string& outError) {
+  outError.clear();
+  
+  if (!m_feHandle) {
+    outError = "Frontend not initialized";
+    return false;
+  }
+  
+  if (!m_feSetVoiceProfile) {
+    // API not available - older DLL version
+    outError = "Voice profile API not available (DLL too old?)";
+    return false;
+  }
+  
+  int ok = m_feSetVoiceProfile(m_feHandle, profileName.c_str());
+  if (!ok) {
+    const char* msg = m_feGetLastError ? m_feGetLastError(m_feHandle) : nullptr;
+    outError = msg ? msg : "setVoiceProfile failed";
+    return false;
+  }
+  
+  return true;
+}
+
+std::string NvspRuntime::getVoiceProfile() const {
+  if (!m_feHandle || !m_feGetVoiceProfile) return "";
+  
+  const char* name = m_feGetVoiceProfile(m_feHandle);
+  return name ? name : "";
 }
 
 } // namespace nvsp_editor

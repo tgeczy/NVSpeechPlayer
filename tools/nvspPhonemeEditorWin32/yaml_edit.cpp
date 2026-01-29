@@ -281,20 +281,166 @@ std::vector<std::string> LanguageYaml::classNamesSorted() const {
   return out;
 }
 
+// Helper to flatten nested settings into dotted/camelCase keys
+// e.g., trajectoryLimit.enabled -> trajectoryLimitEnabled
+// e.g., trajectoryLimit.maxHzPerMs.cf2 -> trajectoryLimitMaxHzPerMsCf2
+static void flattenSettings(const Node& node, const std::string& prefix,
+                            std::vector<std::pair<std::string, std::string>>& out) {
+  if (!node.isMap()) return;
+  
+  for (const auto& kv : node.map) {
+    const std::string& key = kv.first;
+    const Node& v = kv.second;
+    
+    // Build the flattened key name
+    std::string flatKey;
+    if (prefix.empty()) {
+      flatKey = key;
+    } else {
+      // CamelCase join: trajectoryLimit + enabled -> trajectoryLimitEnabled
+      // Capitalize the first letter of the nested key
+      flatKey = prefix;
+      if (!key.empty()) {
+        flatKey += static_cast<char>(std::toupper(static_cast<unsigned char>(key[0])));
+        flatKey += key.substr(1);
+      }
+    }
+    
+    if (v.isScalar()) {
+      out.emplace_back(flatKey, v.scalar);
+    } else if (v.isMap()) {
+      // Recurse into nested maps
+      flattenSettings(v, flatKey, out);
+    } else if (v.isSeq()) {
+      // For sequences, join elements with commas (e.g., applyTo: [cf2, cf3] -> "cf2,cf3")
+      std::string joined;
+      for (size_t i = 0; i < v.seq.size(); ++i) {
+        if (v.seq[i].isScalar()) {
+          if (!joined.empty()) joined += ",";
+          joined += v.seq[i].scalar;
+        }
+      }
+      if (!joined.empty()) {
+        out.emplace_back(flatKey, joined);
+      }
+    }
+  }
+}
+
 std::vector<std::pair<std::string, std::string>> LanguageYaml::settings() const {
   std::vector<std::pair<std::string, std::string>> out;
   const Node* s = m_root.get("settings");
   if (!s || !s->isMap()) return out;
 
-  out.reserve(s->map.size());
-  for (const auto& kv : s->map) {
-    const std::string& key = kv.first;
-    const Node& v = kv.second;
-    if (!v.isScalar()) continue;
-    out.emplace_back(key, v.scalar);
-  }
+  flattenSettings(*s, "", out);
+  
   std::sort(out.begin(), out.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
   return out;
+}
+
+// Map of flattened setting key prefixes to their nested paths.
+// This allows us to reconstruct the nested YAML structure from flattened keys.
+struct NestedKeyMapping {
+  const char* flatPrefix;      // e.g., "trajectoryLimit"
+  const char* nestedPath;      // e.g., "trajectoryLimit" (top-level nested map)
+  const char* subPath;         // e.g., nullptr or "lateralOnglide" for deeper nesting
+};
+
+// Known nested setting prefixes and their structure
+static const NestedKeyMapping kNestedMappings[] = {
+  // trajectoryLimit settings
+  {"trajectoryLimitEnabled", "trajectoryLimit", nullptr},
+  {"trajectoryLimitApplyTo", "trajectoryLimit", nullptr},
+  {"trajectoryLimitWindowMs", "trajectoryLimit", nullptr},
+  {"trajectoryLimitApplyAcrossWordBoundary", "trajectoryLimit", nullptr},
+  {"trajectoryLimitMaxHzPerMsCf2", "trajectoryLimit", "maxHzPerMs"},
+  {"trajectoryLimitMaxHzPerMsCf3", "trajectoryLimit", "maxHzPerMs"},
+  
+  // liquidDynamics settings
+  {"liquidDynamicsEnabled", "liquidDynamics", nullptr},
+  {"liquidDynamicsLateralOnglideF1Delta", "liquidDynamics", "lateralOnglide"},
+  {"liquidDynamicsLateralOnglideF2Delta", "liquidDynamics", "lateralOnglide"},
+  {"liquidDynamicsLateralOnglideDurationPct", "liquidDynamics", "lateralOnglide"},
+  {"liquidDynamicsRhoticF3DipEnabled", "liquidDynamics", "rhoticF3Dip"},
+  {"liquidDynamicsRhoticF3Minimum", "liquidDynamics", "rhoticF3Dip"},
+  {"liquidDynamicsRhoticF3DipDurationPct", "liquidDynamics", "rhoticF3Dip"},
+  {"liquidDynamicsLabialGlideTransitionEnabled", "liquidDynamics", "labialGlideTransition"},
+  {"liquidDynamicsLabialGlideStartF1", "liquidDynamics", "labialGlideTransition"},
+  {"liquidDynamicsLabialGlideStartF2", "liquidDynamics", "labialGlideTransition"},
+  {"liquidDynamicsLabialGlideTransitionPct", "liquidDynamics", "labialGlideTransition"},
+  
+  // positionalAllophones settings  
+  {"positionalAllophonesEnabled", "positionalAllophones", nullptr},
+  {"positionalAllophonesGlottalReinforcementEnabled", "positionalAllophones", "glottalReinforcement"},
+  {"positionalAllophonesGlottalReinforcementDurationMs", "positionalAllophones", "glottalReinforcement"},
+  {"positionalAllophonesLateralDarknessPreVocalic", "positionalAllophones", "lateralDarkness"},
+  {"positionalAllophonesLateralDarknessPostVocalic", "positionalAllophones", "lateralDarkness"},
+  {"positionalAllophonesLateralDarknessSyllabic", "positionalAllophones", "lateralDarkness"},
+  {"positionalAllophonesLateralDarkF2TargetHz", "positionalAllophones", "lateralDarkness"},
+  {"positionalAllophonesStopAspirationWordInitial", "positionalAllophones", "stopAspiration"},
+  {"positionalAllophonesStopAspirationWordInitialStressed", "positionalAllophones", "stopAspiration"},
+  {"positionalAllophonesStopAspirationIntervocalic", "positionalAllophones", "stopAspiration"},
+  {"positionalAllophonesStopAspirationWordFinal", "positionalAllophones", "stopAspiration"},
+};
+
+// Extract the leaf key name from a flattened key given the prefix info
+// e.g., "trajectoryLimitEnabled" with prefix "trajectoryLimit" -> "enabled"
+// e.g., "trajectoryLimitMaxHzPerMsCf2" with prefix "trajectoryLimit" and subPath "maxHzPerMs" -> "cf2"
+static std::string extractLeafKey(const std::string& flatKey, const char* nestedPath, const char* subPath) {
+  std::string prefix = nestedPath;
+  if (subPath) {
+    // Capitalize first letter of subPath for camelCase
+    prefix += static_cast<char>(std::toupper(static_cast<unsigned char>(subPath[0])));
+    prefix += (subPath + 1);
+  }
+  
+  if (flatKey.size() <= prefix.size()) return flatKey;
+  
+  // The leaf key starts after the prefix, with first letter lowercased
+  std::string leaf = flatKey.substr(prefix.size());
+  if (!leaf.empty()) {
+    leaf[0] = static_cast<char>(std::tolower(static_cast<unsigned char>(leaf[0])));
+  }
+  return leaf;
+}
+
+// Check if a value looks like a comma-separated list (for sequences like applyTo)
+static bool looksLikeList(const std::string& value) {
+  return value.find(',') != std::string::npos;
+}
+
+// Split a comma-separated string into a sequence node
+static Node makeSequenceFromCommaSeparated(const std::string& value) {
+  Node seq;
+  seq.type = Node::Type::Seq;
+  
+  size_t start = 0;
+  size_t pos;
+  while ((pos = value.find(',', start)) != std::string::npos) {
+    std::string item = value.substr(start, pos - start);
+    // Trim whitespace
+    while (!item.empty() && std::isspace(static_cast<unsigned char>(item.front()))) item.erase(item.begin());
+    while (!item.empty() && std::isspace(static_cast<unsigned char>(item.back()))) item.pop_back();
+    if (!item.empty()) {
+      Node n;
+      n.type = Node::Type::Scalar;
+      n.scalar = item;
+      seq.seq.push_back(std::move(n));
+    }
+    start = pos + 1;
+  }
+  // Last item
+  std::string item = value.substr(start);
+  while (!item.empty() && std::isspace(static_cast<unsigned char>(item.front()))) item.erase(item.begin());
+  while (!item.empty() && std::isspace(static_cast<unsigned char>(item.back()))) item.pop_back();
+  if (!item.empty()) {
+    Node n;
+    n.type = Node::Type::Scalar;
+    n.scalar = item;
+    seq.seq.push_back(std::move(n));
+  }
+  
+  return seq;
 }
 
 void LanguageYaml::setSettings(const std::vector<std::pair<std::string, std::string>>& settings) {
@@ -313,10 +459,51 @@ void LanguageYaml::setSettings(const std::vector<std::pair<std::string, std::str
 
   for (const auto& kv : settings) {
     if (kv.first.empty()) continue;
-    Node v;
-    v.type = Node::Type::Scalar;
-    v.scalar = kv.second;
-    s->map[kv.first] = std::move(v);
+    
+    // Check if this is a known nested key
+    bool handled = false;
+    for (const auto& mapping : kNestedMappings) {
+      if (kv.first == mapping.flatPrefix) {
+        // This is an exact match to a known nested key pattern
+        std::string leafKey = extractLeafKey(kv.first, mapping.nestedPath, mapping.subPath);
+        
+        // Ensure the top-level nested map exists
+        if (s->map.find(mapping.nestedPath) == s->map.end()) {
+          s->map[mapping.nestedPath].type = Node::Type::Map;
+        }
+        Node* target = &s->map[mapping.nestedPath];
+        
+        // If there's a subPath, ensure that nested map exists too
+        if (mapping.subPath) {
+          if (target->map.find(mapping.subPath) == target->map.end()) {
+            target->map[mapping.subPath].type = Node::Type::Map;
+          }
+          target = &target->map[mapping.subPath];
+        }
+        
+        // Set the leaf value
+        Node v;
+        // Check if this should be a sequence (like applyTo)
+        if (looksLikeList(kv.second) && leafKey == "applyTo") {
+          v = makeSequenceFromCommaSeparated(kv.second);
+        } else {
+          v.type = Node::Type::Scalar;
+          v.scalar = kv.second;
+        }
+        target->map[leafKey] = std::move(v);
+        
+        handled = true;
+        break;
+      }
+    }
+    
+    if (!handled) {
+      // Regular flat setting
+      Node v;
+      v.type = Node::Type::Scalar;
+      v.scalar = kv.second;
+      s->map[kv.first] = std::move(v);
+    }
   }
 }
 
@@ -329,6 +516,40 @@ void LanguageYaml::setSetting(const std::string& key, const std::string& value) 
     m_root.scalar.clear();
   }
   Node* s = getNestedMap(m_root, "settings");
+  
+  // Check if this is a known nested key
+  for (const auto& mapping : kNestedMappings) {
+    if (key == mapping.flatPrefix) {
+      std::string leafKey = extractLeafKey(key, mapping.nestedPath, mapping.subPath);
+      
+      // Ensure the top-level nested map exists
+      if (s->map.find(mapping.nestedPath) == s->map.end()) {
+        s->map[mapping.nestedPath].type = Node::Type::Map;
+      }
+      Node* target = &s->map[mapping.nestedPath];
+      
+      // If there's a subPath, ensure that nested map exists too
+      if (mapping.subPath) {
+        if (target->map.find(mapping.subPath) == target->map.end()) {
+          target->map[mapping.subPath].type = Node::Type::Map;
+        }
+        target = &target->map[mapping.subPath];
+      }
+      
+      // Set the leaf value
+      Node v;
+      if (looksLikeList(value) && leafKey == "applyTo") {
+        v = makeSequenceFromCommaSeparated(value);
+      } else {
+        v.type = Node::Type::Scalar;
+        v.scalar = value;
+      }
+      target->map[leafKey] = std::move(v);
+      return;
+    }
+  }
+  
+  // Regular flat setting
   Node v;
   v.type = Node::Type::Scalar;
   v.scalar = value;
@@ -343,6 +564,25 @@ bool LanguageYaml::removeSetting(const std::string& key) {
   if (it == m_root.map.end()) return false;
   Node& s = it->second;
   if (!s.isMap()) return false;
+
+  // Check if this is a known nested key
+  for (const auto& mapping : kNestedMappings) {
+    if (key == mapping.flatPrefix) {
+      std::string leafKey = extractLeafKey(key, mapping.nestedPath, mapping.subPath);
+      
+      auto topIt = s.map.find(mapping.nestedPath);
+      if (topIt == s.map.end()) return false;
+      
+      Node* target = &topIt->second;
+      if (mapping.subPath) {
+        auto subIt = target->map.find(mapping.subPath);
+        if (subIt == target->map.end()) return false;
+        target = &subIt->second;
+      }
+      
+      return target->map.erase(leafKey) > 0;
+    }
+  }
 
   return s.map.erase(key) > 0;
 }

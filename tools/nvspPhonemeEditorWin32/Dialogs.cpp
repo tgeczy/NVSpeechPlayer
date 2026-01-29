@@ -16,6 +16,7 @@
 #include <cwchar>
 #include <cmath>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 static constexpr int kSampleRate = 22050;
@@ -69,6 +70,7 @@ static std::wstring paramHintW(const std::string& key) {
   if (key == "_isTap") return L"tap timing";
   if (key == "_isTrill") return L"trill timing";
   if (key == "_isAfricate") return L"affricate timing";
+  if (key == "_copyAdjacent") return L"copy adjacent formants";
 
   return L"";
 }
@@ -689,14 +691,59 @@ static std::vector<std::string> sortedNodeKeys(const nvsp_editor::Node& n) {
   return keys;
 }
 
+// Standard phoneme type flags that should always be shown in the editor,
+// even if they are not defined for a given phoneme. These are metadata flags
+// used by timing rules and special-case handling in the engine.
+static const std::vector<std::string>& getStandardPhonemeTypeFlags() {
+  static const std::vector<std::string> flags = {
+    "_copyAdjacent",
+    "_isAffricate",
+    "_isLiquid",
+    "_isNasal",
+    "_isSemivowel",
+    "_isStop",
+    "_isTap",
+    "_isTrill",
+    "_isVoiced",
+    "_isVowel"
+  };
+  return flags;
+}
+
 static void populatePhonemeFieldsList(HWND lv, const nvsp_editor::Node& phonemeMap) {
   ListView_DeleteAllItems(lv);
-  auto keys = sortedNodeKeys(phonemeMap);
+  
+  // First, collect all keys from the phoneme map
+  auto existingKeys = sortedNodeKeys(phonemeMap);
+  
+  // Build a set of keys to show: existing keys + standard type flags
+  std::vector<std::string> allKeys;
+  std::unordered_set<std::string> seen;
+  
+  // Add existing keys first
+  for (const auto& k : existingKeys) {
+    allKeys.push_back(k);
+    seen.insert(k);
+  }
+  
+  // Add standard type flags that aren't already present
+  for (const auto& flag : getStandardPhonemeTypeFlags()) {
+    if (seen.find(flag) == seen.end()) {
+      allKeys.push_back(flag);
+      seen.insert(flag);
+    }
+  }
+  
+  // Sort all keys
+  std::sort(allKeys.begin(), allKeys.end());
 
   int row = 0;
-  for (const auto& k : keys) {
-    const auto& v = phonemeMap.map.at(k);
-    if (!v.isScalar()) continue;
+  for (const auto& k : allKeys) {
+    auto it = phonemeMap.map.find(k);
+    bool exists = (it != phonemeMap.map.end() && it->second.isScalar());
+    
+    // Skip non-scalar values that exist (like nested maps)
+    if (it != phonemeMap.map.end() && !it->second.isScalar()) continue;
 
     LVITEMW item{};
     item.mask = LVIF_TEXT;
@@ -706,7 +753,7 @@ static void populatePhonemeFieldsList(HWND lv, const nvsp_editor::Node& phonemeM
     item.pszText = wk.data();
     ListView_InsertItem(lv, &item);
 
-    std::wstring wv = utf8ToWide(v.scalar);
+    std::wstring wv = exists ? utf8ToWide(it->second.scalar) : L"(not set)";
     ListView_SetItemText(lv, row, 1, const_cast<wchar_t*>(wv.c_str()));
 
     row++;
@@ -754,20 +801,28 @@ static INT_PTR CALLBACK EditPhonemeDlgProc(HWND hDlg, UINT msg, WPARAM wParam, L
         }
 
         auto it = st->working.map.find(field);
-        if (it == st->working.map.end() || !it->second.isScalar()) {
+        bool fieldExists = (it != st->working.map.end());
+        
+        // If field exists but is not scalar, reject it
+        if (fieldExists && !it->second.isScalar()) {
           msgBox(hDlg, L"That field isn't a scalar value.", L"Edit phoneme", MB_ICONERROR);
           return TRUE;
         }
 
         EditValueDialogState vs;
         vs.field = field;
-        vs.value = it->second.scalar;
+        vs.value = fieldExists ? it->second.scalar : "";
         vs.baseMap = st->working;
         vs.runtime = st->runtime;
         vs.livePreview = true;
 
         DialogBoxParamW(GetModuleHandleW(nullptr), MAKEINTRESOURCEW(IDD_EDIT_VALUE), hDlg, EditValueDlgProc, reinterpret_cast<LPARAM>(&vs));
         if (vs.ok) {
+          // Create or update the field
+          if (!fieldExists) {
+            st->working.map[field] = nvsp_editor::Node{};
+            it = st->working.map.find(field);
+          }
           it->second.type = nvsp_editor::Node::Type::Scalar;
           it->second.scalar = vs.value;
           populatePhonemeFieldsList(lv, st->working);
@@ -871,16 +926,34 @@ static void setDlgIntText(HWND hDlg, int id, int value) {
   SetDlgItemTextW(hDlg, id, buf);
 }
 
-static void fillVoices(HWND combo, const std::string& selected) {
+static void fillVoices(HWND combo, const std::string& selected, const std::vector<std::string>& profiles) {
   if (!combo) return;
   SendMessageW(combo, CB_RESETCONTENT, 0, 0);
-  const char* voices[] = {"Adam", "Benjamin", "Caleb", "David"};
+  
+  // Python presets first
+  const char* presets[] = {"Adam", "Benjamin", "Caleb", "David", "Robert"};
   int sel = 0;
-  for (int i = 0; i < 4; ++i) {
-    std::wstring w = utf8ToWide(voices[i]);
-    int idx = static_cast<int>(SendMessageW(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(w.c_str())));
-    if (selected == voices[i]) sel = idx;
+  int idx = 0;
+  
+  for (const char* preset : presets) {
+    std::wstring w = utf8ToWide(preset);
+    int pos = static_cast<int>(SendMessageW(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(w.c_str())));
+    if (selected == preset) sel = pos;
+    ++idx;
   }
+  
+  // Voice profiles from phonemes.yaml
+  for (const std::string& profileName : profiles) {
+    // Display as "profileName (profile)" to distinguish from presets
+    std::string displayName = profileName + " (profile)";
+    std::wstring w = utf8ToWide(displayName);
+    int pos = static_cast<int>(SendMessageW(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(w.c_str())));
+    
+    // Voice ID uses prefix
+    std::string voiceId = std::string(nvsp_editor::NvspRuntime::kVoiceProfilePrefix) + profileName;
+    if (selected == voiceId) sel = pos;
+  }
+  
   SendMessageW(combo, CB_SETCURSEL, sel, 0);
 }
 
@@ -923,7 +996,7 @@ static INT_PTR CALLBACK SpeechSettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam
 
       // Accessible names for any ListView controls (none here), and predictable defaults.
       HWND combo = GetDlgItem(hDlg, IDC_SPEECH_VOICE);
-      fillVoices(combo, st->settings.voiceName);
+      fillVoices(combo, st->settings.voiceName, st->voiceProfiles);
 
       setTrackbarRangeAndPos(GetDlgItem(hDlg, IDC_SPEECH_RATE_SLIDER), st->settings.rate);
       setDlgIntText(hDlg, IDC_SPEECH_RATE_VAL, st->settings.rate);
@@ -999,7 +1072,31 @@ static INT_PTR CALLBACK SpeechSettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam
         if (sel >= 0) {
           wchar_t buf[128];
           SendMessageW(combo, CB_GETLBTEXT, sel, reinterpret_cast<LPARAM>(buf));
-          st->settings.voiceName = wideToUtf8(buf);
+          std::string displayName = wideToUtf8(buf);
+          
+          // Check if this is a profile (ends with " (profile)")
+          const std::string suffix = " (profile)";
+          if (displayName.size() > suffix.size() &&
+              displayName.substr(displayName.size() - suffix.size()) == suffix) {
+            // Extract profile name and add prefix
+            std::string profileName = displayName.substr(0, displayName.size() - suffix.size());
+            st->settings.voiceName = std::string(nvsp_editor::NvspRuntime::kVoiceProfilePrefix) + profileName;
+            
+            // Set the voice profile on the frontend
+            if (st->runtime) {
+              std::string err;
+              st->runtime->setVoiceProfile(profileName, err);
+            }
+          } else {
+            // Regular Python preset
+            st->settings.voiceName = displayName;
+            
+            // Clear any active voice profile
+            if (st->runtime) {
+              std::string err;
+              st->runtime->setVoiceProfile("", err);
+            }
+          }
         }
         return TRUE;
       }

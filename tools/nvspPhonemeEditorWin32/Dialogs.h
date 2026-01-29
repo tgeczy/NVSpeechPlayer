@@ -63,6 +63,9 @@ struct SpeechSettingsDialogState {
   nvsp_editor::SpeechSettings settings;
   nvsp_editor::NvspRuntime* runtime = nullptr;
 
+  // Discovered voice profiles from phonemes.yaml
+  std::vector<std::string> voiceProfiles;
+
   // Param UI
   std::vector<std::string> paramNames;
   int selectedParam = 0;

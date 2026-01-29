@@ -55,6 +55,9 @@ using fe_queueIPA_fn = int(*)(
   void*
 );
 using fe_getLastError_fn = const char*(*)(nvspFrontend_handle_t);
+using fe_setVoiceProfile_fn = int(*)(nvspFrontend_handle_t, const char*);
+using fe_getVoiceProfile_fn = const char*(*)(nvspFrontend_handle_t);
+using fe_getPackWarnings_fn = const char*(*)(nvspFrontend_handle_t);
 
 class NvspRuntime {
 public:
@@ -98,6 +101,25 @@ public:
   // Last frontend error (if available).
   std::string lastFrontendError() const { return m_lastFrontendError; }
 
+  // Voice profile support.
+  // Discover profile names from phonemes.yaml (call after setPackRoot).
+  std::vector<std::string> discoverVoiceProfiles() const;
+  
+  // Set the active voice profile (empty string = no profile).
+  bool setVoiceProfile(const std::string& profileName, std::string& outError);
+  
+  // Get the currently active voice profile name.
+  std::string getVoiceProfile() const;
+  
+  // Check if a voice name is a C++ profile (vs Python preset).
+  static bool isVoiceProfile(const std::string& voiceName);
+  
+  // Get profile name from voice name (strips "profile:" prefix).
+  static std::string getProfileNameFromVoice(const std::string& voiceName);
+  
+  // Voice profile prefix used to distinguish profiles from Python presets.
+  static constexpr const char* kVoiceProfilePrefix = "profile:";
+
   // Apply voice preset + per-field multipliers + volume scaling.
   // Exposed so the free callback helper can reuse the same logic.
   void applySpeechSettingsToFrame(speechPlayer_frame_t& frame) const;
@@ -119,6 +141,9 @@ private:
   fe_setLanguage_fn m_feSetLanguage = nullptr;
   fe_queueIPA_fn m_feQueueIPA = nullptr;
   fe_getLastError_fn m_feGetLastError = nullptr;
+  fe_setVoiceProfile_fn m_feSetVoiceProfile = nullptr;
+  fe_getVoiceProfile_fn m_feGetVoiceProfile = nullptr;
+  fe_getPackWarnings_fn m_feGetPackWarnings = nullptr;
 
   // Runtime state
   nvspFrontend_handle_t m_feHandle = nullptr;
