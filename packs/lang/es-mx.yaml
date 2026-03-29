@@ -14,6 +14,15 @@ normalization:
       to: x_es
     - from: s
       to: s_es
+    - from: "t͡ʃ"
+      to: "t͡ʃ_es"
+    # Skip cluster rules from es.yaml that create new /s/ or /t͡ʃ/ instances.
+    # These prevent the s→s_mx and t͡ʃ→t͡ʃ_mx replacements from applying.
+    # Examples: "horas", "fresas", "catorce", "archivo".
+    - from: "ɾs"
+      to: "ɾᵊs"
+    - from: "ɾt͡ʃ"
+      to: "ɾᵊt͡ʃ"
 
   preReplacements:
     # Mexican yeísmo: espeak es-419 emits "jj" for intervocalic ll

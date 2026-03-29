@@ -116,6 +116,13 @@ normalization:
     # dialect-specific replacement (s→s_es or s→s_mx).
     - from: "ts"
       to: "t͡s"
+    # Skip cluster rules that create new /s/ or /t͡ʃ/ instances. These would
+    # prevent dialect-specific replacements (s→s_es/s→s_mx, t͡ʃ→t͡ʃ_es/t͡ʃ_mx)
+    # from applying correctly. Examples: "horas", "fresas", "catorce", "archivo".
+    - from: "ɾs"
+      to: "ɾᵊs"
+    - from: "ɾt͡ʃ"
+      to: "ɾᵊt͡ʃ"
 
   replacements:
     # Pronounciation-level normalization rules:
