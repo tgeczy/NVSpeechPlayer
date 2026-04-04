@@ -271,6 +271,30 @@ normalization:
       to: "pᵊɾ"
     - from: "dɾ"
       to: "dᵊɾ"
+    - from: "tɾ"
+      to: "tᵊɾ"
+    # Separate sonorant/fricative + velar clusters so the preceding
+    # consonant isn't swallowed by the velar burst.
+    # Reported: "algo", "carga", "rasgar", "regla" sound unclear.
+    # MUST come before dialect replacements (ɣ→ɣ_es, l→l_es, s→s_es)
+    # or cascade protection makes the patterns unmatchable.
+    - from: "lɡ"
+      to: "lᵊɡ"
+    - from: "lɣ"
+      to: "lᵊɣ"
+    - from: "ɾɡ"
+      to: "ɾᵊɡ"
+    # Note: ɾɣ handled above (line ~228).
+    - from: "sɡ"
+      to: "sᵊɡ"
+    - from: "sɣ"
+      to: "sᵊɣ"
+    # Velar + lateral (regla = /reɣla/): use full stop [ɡ] in pre-lateral
+    # clusters — Spanish /ɡ/ stays a stop before liquids, never approximant.
+    - from: "ɣl"
+      to: "ɡᵊl"
+    - from: "ɡl"
+      to: "ɡᵊl"
     # Custom phoneme tune replacements.
     # Make vowels more central:
     - from: a
@@ -325,29 +349,6 @@ normalization:
     # Make ch more clear:
     - from: "t͡ʃ"
       to: "t͡ʃ_es"
-    - from: "tɾ"
-      to: "tᵊɾ"
-    # Separate sonorant/fricative + velar clusters so the preceding
-    # consonant isn't swallowed by the velar burst.
-    # Reported: "algo", "carga", "rasgar", "regla" sound unclear.
-    - from: "lɡ"
-      to: "lᵊɡ"
-    - from: "lɣ"
-      to: "lᵊɣ"
-    - from: "ɾɡ"
-      to: "ɾᵊɡ"
-    - from: "ɾɣ"
-      to: "ɾᵊɣ"
-    - from: "sɡ"
-      to: "sᵊɡ"
-    - from: "sɣ"
-      to: "sᵊɣ"
-    # Velar + lateral (regla = /reɣla/): use full stop [ɡ] in pre-lateral
-    # clusters — Spanish /ɡ/ stays a stop before liquids, never approximant.
-    - from: "ɣl"
-      to: "ɡᵊl"
-    - from: "ɡl"
-      to: "ɡᵊl"
     # Word-initial /r/: sonorant trill (no burst, voicing through closure).
     # Base /r/ has pa1-pa6 burst energy that makes it sound like /d/.
     - from: "r"
