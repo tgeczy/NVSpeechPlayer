@@ -300,6 +300,14 @@ normalization:
       to: "ɡᵊl"
     - from: "ɡl"
       to: "ɡᵊl"
+    # Velar approximant + palatal glide coalescence.  In natural Spanish,
+    # intervocalic /ɣ/ before /j/ merges into [ʝ] — two segments become
+    # one gesture.  Synthesizing them as separate phonemes creates an F2
+    # sweep through tap territory (1650→2200 Hz), causing /r/-like percept
+    # regardless of how gentle the /ɣ/ phoneme is (issue #81: "siguiente"
+    # → "siriente").  [siˈʝente] is standard across dialects.
+    - from: "ɣj"
+      to: "ʝ"
     # Custom phoneme tune replacements.
     # Make vowels more central:
     - from: a
