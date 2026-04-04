@@ -5852,59 +5852,6 @@ phonemes:
     pf5: 3750
     pf6: 4900
     voiceAmplitude: 0.82
-  "ɣ_pal":
-    # Spanish velar approximant before front-high segments (/j/, /i/).
-    # Zero-noise sonorant: velar quality from formants alone, no frication
-    # or parallel excitation.  In natural Spanish, intervocalic /ɣ/ before
-    # /je/ is barely a consonant — a brief velar coloring, almost a semivowel.
-    # Narrow bandwidths created peaky resonances that read as "tap" to the
-    # ear; widened cb2/cb3 for smoother, vowel-like resonance.
-    # Issue #81: "siguiente" → "sirente" with frication at any level.
-    _isAfricate: false
-    _isLiquid: false
-    _isNasal: false
-    _isStop: false
-    _isVoiced: true
-    _isVowel: false
-    aspirationAmplitude: 0
-    caNP: 0
-    cb1: 100
-    cb2: 170
-    cb3: 200
-    cb4: 500
-    cb5: 1000
-    cb6: 1800
-    cbN0: 100
-    cbNP: 100
-    cf1: 400
-    cf2: 1650
-    cf3: 2600
-    cf4: 3300
-    cf5: 3750
-    cf6: 4900
-    cfN0: 250
-    cfNP: 200
-    fricationAmplitude: 0
-    pa1: 0
-    pa2: 0
-    pa3: 0
-    pa4: 0
-    pa5: 0
-    pa6: 0
-    parallelBypass: 0
-    pb1: 90
-    pb2: 170
-    pb3: 200
-    pb4: 500
-    pb5: 1000
-    pb6: 1800
-    pf1: 400
-    pf2: 1600
-    pf3: 2600
-    pf4: 3300
-    pf5: 3750
-    pf6: 4900
-    voiceAmplitude: 0.88
   "ɣ_cas":
     # Castilian velar approximant — more exaggerated than Latin American.
     # Tongue moves further back, more audible frication/noise component.

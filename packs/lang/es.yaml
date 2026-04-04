@@ -300,14 +300,17 @@ normalization:
       to: "ɡᵊl"
     - from: "ɡl"
       to: "ɡᵊl"
-    # Velar approximant + palatal glide coalescence.  In natural Spanish,
-    # intervocalic /ɣ/ before /j/ merges into [ʝ] — two segments become
-    # one gesture.  Synthesizing them as separate phonemes creates an F2
-    # sweep through tap territory (1650→2200 Hz), causing /r/-like percept
+    # Velar approximant → palatal fricative before front-high segments.
+    # In natural Spanish, intervocalic /ɣ/ before /j/ or /i/ merges into
+    # [ʝ].  Synthesizing ɣ + palatal as separate phonemes creates an F2
+    # sweep through tap territory (~1450→2200 Hz), causing /r/-like percept
     # regardless of how gentle the /ɣ/ phoneme is (issue #81: "siguiente"
-    # → "siriente").  [siˈʝente] is standard across dialects.
-    - from: "ɣj"
+    # → "siriente", "cieguito" → "cierguito").  ʝ (cf2=2100) is already
+    # close to palatal targets, so no transition artifact.
+    - from: "ɣ"
       to: "ʝ"
+      when:
+        beforeClass: FRONT_HIGH
     # Custom phoneme tune replacements.
     # Make vowels more central:
     - from: a
@@ -329,13 +332,6 @@ normalization:
     # A slightly softened and less noisy /d/.
     - from: d
       to: d_es
-    # Velar approximant before front-high segments: lighter frication and
-    # forward formants to avoid /r/-like percept from rapid F2 sweep into
-    # palatal /j/ or /i/ (issue #81: "siguiente"→"sigüiente"/"sigr-iente").
-    - from: "ɣ"
-      to: "ɣ_pal"
-      when:
-        beforeClass: FRONT_HIGH
     # A softed g approximant. It is neutral, dialect independent, but this may change in the future.
     - from: "ɣ"
       to: ɣ_es
