@@ -5852,6 +5852,57 @@ phonemes:
     pf5: 3750
     pf6: 4900
     voiceAmplitude: 0.82
+  "ɣ_pal":
+    # Spanish velar approximant before front-high segments (/j/, /i/).
+    # Very light frication to avoid /r/-like percept from noise during
+    # rapid F2 transition into palatal target.  Forward formants (cf2 1650)
+    # reduce the F2 jump.  Presence through voicing, not frication.
+    # Issue #81: "siguiente" sounded like "sigr-iente" with ɣ_es (0.20).
+    _isAfricate: false
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 100
+    cb2: 110
+    cb3: 170
+    cb4: 500
+    cb5: 1000
+    cb6: 1800
+    cbN0: 100
+    cbNP: 100
+    cf1: 400
+    cf2: 1650
+    cf3: 2600
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.06
+    pa1: 0.04
+    pa2: 0.03
+    pa3: 0.04
+    pa4: 0.03
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 90
+    pb2: 120
+    pb3: 170
+    pb4: 500
+    pb5: 1000
+    pb6: 1800
+    pf1: 400
+    pf2: 1600
+    pf3: 2600
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.85
   "ɣ_cas":
     # Castilian velar approximant — more exaggerated than Latin American.
     # Tongue moves further back, more audible frication/noise component.

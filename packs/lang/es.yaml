@@ -116,6 +116,11 @@ normalization:
       - "ɣ"
       - p
       - t
+    # Front-high segments: palatal glide + high front vowel.
+    # Used to lighten ɣ before palatal context ("siguiente", "cieguito").
+    FRONT_HIGH:
+      - j
+      - i
 
   skipReplacements:
     # Spanish does not have a /t͡s/ affricate — "ts" sequences (e.g. whatsapp,
@@ -316,6 +321,13 @@ normalization:
     # A slightly softened and less noisy /d/.
     - from: d
       to: d_es
+    # Velar approximant before front-high segments: lighter frication and
+    # forward formants to avoid /r/-like percept from rapid F2 sweep into
+    # palatal /j/ or /i/ (issue #81: "siguiente"→"sigüiente"/"sigr-iente").
+    - from: "ɣ"
+      to: "ɣ_pal"
+      when:
+        beforeClass: FRONT_HIGH
     # A softed g approximant. It is neutral, dialect independent, but this may change in the future.
     - from: "ɣ"
       to: ɣ_es
