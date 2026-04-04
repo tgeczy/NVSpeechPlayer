@@ -116,11 +116,6 @@ normalization:
       - "ɣ"
       - p
       - t
-    # Front-high segments: palatal glide + high front vowel.
-    # Used to lighten ɣ before palatal context ("siguiente", "cieguito").
-    FRONT_HIGH:
-      - j
-      - i
 
   skipReplacements:
     # Spanish does not have a /t͡s/ affricate — "ts" sequences (e.g. whatsapp,
@@ -300,17 +295,15 @@ normalization:
       to: "ɡᵊl"
     - from: "ɡl"
       to: "ɡᵊl"
-    # Velar approximant → palatal fricative before front-high segments.
-    # In natural Spanish, intervocalic /ɣ/ before /j/ or /i/ merges into
-    # [ʝ].  Synthesizing ɣ + palatal as separate phonemes creates an F2
+    # Velar approximant + palatal glide coalescence.  In natural Spanish,
+    # intervocalic /ɣ/ before /j/ merges into [ʝ] — two segments become
+    # one gesture.  Synthesizing them as separate phonemes creates an F2
     # sweep through tap territory (~1450→2200 Hz), causing /r/-like percept
-    # regardless of how gentle the /ɣ/ phoneme is (issue #81: "siguiente"
-    # → "siriente", "cieguito" → "cierguito").  ʝ (cf2=2100) is already
-    # close to palatal targets, so no transition artifact.
-    - from: "ɣ"
+    # (issue #81: "siguiente" → "siriente").  [siˈʝente] is standard.
+    # Note: ɣ before /i/ (cieguito) uses ɣ_es — no coalescence needed,
+    # the boosted ɣ_es (cf2 1450, pf2 1400) handles that context fine.
+    - from: "ɣj"
       to: "ʝ"
-      when:
-        beforeClass: FRONT_HIGH
     # Custom phoneme tune replacements.
     # Make vowels more central:
     - from: a
