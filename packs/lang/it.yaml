@@ -1,7 +1,9 @@
 # Italian (it)
 
 settings:
-  primaryStressDiv: 1.25
+  # Italian uses duration as primary stress cue (Eriksson 2016: ratio 1.5–2.0:1).
+  # 1.55 is at the conservative end — distinctly Italian rhythm.
+  primaryStressDiv: 1.55
   secondaryStressDiv: 1.07
 
   # Nasal+stop clusters (campo, tanto, banco) — protect stop from being swallowed at speed

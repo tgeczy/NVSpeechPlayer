@@ -78,6 +78,13 @@ normalization:
     - from: "ɣ"
       to: "x"
 
+    # Standard (Randstad) Dutch uses uvular [ʁ], like German.
+    # Map alveolar variants from eSpeak to uvular fricative.
+    - from: "r"
+      to: "ʁ"
+    - from: "ɾ"
+      to: "ʁ"
+
     # Dutch diphthongs - ensure proper handling
     # ij/ei = [ɛi], ui = [œy], ou/au = [ɔu]
     # These should already be in phonemes.yaml

@@ -4993,6 +4993,55 @@ phonemes:
     pf5: 3750
     pf6: 4900
     voiceAmplitude: 0.95
+  "ɔ_oz":
+    # Australian MOUTH offglide — open-mid [ɔ], not close [ʊ].
+    # Cox 2006: Aus MOUTH offglide reaches only [ɔ] territory,
+    # F1≈530–580, F2≈950–1050. Base ʊ (F1=445, F2=960) is too closed.
+    # Named _oz (not _au) to avoid 'a' being caught by a→æ replacement.
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: true
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 100
+    cb2: 90
+    cb3: 180
+    cb4: 250
+    cb5: 200
+    cb6: 1000
+    cbN0: 100
+    cbNP: 100
+    cf1: 560
+    cf2: 1000
+    cf3: 2450
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0
+    pa1: 0
+    pa2: 0
+    pa3: 0
+    pa4: 0
+    pa5: 0
+    pa6: 0
+    parallelBypass: 0
+    pb1: 140
+    pb2: 100
+    pb3: 200
+    pb4: 250
+    pb5: 200
+    pb6: 1000
+    pf1: 600
+    pf2: 1050
+    pf3: 2450
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.90
   "ɔ_fr":
     # French /ɔ/ — open-mid back rounded. Calliope 1989: F1≈530, F2≈900.
     # Base ɔ (F1=420, F2=840) is too closed — French /ɔ/ is distinctly open.

@@ -179,11 +179,11 @@ settings:
     enabled: true
     durationScale: 1.0
     pairScales:
-      "ɑ ɪ": 1.20         # PRICE — wide
-      "ɑ ʊ": 1.15          # MOUTH — wide
-      "ɔ ɪ": 1.15          # CHOICE — wide
-      "æ ɪ": 0.95          # FACE — narrow (Australian raised onset)
-      "ə ᵘ": 0.92          # GOAT — narrow (fronted offglide)
+      "ᵅ ᵉ": 1.20           # PRICE — wide (backed onset → DRESS offglide)
+      "æ ɔ_oz": 0.82         # MOUTH — tight (very wide F2 sweep needs compression)
+      "ɔ ɪ_au": 1.15         # CHOICE — wide (ɪ→ɪ_au replacement fires in tie)
+      "æ ɪ_au": 0.95         # FACE — narrow (ɪ→ɪ_au replacement fires in tie)
+      "ə ᵘ": 0.92            # GOAT — narrow (no replacement on ᵘ, key correct)
     durationFloorMs: 60
     onsetHoldExponent: 1.7
     microFrameIntervalMs: 8
@@ -584,14 +584,19 @@ normalization:
     - from: "eɪ"
       to:   "æ͡ɪ"
 
-    # PRICE: Protect from TRAP rule (a→æ).
-    # With tie-insensitive matching, catches both aɪ and a͡ɪ.
+    # PRICE: Back the onset to [ɑ̟] (Cox 2006, F2≈1200) and open the
+    # offglide to DRESS [e] quality (F1≈510, F2≈2010) instead of close
+    # KIT [ɪ].  Australian PRICE glides from back-open to mid-front.
+    # Uses ᵅ (RP back ɑ, F2=1200) + ᵉ (raised DRESS).
     - from: "a͡ɪ"
-      to:   "ɑ͡ɪ"
+      to:   "ᵅ͡ᵉ"
 
-    # MOUTH: Same protection as PRICE.
+    # MOUTH: Front the onset to [æ] (Cox 2006, F2≈1650) and open the
+    # offglide to [ɔ] (F1≈560, F2≈1000) instead of close [ʊ].
+    # Australian PRICE backs, MOUTH fronts — opposite directions.
+    # Uses existing æ (F2=1720) + ɔ_oz (open-mid, F1=560).
     - from: "a͡ʊ"
-      to:   "ɑ͡ʊ"
+      to:   "æ͡ɔ_oz"
 
     # CHOICE: eSpeak gives ɔɪ without tie bar.  Protect the ɪ offglide.
     - from: "ɔɪ"
@@ -667,6 +672,8 @@ normalization:
       - "ᴐ"
       - "ᵒ"
       - "ᵊ"
+      - "ᵅ"
+      - "ɔ_oz"
 
     CONSONANTS:
       - "b"
@@ -707,7 +714,7 @@ normalization:
       - "d͡z"
 
     # ── Vowels class (for beforeClass/afterClass checks) ─────────
-    VOWELS: ["a", "e", "i", "o", "u", "ɐ", "ə", "ɜ", "ɑ", "ɒ", "ɔ", "ɛ", "æ", "ʊ", "ɪ", "ᵻ", "ᵾ", "ʉ", "ᵉ", "ᵘ", "ᴏ", "ᴐ", "ã", "ẽ", "ĩ", "õ", "ũ"]
+    VOWELS: ["a", "e", "i", "o", "u", "ɐ", "ə", "ɜ", "ɑ", "ɒ", "ɔ", "ɛ", "æ", "ʊ", "ɪ", "ᵻ", "ᵾ", "ʉ", "ᵉ", "ᵘ", "ᴏ", "ᴐ", "ᵅ", "ɔ_oz", "ã", "ẽ", "ĩ", "õ", "ũ"]
 
   replacements:
     # ══════════════════════════════════════════════════════════════
