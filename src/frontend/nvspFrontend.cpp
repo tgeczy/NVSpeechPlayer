@@ -956,6 +956,25 @@ NVSP_FRONTEND_API char* nvspFrontend_prepareText(
 
   const std::string original(textUtf8);
   std::string input = normalizeText(original);
+
+  // Single-character letter dict lookup: if the input is exactly one
+  // Unicode codepoint and the language has a letter dict entry for it,
+  // return the description (e.g. "y" → "i griega" in Spanish).
+  // This must happen before eSpeak phonemization so all platforms
+  // (Android, iOS, Speech Dispatcher) get correct character names.
+  if (!h->pack.letterDict.empty()) {
+    auto u32 = utf8ToU32(input);
+    if (u32.size() == 1) {
+      auto it = h->pack.letterDict.find(input);
+      if (it != h->pack.letterDict.end()) {
+        const std::string& desc = it->second;
+        char* out = static_cast<char*>(std::malloc(desc.size() + 1));
+        if (out) std::memcpy(out, desc.c_str(), desc.size() + 1);
+        return out;
+      }
+    }
+  }
+
   // Get disabled dict types for current language (empty set if none disabled).
   const auto& disabled = h->disabledDictTypes.count(h->langTag)
       ? h->disabledDictTypes.at(h->langTag) : std::unordered_set<std::string>{};
