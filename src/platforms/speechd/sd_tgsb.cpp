@@ -128,7 +128,7 @@ struct BuiltinVoice {
 };
 
 static const BuiltinVoice kBuiltinVoices[] = {
-  {"Adam", 1,1, 1,1,1,1,1,1, 1.3,1,1,1,1,1, 1,1,1,1,1,1, 1,1,1,1, 1,1,1,1.3,
+  {"Adam", 0.92,0.92, 1,1,1,1,1,1, 1.3,1,1,1,1,1, 1,1,1,1,1,1, 1,1,1,1, 1,1,1,1.3,
    0.85,1,1, NAN,NAN,NAN,NAN,NAN, NAN,NAN,NAN,1.0, 0.0,true},
   {"Benjamin", 1,1, 1.01,1.02,1,1,1,1, 1.3,1,1,1,1,1, 1,1,1,1,1,1, 1,1,1,1, 1,1,1,1.3,
    0.7,1,1, NAN,NAN,NAN,NAN,NAN, 3770,4100,5000,0.9, 0.0,true},
@@ -599,7 +599,7 @@ int main(int argc, char** argv) {
   std::string voiceName = "Adam";
   std::string pitchMode = "";  // empty = use pack default
   int ssipRate = 0;
-  int ssipPitch = 50;
+  int ssipPitch = 0;  // SSIP default (range -100..+100); was 50 which mapped to ~152 Hz
   double ssipVolume = 1.0;
   double inflection = 0.5;
   int pauseMode = 0;  // 0=off, 1=short, 2=long

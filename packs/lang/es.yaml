@@ -131,6 +131,35 @@ normalization:
     - from: "ss"
       to: "s"
 
+    # Spanish consonant gemination (issue #91): Spanish speakers merge
+    # orthographic double consonants into single sounds.  "innato",
+    # "cannabis", "vegetto", "kakarotto", "Klatt" etc. should be pronounced
+    # with single consonants.  eSpeak emits the doubles literally; merge here.
+    #
+    # Skipped intentionally:
+    #   rr — phonemic trill contrast (pero/perro)
+    #   ll — digraph, already converted to ʎ or ʝ by eSpeak
+    #   ɲɲ — explicit doubling for mañana clarity (different Unicode)
+    #   cc — usually /kθ/ or /ks/ (acción), not true gemination
+    - from: "nn"
+      to: "n"
+    - from: "tt"
+      to: "t"
+    - from: "bb"
+      to: "b"
+    - from: "pp"
+      to: "p"
+    - from: "dd"
+      to: "d"
+    - from: "ff"
+      to: "f"
+    - from: "mm"
+      to: "m"
+    - from: "ɡɡ"
+      to: "ɡ"
+    - from: "kk"
+      to: "k"
+
   replacements:
     # Pronounciation-level normalization rules:
     # Palatal nasal: some tables emit ñ as nʲ (or n͡ʲ). Map it to /ɲ/ so it doesn't collapse to plain /n/.
