@@ -17,6 +17,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <mutex>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace nvsp_frontend {

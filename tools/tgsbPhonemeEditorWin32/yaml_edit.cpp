@@ -12,6 +12,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <fstream>
 #include <locale>
 #include <sstream>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace ye = nvsp_frontend::yaml_export;

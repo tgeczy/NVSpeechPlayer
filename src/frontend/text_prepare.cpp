@@ -10,6 +10,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <cctype>
 #include <cstdlib>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // Debug logging (set to 1 to enable, 0 to disable).

@@ -9,6 +9,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <cctype>
 #include <cstdint>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // Debug logging (shares TPARSER_DEBUG_LOG toggle from text_parser.cpp).

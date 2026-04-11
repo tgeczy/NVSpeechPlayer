@@ -13,6 +13,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace fs = std::filesystem;

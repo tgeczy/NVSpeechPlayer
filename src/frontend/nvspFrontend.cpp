@@ -14,6 +14,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <new>
 #include <set>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "utf8.h"

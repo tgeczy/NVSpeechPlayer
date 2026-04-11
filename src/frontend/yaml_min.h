@@ -7,9 +7,9 @@ Licensed under the MIT License. See LICENSE for details.
 #ifndef TGSB_FRONTEND_YAML_MIN_H
 #define TGSB_FRONTEND_YAML_MIN_H
 
+#include <map>
 #include <string>
 #include <string_view>
-#include <unordered_map>
 #include <vector>
 
 namespace nvsp_frontend::yaml_min {
@@ -26,7 +26,12 @@ struct Node {
   // For scalars, we keep the raw text without quotes.
   std::string scalar;
 
-  std::unordered_map<std::string, Node> map;
+  // std::map instead of std::unordered_map: std::map allows incomplete
+  // value types (recursive Node) under GCC 11's libstdc++, which is the
+  // default on Ubuntu 22.04 LTS.  Tiny perf diff vs unordered_map is
+  // irrelevant — parsing happens once at startup.  Insertion-order
+  // round-trip fidelity is handled separately by keyOrder below.
+  std::map<std::string, Node> map;
   // Preserves insertion order of map keys for round-trip fidelity.
   std::vector<std::string> keyOrder;
   std::vector<Node> seq;

@@ -24,6 +24,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <algorithm>
 #include <cstdint>
 #include <sstream>
+#include <unordered_map>
 #include <unordered_set>
 
 // Temporary debug logging for text parser investigation.
