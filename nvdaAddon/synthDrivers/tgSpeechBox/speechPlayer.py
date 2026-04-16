@@ -218,6 +218,14 @@ class VoicingTone(Structure):
         ("nasalBwScale", c_double),              # Nasal resonator bandwidth multiplier (0.5-2.0, default 1.0)
         ("f4FreqScale", c_double),               # F4 frequency multiplier (0.7-1.5, default 1.0)
         ("nasalGainScale", c_double),            # Nasal pole coupling amplitude multiplier (0.5-1.5, default 1.0)
+
+        # New v5 parameters — dual-oscillator chorus (vocal fold asymmetry)
+        # MUST stay in sync with speechPlayer_voicingTone_t in src/voicingTone.h.
+        # ctypes silently accepts attribute writes on undeclared fields, so missing
+        # entries here cause slider values to be stored as Python-only attributes
+        # that never reach the DLL — see issue #93.
+        ("chorusDepth", c_double),               # Chorus blend amount (0.0-1.0, default 0.0 = off)
+        ("chorusDetuneHz", c_double),            # Second oscillator pitch offset (0.5-5.0 Hz, default 2.0)
     ]
     
     @classmethod
@@ -254,6 +262,10 @@ class VoicingTone(Structure):
         tone.nasalBwScale = 1.0                 # No scaling (default)
         tone.f4FreqScale = 1.0                  # No scaling (default)
         tone.nasalGainScale = 1.0               # No scaling (default)
+
+        # New v5 parameters — dual-oscillator chorus
+        tone.chorusDepth = 0.0                  # Off by default
+        tone.chorusDetuneHz = 2.0               # Natural vocal fold asymmetry range
         return tone
 
 
