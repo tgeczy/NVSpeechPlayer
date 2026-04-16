@@ -956,9 +956,9 @@ player.setOutputGain(1.6)        # -> bool
 player.setTimeStretch(2.0)       # -> bool
 ```
 
-This file lives at both `speechPlayer.py` (repo root, for standalone use) and `nvdaAddon/synthDrivers/tgSpeechBox/speechPlayer.py` (bundled with the NVDA add-on). It can be used in any Python project that needs to drive the DSP engine directly.
+This file lives at `speechPlayer.py` (repo root) and is the **single source of truth** for all consumers — standalone Python users and the NVDA add-on alike. The NVDA add-on packaging step (documented in `claude-release.md`) manually copies this file into `C:\git\nvda-release-tg\synthDrivers\tgSpeechBox\speechPlayer.py` at release time. There is no second in-repo copy under `nvdaAddon/` — that was eliminated in April 2026 after issue #93 exposed a silent drift where slider values never reached the DLL.
 
-Note: The NVDA add-on version imports from `logHandler` for logging. For standalone use outside NVDA, the repo-root copy can be adapted.
+Note: `speechPlayer.py` does `from logHandler import log` at the top, which is NVDA-specific. Standalone users outside NVDA should provide a compatible `logHandler` shim on `sys.path` or adapt the import in their own fork.
 
 ---
 
