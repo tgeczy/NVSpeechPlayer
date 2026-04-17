@@ -65,68 +65,47 @@ typedef struct nvspFrontend_Frame {
   (typically 0.5-2.0, where 1.0 is neutral), and endCf/endPf which are Hz
   (or NAN for no ramping).
 */
-typedef struct nvspFrontend_FrameEx {
-  double creakiness;      /* laryngealization / creaky voice (e.g. Danish stød) */
-  double breathiness;     /* breath noise mixed into voicing */
-  double jitter;          /* pitch period variation (irregular F0) */
-  double shimmer;         /* amplitude variation (irregular loudness) */
-  double sharpness;       /* glottal closure sharpness multiplier (1.0 = neutral) */
-  
-  /* Formant end targets for within-frame ramping (DECTalk-style transitions).
-     NAN = no ramping (use base formant value throughout frame).
-     Any other value = ramp from base to this value over the frame duration. */
-  double endCf1;          /* Cascade F1 end target (Hz), NAN = no ramp */
-  double endCf2;          /* Cascade F2 end target (Hz), NAN = no ramp */
-  double endCf3;          /* Cascade F3 end target (Hz), NAN = no ramp */
-  double endPf1;          /* Parallel F1 end target (Hz), NAN = no ramp */
-  double endPf2;          /* Parallel F2 end target (Hz), NAN = no ramp */
-  double endPf3;          /* Parallel F3 end target (Hz), NAN = no ramp */
-
-  /* Optional pitch contour model (DSP v6+)
-     Fujisaki-Bartman / DECTalk-style pitch contour model.
-
-     IMPORTANT: All time units for this model are in *samples* (not milliseconds). */
-  double fujisakiEnabled;     /* 0.0 = off, >0.5 = on */
-  double fujisakiReset;       /* rising edge resets model state */
-  double fujisakiPhraseAmp;   /* phrase command amplitude (e.g. 1.3) */
-  double fujisakiPhraseLen;   /* phrase filter L (samples). 0 = use default */
-  double fujisakiAccentAmp;   /* accent command amplitude (e.g. 0.4) */
-  double fujisakiAccentDur;   /* accent duration D (samples). 0 = use default */
-  double fujisakiAccentLen;   /* accent filter L (samples). 0 = use default */
-
-  /* Per-parameter transition speed scales (0.0 = no override, 1.0 = normal).
-     Scale < 1.0 means the parameter reaches its target in that fraction of the
-     fade, then holds.  E.g. 0.6 = reach target at 60% of fade window. */
-  double transF1Scale;        /* cf1, pf1, cb1, pb1 */
-  double transF2Scale;        /* cf2, pf2, cb2, pb2 */
-  double transF3Scale;        /* cf3, pf3, cb3, pb3 */
-  double transNasalScale;     /* cfN0, cfNP, cbN0, cbNP, caNP */
-
-  /* Amplitude crossfade mode: 0.0 = linear (default), 1.0 = equal-power.
-     Equal-power prevents energy dips at source transitions (voiced→voiceless).
-     Set by frame_emit when it detects a voicing source change. */
+// >>> AUTO-GENERATED FROM src/frame.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_frame_ex.py) >>>
+typedef struct {
+  // Voice quality parameters (DSP v5)
+  double creakiness;  // laryngealization / creaky voice (e.g. Danish stød)
+  double breathiness;  // breath noise mixed into voicing
+  double jitter;  // pitch period variation (irregular F0)
+  double shimmer;  // amplitude variation (irregular loudness)
+  double sharpness;  // glottal closure sharpness MULTIPLIER (0=use SR default, 0.5-2.0 typical)
+  // Formant end targets for within-frame ramping (NAN = no ramp)
+  double endCf1;  // Cascade F1 end target (Hz), NAN = no ramp
+  double endCf2;  // Cascade F2 end target (Hz), NAN = no ramp
+  double endCf3;  // Cascade F3 end target (Hz), NAN = no ramp
+  double endPf1;  // Parallel F1 end target (Hz), NAN = no ramp
+  double endPf2;  // Parallel F2 end target (Hz), NAN = no ramp
+  double endPf3;  // Parallel F3 end target (Hz), NAN = no ramp
+  // Fujisaki-Bartman pitch contour model (DSP v6+)
+  double fujisakiEnabled;  // 0.0 = off (legacy behavior), >0.5 = on
+  double fujisakiReset;  // rising edge resets model filter state
+  double fujisakiPhraseAmp;  // phrase command amplitude (e.g. 1.3)
+  double fujisakiPhraseLen;  // phrase filter L (samples to peak). 0 = use default
+  double fujisakiAccentAmp;  // accent command amplitude (e.g. 0.4)
+  double fujisakiAccentDur;  // accent duration D (samples). 0 = use default
+  double fujisakiAccentLen;  // accent filter L (samples to peak). 0 = use default
+  // Per-parameter transition speed scales (DSP v7). 0.0 = no override.
+  double transF1Scale;  // cf1, pf1, cb1, pb1
+  double transF2Scale;  // cf2, pf2, cb2, pb2
+  double transF3Scale;  // cf3, pf3, cb3, pb3
+  double transNasalScale;  // cfN0, cfNP, cbN0, cbNP, caNP
+  // Amplitude crossfade mode (DSP v7.1). 0=linear, 1=equal-power.
   double transAmplitudeMode;
-
-  /* Higher cascade formants F7/F8 (DSP v8).
-     Fills the spectral gap above F6 at sample rates >= 22050 Hz.
-     Defaults from Rabiner 1968, cited in QLatt (github.com/nicclase/qlatt).
-     Per-phoneme overridable via YAML keys cf7/cb7/cf8/cb8. */
-  double cf7;   /* F7 frequency (Hz).  Default 6500.0 */
-  double cb7;   /* F7 bandwidth (Hz).  Default 720.0  */
-  double cf8;   /* F8 frequency (Hz).  Default 7500.0 */
-  double cb8;   /* F8 bandwidth (Hz).  Default 1250.0 */
-
-  /* Source amplitude timing — noise hold ratio.
-     Delays fadeout of old noise sources during crossfade.
-     0.0 = legacy, 0.3 = hold for first 30% of fade.
-     Set by boundary_smoothing based on transition type. */
+  // Higher cascade formants F7/F8 (DSP v8, Rabiner 1968 defaults)
+  double cf7;  // F7 frequency (Hz).  Default 6500.0
+  double cb7;  // F7 bandwidth (Hz).  Default 720.0
+  double cf8;  // F8 frequency (Hz).  Default 7500.0
+  double cb8;  // F8 bandwidth (Hz).  Default 1250.0
+  // Source amplitude timing (DSP v8). 0.0 = legacy, no hold.
   double transSourceHoldRatio;
-
-  /* Voicing onset hold — delays ramp-in of new voiceAmplitude.
-     0.0 = legacy, 0.25 = hold old voicing for first 25% of fade.
-     Combined with transSourceHoldRatio for per-parameter timing. */
+  // Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
   double transVoicingHoldRatio;
 } nvspFrontend_FrameEx;
+// <<< END AUTO-GENERATED <<<
 
 /* Number of fields in FrameEx struct (for size validation) */
 #define NVSP_FRONTEND_FRAMEEX_NUM_PARAMS 29

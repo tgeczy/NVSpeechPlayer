@@ -78,60 +78,48 @@ class FrameEx(Structure):
     IMPORTANT: This struct must match nvspFrontend_FrameEx / speechPlayer_frameEx_t
     exactly (29 doubles = 232 bytes). Field order matters for ctypes.memmove().
     """
+    # >>> AUTO-GENERATED FROM src/frame.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_frame_ex.py) >>>
     _fields_ = [
         # Voice quality parameters (DSP v5)
-        ("creakiness", c_double),   # Laryngealization / creaky voice (e.g. Danish stød)
-        ("breathiness", c_double),  # Breath noise mixed into voicing
-        ("jitter", c_double),       # Pitch period variation (irregular F0)
-        ("shimmer", c_double),      # Amplitude variation (irregular loudness)
-        ("sharpness", c_double),    # Glottal sharpness MULTIPLIER (0=SR default, 0.5-2.0 typical)
-        
-        # Formant end targets for within-frame ramping (DECTalk-style transitions)
-        # NAN = no ramping (use base formant value throughout frame)
-        # Any other value = ramp from base to this value over the frame duration
-        ("endCf1", c_double),       # Cascade F1 end target (Hz), NAN = no ramp
-        ("endCf2", c_double),       # Cascade F2 end target (Hz), NAN = no ramp
-        ("endCf3", c_double),       # Cascade F3 end target (Hz), NAN = no ramp
-        ("endPf1", c_double),       # Parallel F1 end target (Hz), NAN = no ramp
-        ("endPf2", c_double),       # Parallel F2 end target (Hz), NAN = no ramp
-        ("endPf3", c_double),       # Parallel F3 end target (Hz), NAN = no ramp
-        
+        ("creakiness", c_double),  # laryngealization / creaky voice (e.g. Danish stød)
+        ("breathiness", c_double),  # breath noise mixed into voicing
+        ("jitter", c_double),  # pitch period variation (irregular F0)
+        ("shimmer", c_double),  # amplitude variation (irregular loudness)
+        ("sharpness", c_double),  # glottal closure sharpness MULTIPLIER (0=use SR default, 0.5-2.0 typical)
+        # Formant end targets for within-frame ramping (NAN = no ramp)
+        ("endCf1", c_double),  # Cascade F1 end target (Hz), NAN = no ramp
+        ("endCf2", c_double),  # Cascade F2 end target (Hz), NAN = no ramp
+        ("endCf3", c_double),  # Cascade F3 end target (Hz), NAN = no ramp
+        ("endPf1", c_double),  # Parallel F1 end target (Hz), NAN = no ramp
+        ("endPf2", c_double),  # Parallel F2 end target (Hz), NAN = no ramp
+        ("endPf3", c_double),  # Parallel F3 end target (Hz), NAN = no ramp
         # Fujisaki-Bartman pitch contour model (DSP v6+)
-        # Enables Eloquence-style phrase/accent pitch shaping in the DSP
-        ("fujisakiEnabled", c_double),   # 0.0 = off, >0.5 = on
-        ("fujisakiReset", c_double),     # Rising edge resets model state
-        ("fujisakiPhraseAmp", c_double), # Phrase command amplitude (e.g. 1.3)
-        ("fujisakiPhraseLen", c_double), # Phrase filter L (samples). 0 = use default
-        ("fujisakiAccentAmp", c_double), # Accent command amplitude (e.g. 0.4)
-        ("fujisakiAccentDur", c_double), # Accent duration D (samples). 0 = use default
-        ("fujisakiAccentLen", c_double), # Accent filter L (samples). 0 = use default
-
-        # Per-parameter transition speed scales (DSP v7)
-        # 0.0 = no override, <1.0 = reach target faster, 1.0 = normal fade rate
-        ("transF1Scale", c_double),     # cf1, pf1, cb1, pb1
-        ("transF2Scale", c_double),     # cf2, pf2, cb2, pb2
-        ("transF3Scale", c_double),     # cf3, pf3, cb3, pb3
+        ("fujisakiEnabled", c_double),  # 0.0 = off (legacy behavior), >0.5 = on
+        ("fujisakiReset", c_double),  # rising edge resets model filter state
+        ("fujisakiPhraseAmp", c_double),  # phrase command amplitude (e.g. 1.3)
+        ("fujisakiPhraseLen", c_double),  # phrase filter L (samples to peak). 0 = use default
+        ("fujisakiAccentAmp", c_double),  # accent command amplitude (e.g. 0.4)
+        ("fujisakiAccentDur", c_double),  # accent duration D (samples). 0 = use default
+        ("fujisakiAccentLen", c_double),  # accent filter L (samples to peak). 0 = use default
+        # Per-parameter transition speed scales (DSP v7). 0.0 = no override.
+        ("transF1Scale", c_double),  # cf1, pf1, cb1, pb1
+        ("transF2Scale", c_double),  # cf2, pf2, cb2, pb2
+        ("transF3Scale", c_double),  # cf3, pf3, cb3, pb3
         ("transNasalScale", c_double),  # cfN0, cfNP, cbN0, cbNP, caNP
-
-        # Amplitude crossfade mode (DSP v7.1)
-        # 0.0 = linear (legacy), 1.0 = equal-power (sin/cos, prevents energy dips)
+        # Amplitude crossfade mode (DSP v7.1). 0=linear, 1=equal-power.
         ("transAmplitudeMode", c_double),
-
         # Higher cascade formants F7/F8 (DSP v8, Rabiner 1968 defaults)
-        ("cf7", c_double),          # F7 frequency (Hz), default 6500.0
-        ("cb7", c_double),          # F7 bandwidth (Hz), default 720.0
-        ("cf8", c_double),          # F8 frequency (Hz), default 7500.0
-        ("cb8", c_double),          # F8 bandwidth (Hz), default 1250.0
-
-        # Source amplitude timing (DSP v8)
-        # Delays fadeout of old noise sources during crossfade.
-        ("transSourceHoldRatio", c_double),  # 0.0 = legacy, 0.3 = hold 30%
-
-        # Voicing onset hold (DSP v8)
-        # Delays ramp-in of new voicing during crossfade.
-        ("transVoicingHoldRatio", c_double),  # 0.0 = legacy, 0.25 = hold 25%
+        ("cf7", c_double),  # F7 frequency (Hz).  Default 6500.0
+        ("cb7", c_double),  # F7 bandwidth (Hz).  Default 720.0
+        ("cf8", c_double),  # F8 frequency (Hz).  Default 7500.0
+        ("cb8", c_double),  # F8 bandwidth (Hz).  Default 1250.0
+        # Source amplitude timing (DSP v8). 0.0 = legacy, no hold.
+        ("transSourceHoldRatio", c_double),
+        # Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
+        ("transVoicingHoldRatio", c_double),
     ]
-    
+    # <<< END AUTO-GENERATED <<<
+
     @classmethod
     def create(cls, creakiness: float = 0.0, breathiness: float = 0.0,
                jitter: float = 0.0, shimmer: float = 0.0,

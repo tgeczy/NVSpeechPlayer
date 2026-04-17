@@ -19,47 +19,47 @@ from . import speechPlayer
 # FrameEx struct matching nvspFrontend_FrameEx in the DLL (ABI v2+)
 # IMPORTANT: Must match speechPlayer.FrameEx exactly (29 doubles = 232 bytes)
 class FrameEx(ctypes.Structure):
+    # >>> AUTO-GENERATED FROM src/frame.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_frame_ex.py) >>>
     _fields_ = [
         # Voice quality parameters (DSP v5)
-        ("creakiness", ctypes.c_double),
-        ("breathiness", ctypes.c_double),
-        ("jitter", ctypes.c_double),
-        ("shimmer", ctypes.c_double),
-        ("sharpness", ctypes.c_double),
-        # Formant end targets (DECTalk-style ramping)
-        ("endCf1", ctypes.c_double),
-        ("endCf2", ctypes.c_double),
-        ("endCf3", ctypes.c_double),
-        ("endPf1", ctypes.c_double),
-        ("endPf2", ctypes.c_double),
-        ("endPf3", ctypes.c_double),
-        # Fujisaki pitch model (DSP v6+)
-        ("fujisakiEnabled", ctypes.c_double),
-        ("fujisakiReset", ctypes.c_double),
-        ("fujisakiPhraseAmp", ctypes.c_double),
-        ("fujisakiPhraseLen", ctypes.c_double),
-        ("fujisakiAccentAmp", ctypes.c_double),
-        ("fujisakiAccentDur", ctypes.c_double),
-        ("fujisakiAccentLen", ctypes.c_double),
-        # Per-parameter transition speed scales (DSP v7)
-        # 0.0 = no override, <1.0 = reach target faster, 1.0 = normal fade rate
-        ("transF1Scale", ctypes.c_double),
-        ("transF2Scale", ctypes.c_double),
-        ("transF3Scale", ctypes.c_double),
-        ("transNasalScale", ctypes.c_double),
-        # Amplitude crossfade mode (DSP v7.1)
-        # 0.0 = linear (legacy), 1.0 = equal-power (prevents energy dips)
+        ("creakiness", ctypes.c_double),  # laryngealization / creaky voice (e.g. Danish stød)
+        ("breathiness", ctypes.c_double),  # breath noise mixed into voicing
+        ("jitter", ctypes.c_double),  # pitch period variation (irregular F0)
+        ("shimmer", ctypes.c_double),  # amplitude variation (irregular loudness)
+        ("sharpness", ctypes.c_double),  # glottal closure sharpness MULTIPLIER (0=use SR default, 0.5-2.0 typical)
+        # Formant end targets for within-frame ramping (NAN = no ramp)
+        ("endCf1", ctypes.c_double),  # Cascade F1 end target (Hz), NAN = no ramp
+        ("endCf2", ctypes.c_double),  # Cascade F2 end target (Hz), NAN = no ramp
+        ("endCf3", ctypes.c_double),  # Cascade F3 end target (Hz), NAN = no ramp
+        ("endPf1", ctypes.c_double),  # Parallel F1 end target (Hz), NAN = no ramp
+        ("endPf2", ctypes.c_double),  # Parallel F2 end target (Hz), NAN = no ramp
+        ("endPf3", ctypes.c_double),  # Parallel F3 end target (Hz), NAN = no ramp
+        # Fujisaki-Bartman pitch contour model (DSP v6+)
+        ("fujisakiEnabled", ctypes.c_double),  # 0.0 = off (legacy behavior), >0.5 = on
+        ("fujisakiReset", ctypes.c_double),  # rising edge resets model filter state
+        ("fujisakiPhraseAmp", ctypes.c_double),  # phrase command amplitude (e.g. 1.3)
+        ("fujisakiPhraseLen", ctypes.c_double),  # phrase filter L (samples to peak). 0 = use default
+        ("fujisakiAccentAmp", ctypes.c_double),  # accent command amplitude (e.g. 0.4)
+        ("fujisakiAccentDur", ctypes.c_double),  # accent duration D (samples). 0 = use default
+        ("fujisakiAccentLen", ctypes.c_double),  # accent filter L (samples to peak). 0 = use default
+        # Per-parameter transition speed scales (DSP v7). 0.0 = no override.
+        ("transF1Scale", ctypes.c_double),  # cf1, pf1, cb1, pb1
+        ("transF2Scale", ctypes.c_double),  # cf2, pf2, cb2, pb2
+        ("transF3Scale", ctypes.c_double),  # cf3, pf3, cb3, pb3
+        ("transNasalScale", ctypes.c_double),  # cfN0, cfNP, cbN0, cbNP, caNP
+        # Amplitude crossfade mode (DSP v7.1). 0=linear, 1=equal-power.
         ("transAmplitudeMode", ctypes.c_double),
         # Higher cascade formants F7/F8 (DSP v8, Rabiner 1968 defaults)
-        ("cf7", ctypes.c_double),
-        ("cb7", ctypes.c_double),
-        ("cf8", ctypes.c_double),
-        ("cb8", ctypes.c_double),
-        # Source amplitude timing (DSP v8)
-        ("transSourceHoldRatio", ctypes.c_double),  # 0.0 = legacy, 0.3 = hold 30%
-        # Voicing onset hold (DSP v8)
-        ("transVoicingHoldRatio", ctypes.c_double),  # 0.0 = legacy, 0.25 = hold 25%
+        ("cf7", ctypes.c_double),  # F7 frequency (Hz).  Default 6500.0
+        ("cb7", ctypes.c_double),  # F7 bandwidth (Hz).  Default 720.0
+        ("cf8", ctypes.c_double),  # F8 frequency (Hz).  Default 7500.0
+        ("cb8", ctypes.c_double),  # F8 bandwidth (Hz).  Default 1250.0
+        # Source amplitude timing (DSP v8). 0.0 = legacy, no hold.
+        ("transSourceHoldRatio", ctypes.c_double),
+        # Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
+        ("transVoicingHoldRatio", ctypes.c_double),
     ]
+    # <<< END AUTO-GENERATED <<<
 
 
 # VoicingTone struct matching nvspFrontend_VoicingTone in the DLL (ABI v2+)

@@ -103,43 +103,47 @@ struct EditorVoicingToneV1 {
 
 // FrameEx struct - per-frame voice quality extensions (DSP v5+)
 // Must match nvspFrontend_FrameEx / speechPlayer_frameEx_t exactly (29 doubles = 232 bytes)
+// >>> AUTO-GENERATED FROM src/frame.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_frame_ex.py) >>>
 struct EditorFrameEx {
   // Voice quality parameters (DSP v5)
-  double creakiness;      // laryngealization / creaky voice
-  double breathiness;     // breath noise mixed into voicing
-  double jitter;          // pitch period variation
-  double shimmer;         // amplitude variation
-  double sharpness;       // glottal closure sharpness MULTIPLIER (0=SR default, 0.5-2.0)
-  // Formant end targets (DECTalk-style ramping)
-  double endCf1;          // Cascade F1 end target (Hz), NAN = no ramp
-  double endCf2;          // Cascade F2 end target (Hz), NAN = no ramp
-  double endCf3;          // Cascade F3 end target (Hz), NAN = no ramp
-  double endPf1;          // Parallel F1 end target (Hz), NAN = no ramp
-  double endPf2;          // Parallel F2 end target (Hz), NAN = no ramp
-  double endPf3;          // Parallel F3 end target (Hz), NAN = no ramp
-  // Fujisaki pitch model (DSP v6+)
-  double fujisakiEnabled;     // 0.0 = off, >0.5 = on
-  double fujisakiReset;       // rising edge resets model state
-  double fujisakiPhraseAmp;   // phrase command amplitude
-  double fujisakiPhraseLen;   // phrase filter L (samples). 0 = use default
-  double fujisakiAccentAmp;   // accent command amplitude
-  double fujisakiAccentDur;   // accent duration D (samples). 0 = use default
-  double fujisakiAccentLen;   // accent filter L (samples). 0 = use default
-  // Per-parameter transition speed scales
-  double transF1Scale;        // cf1, pf1, cb1, pb1
-  double transF2Scale;        // cf2, pf2, cb2, pb2
-  double transF3Scale;        // cf3, pf3, cb3, pb3
-  double transNasalScale;     // cfN0, cfNP, cbN0, cbNP, caNP
-  // Amplitude crossfade mode: 0.0 = linear, 1.0 = equal-power
+  double creakiness;  // laryngealization / creaky voice (e.g. Danish stød)
+  double breathiness;  // breath noise mixed into voicing
+  double jitter;  // pitch period variation (irregular F0)
+  double shimmer;  // amplitude variation (irregular loudness)
+  double sharpness;  // glottal closure sharpness MULTIPLIER (0=use SR default, 0.5-2.0 typical)
+  // Formant end targets for within-frame ramping (NAN = no ramp)
+  double endCf1;  // Cascade F1 end target (Hz), NAN = no ramp
+  double endCf2;  // Cascade F2 end target (Hz), NAN = no ramp
+  double endCf3;  // Cascade F3 end target (Hz), NAN = no ramp
+  double endPf1;  // Parallel F1 end target (Hz), NAN = no ramp
+  double endPf2;  // Parallel F2 end target (Hz), NAN = no ramp
+  double endPf3;  // Parallel F3 end target (Hz), NAN = no ramp
+  // Fujisaki-Bartman pitch contour model (DSP v6+)
+  double fujisakiEnabled;  // 0.0 = off (legacy behavior), >0.5 = on
+  double fujisakiReset;  // rising edge resets model filter state
+  double fujisakiPhraseAmp;  // phrase command amplitude (e.g. 1.3)
+  double fujisakiPhraseLen;  // phrase filter L (samples to peak). 0 = use default
+  double fujisakiAccentAmp;  // accent command amplitude (e.g. 0.4)
+  double fujisakiAccentDur;  // accent duration D (samples). 0 = use default
+  double fujisakiAccentLen;  // accent filter L (samples to peak). 0 = use default
+  // Per-parameter transition speed scales (DSP v7). 0.0 = no override.
+  double transF1Scale;  // cf1, pf1, cb1, pb1
+  double transF2Scale;  // cf2, pf2, cb2, pb2
+  double transF3Scale;  // cf3, pf3, cb3, pb3
+  double transNasalScale;  // cfN0, cfNP, cbN0, cbNP, caNP
+  // Amplitude crossfade mode (DSP v7.1). 0=linear, 1=equal-power.
   double transAmplitudeMode;
   // Higher cascade formants F7/F8 (DSP v8, Rabiner 1968 defaults)
-  double cf7;   // F7 frequency (Hz).  Default 6500.0
-  double cb7;   // F7 bandwidth (Hz).  Default 720.0
-  double cf8;   // F8 frequency (Hz).  Default 7500.0
-  double cb8;   // F8 bandwidth (Hz).  Default 1250.0
-  double transSourceHoldRatio;  // Noise hold ratio. Default 0.0
-  double transVoicingHoldRatio; // Voicing onset hold ratio. Default 0.0
+  double cf7;  // F7 frequency (Hz).  Default 6500.0
+  double cb7;  // F7 bandwidth (Hz).  Default 720.0
+  double cf8;  // F8 frequency (Hz).  Default 7500.0
+  double cb8;  // F8 bandwidth (Hz).  Default 1250.0
+  // Source amplitude timing (DSP v8). 0.0 = legacy, no hold.
+  double transSourceHoldRatio;
+  // Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
+  double transVoicingHoldRatio;
 };
+// <<< END AUTO-GENERATED <<<
 
 // speechPlayer.dll API
 using sp_initialize_fn = speechPlayer_handle_t(*)(int);
