@@ -27,7 +27,7 @@ Licensed under the MIT License. See LICENSE for details.
  * the magic won't match and the DLL will treat it as the legacy layout.
  */
 #define SPEECHPLAYER_VOICINGTONE_MAGIC 0x32544F56u /* "VOT2" */
-#define SPEECHPLAYER_VOICINGTONE_VERSION 4u
+#define SPEECHPLAYER_VOICINGTONE_VERSION 5u  /* V5: chorus depth/detune added */
 
 #ifdef __cplusplus
 extern "C" {

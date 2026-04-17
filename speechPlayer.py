@@ -37,7 +37,15 @@ speechPlayer_frameParam_t = c_double
 
 # VoicingTone struct versioning constants (must match voicingTone.h)
 SPEECHPLAYER_VOICINGTONE_MAGIC = 0x32544F56  # "VOT2" in little-endian
+# Intentionally pinned at 3 (not bumped to match the C-side V4/V5 layout additions).
+# Older speechPlayer.dll copies users may have don't recognize newer values, and the
+# C side uses structSize (not structVersion) for layout compat — bumping this here
+# offers no benefit and risks breaking edge cases. Bump only when introducing fields
+# that fundamentally change the wire format in a way size-based detection can't handle.
 SPEECHPLAYER_VOICINGTONE_VERSION = 3
+# Mirrors SPEECHPLAYER_DSP_VERSION in src/voicingTone.h. Currently 8: F7/F8 cascade
+# formants + per-parameter transition timing + chorus depth/detune.
+SPEECHPLAYER_DSP_VERSION = 8
 
 
 class Frame(Structure):
@@ -223,7 +231,7 @@ class VoicingTone(Structure):
         tone.magic = SPEECHPLAYER_VOICINGTONE_MAGIC
         tone.structSize = ctypes.sizeof(cls)
         tone.structVersion = SPEECHPLAYER_VOICINGTONE_VERSION
-        tone.dspVersion = 8  # Current DSP version
+        tone.dspVersion = SPEECHPLAYER_DSP_VERSION
         
         # Original parameters
         tone.voicingPeakPos = 0.91

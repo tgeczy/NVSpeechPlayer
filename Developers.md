@@ -157,7 +157,7 @@ typedef struct {
 
 Global voice quality parameters that shape the glottal pulse, spectral character, and vocal tract geometry. These persist across frames and are typically set once per voice profile.
 
-The struct contains **20 parameters** plus a version detection header. DSP version: **8**. Struct version: **4**.
+The struct contains **19 doubles** plus a version detection header. DSP version: **8**. Struct version: **5**.
 
 ### Version detection header
 
@@ -165,8 +165,8 @@ The struct contains **20 parameters** plus a version detection header. DSP versi
 |-------|------|-------------|
 | `magic` | uint32 | Magic number `0x32544F56` ("VOT2" in little-endian) |
 | `structSize` | uint32 | Size of the struct in bytes |
-| `structVersion` | uint32 | Struct version (currently 4) |
-| `dspVersion` | uint32 | DSP version (currently 8) |
+| `structVersion` | uint32 | Struct version (currently 5; bumps when fields are added — V1=1, V2=2, V3=3, V4=4, V5=5) |
+| `dspVersion` | uint32 | DSP version (currently 8). See the version-history table at the end of FrameEx for what each bump introduced. |
 
 When the DLL receives a `VoicingTone` struct, it checks the magic number:
 - **If magic matches**: Reads up to `structSize` bytes, applying defaults for any trailing fields not present
@@ -228,7 +228,9 @@ Models vocal fold asymmetry by running a second glottal phase accumulator at a s
 
 Optional per-frame extension for voice quality parameters that vary during speech (e.g., Danish stod, diphthong formant sweeps, Fujisaki pitch contours). This keeps the original 47-parameter frame ABI stable.
 
-The struct is currently **27 doubles = 216 bytes**. The `speechPlayer_queueFrameEx()` function takes a `frameExSize` parameter; the DSP starts with defaults then overlays `min(frameExSize, sizeof(speechPlayer_frameEx_t))` bytes. This provides forward/backward ABI compatibility — callers with smaller structs simply don't override the trailing fields.
+The struct is currently **29 doubles = 232 bytes**. The `speechPlayer_queueFrameEx()` function takes a `frameExSize` parameter; the DSP starts with defaults then overlays `min(frameExSize, sizeof(speechPlayer_frameEx_t))` bytes. This provides forward/backward ABI compatibility — callers with smaller structs simply don't override the trailing fields.
+
+The five FrameEx mirrors (in C/C++ headers, render tool, and two Python ctypes copies) are codegen'd from `src/frame.h` via `tools/gen_frame_ex.py`. CMake runs `--check` on every build; drift fails the build with a regen hint. Add a field by editing `src/frame.h` and running the script.
 
 ### Voice quality (DSP v5+)
 
@@ -309,6 +311,22 @@ Per-phoneme overridable via YAML keys `cf7`, `cb7`, `cf8`, `cb8`. At low sample 
 
 Cascade order: N0 -> NP -> F8 -> F7 -> F6 -> F5 -> F4 -> F3 -> F2 -> F1.
 
+### Source amplitude timing (DSP v8)
+
+Per-parameter onset/offset timing for noise sources and voicing during frame crossfades. Together these create natural temporal structure for stop releases and affricates — the noise burst can hold while voicing ramps in independently, mimicking real glottal coordination.
+
+| Parameter | Type | Default | Range | Description |
+|-----------|------|---------|-------|-------------|
+| `transSourceHoldRatio` | double | 0.0 | 0.0–0.5 | Delays fadeout of old noise sources (`fricationAmplitude`, `aspirationAmplitude`) during crossfades. 0.3 = old noise holds for first 30% of fade, then fades over the remaining 70%. `voiceAmplitude` is unaffected. |
+| `transVoicingHoldRatio` | double | 0.0 | 0.0–0.5 | Delays ramp-in of new `voiceAmplitude` during crossfades. 0.25 = voicing stays at the old value for the first 25% of the fade, then ramps in over the remaining 75%. |
+
+Combined example: `sourceHold=0.40, voicingHold=0.25` produces:
+- 0–25%: frication HIGH, voicing ZERO  (pure affricate release)
+- 25–40%: frication HIGH, voicing ramping (overlap)
+- 40–100%: frication fading, voicing ramping (transition)
+
+The boundary smoothing pass (`boundary_smoothing.cpp`) sets these on tokens based on transition type. Research on natural affricate production motivated the per-parameter scheme.
+
 ### 2x source oversampling (DSP v8)
 
 The glottal LF model is evaluated at twice the output sample rate, using sharper closure settings appropriate for the effective 2x rate, then decimated with a half-band average filter. This produces cleaner harmonics at lower sample rates without aliasing.
@@ -330,7 +348,20 @@ Two fixes prevent pops at silence boundaries:
 
 2. **Resonator reset on preFormantGain recovery** (`speechWaveGenerator.cpp`): When `smoothPreGain` rises from near-zero to above 0.01, cascade and parallel resonators are reset. This clears residual IIR state from the previous phoneme across word-boundary gaps.
 
-**ABI note:** The 5 transition fields sit at offsets 18–22 (bytes 144–183). Callers passing `frameExSize = 144` (the old 18-double size) will silently get DSP defaults (0.0 for scales, 0.0 for amplitude mode).
+**ABI note:** The struct grows by appending only — older callers with smaller `frameExSize` silently get DSP defaults for any trailing fields they omit. The DSP v7 transition fields sit at indices 18–22, the DSP v8 cf7/cb7/cf8/cb8 at 23–26, and `transSourceHoldRatio`/`transVoicingHoldRatio` at 27–28.
+
+### Version history
+
+| DSP version | VoicingTone struct | FrameEx fields added | What landed |
+|-------------|--------------------|----------------------|-------------|
+| 4 | V2 (10 doubles) | — | Pitch-sync F1/B1 modulation, Klatt-style noise AM |
+| 5 | V3 (14 doubles) | initial 18 (creakiness, breathiness, jitter, shimmer, sharpness, endCf/Pf, Fujisaki) | Speed quotient, aspiration tilt, cascade BW scale, tremor; FrameEx introduced |
+| 6 | V4 (17 doubles) | — | Vocal tract shape: nasalBwScale, f4FreqScale, nasalGainScale |
+| 7 | V4 | +transF1/F2/F3/NasalScale + transAmplitudeMode (→23) | Per-parameter formant transition timing, equal-power crossfade |
+| **8** | **V5 (19 doubles)** | **+cf7/cb7/cf8/cb8 + transSourceHoldRatio + transVoicingHoldRatio (→29)** | **F7/F8 cascade formants, 2x source oversampling, per-source amplitude timing, dual-oscillator chorus** |
+| (next) | V6 | (next batch) | DSP v9 — opens when the next functional batch is ready |
+
+**Closing convention:** A DSP version is "closed" once any released build ships with that number set as `SPEECHPLAYER_DSP_VERSION`. After that point, additions go into the *next* version slot — do not retroactively add fields to a closed version, even if the field is logically related, because shipped DLLs already advertise that version with a fixed feature set.
 
 ---
 

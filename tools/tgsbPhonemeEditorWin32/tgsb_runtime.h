@@ -49,11 +49,11 @@ struct SpeechSettings {
 #endif
 
 #ifndef SPEECHPLAYER_VOICINGTONE_VERSION
-#define SPEECHPLAYER_VOICINGTONE_VERSION 4u
+#define SPEECHPLAYER_VOICINGTONE_VERSION 5u  // V5: chorus depth/detune
 #endif
 
 #ifndef SPEECHPLAYER_DSP_VERSION
-#define SPEECHPLAYER_DSP_VERSION 6u
+#define SPEECHPLAYER_DSP_VERSION 8u  // F7/F8 + transHoldRatios + chorus
 #endif
 
 struct EditorVoicingToneV3 {
