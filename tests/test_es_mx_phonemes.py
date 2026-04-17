@@ -53,28 +53,54 @@ def test_es_mx_synthesizes_simple_word(es_mx):
 # would manifest as "X sounds like Y" user reports.
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason=(
-    "Methodology not yet sufficient. Aggregate stats (MIN/MAX/AVG) over the whole "
-    "word are dominated by vowel frames — the few consonant frames don't move the "
-    "needle. Reproduced experimentally: MIN F2 is identical (910 Hz, dominated by "
-    "/o/ in '-aðo') for both /entreɣaðo/ and /entrelaðo/. Re-enable once one of: "
-    "(1) frontend exposes phoneme attribution on the frame callback ('frame N is "
-    "from phoneme /ɣ/'), (2) we add a wrapper around previewPhoneme that diffs "
-    "individual phoneme definitions, or (3) we synthesize minimal contexts like "
-    "'aɣa' vs 'ala' where the consonant dominates the stream."
-))
-def test_g_and_l_intervocalic_produce_different_streams(es_mx):
-    """Issue #84/#95: 'entregado' was sounding like 'entrelado' (/g/ -> /l/).
+def test_g_and_l_acoustic_distinction_minimal_context(es_mx):
+    """Issue #84/#95 regression guard: 'entregado' was sounding like 'entrelado'
+    (intervocalic /g/ allophone /ɣ/ collapsing acoustically toward /l/).
 
-    Currently skipped — see decorator. Kept in the suite as a reminder that this
-    is the bug class we want to catch automatically once phoneme attribution exists.
+    METHODOLOGY: minimal 3-phoneme context (/aɣa/ vs /ala/). Each input
+    produces exactly 3 voiced frames (vowel-consonant-vowel), so frame[1] is
+    reliably the consonant — no need for phoneme attribution on the callback.
+
+    This sidesteps the vowel-domination problem that breaks aggregate-stat
+    tests on whole words: in /entreɣaðo/ vs /entrelaðo/ the consonant
+    contributes ~3 frames out of ~50, so MIN/AVG/MAX over the whole word
+    is dominated by /e/ /a/ /o/ and the consonant difference is invisible.
+
+    Empirical baseline (es-mx, default speed/pitch, post-3.10-beta-1):
+      /aɣa/ middle frame: F1=450, F2=1450, voiceAmplitude=0.82
+      /ala/ middle frame: F1=350, F2=1400, voiceAmplitude=0.90
+    The 100 Hz F1 gap and the ~0.08 voiceAmplitude dip on /ɣ/ are the engine
+    actually distinguishing these phonemes. If they collapse to identical
+    parameters, this test fires.
     """
     fe, h = es_mx
-    g_frames = voiced_frames(fe.capture_frames(h, "entreɣaðo"))
-    l_frames = voiced_frames(fe.capture_frames(h, "entrelaðo"))
-    g_min_f2 = min(f.frame_dict["cf2"] for f in g_frames)
-    l_min_f2 = min(f.frame_dict["cf2"] for f in l_frames)
-    assert abs(g_min_f2 - l_min_f2) > 1.0
+    g_frames = voiced_frames(fe.capture_frames(h, "aɣa"))
+    l_frames = voiced_frames(fe.capture_frames(h, "ala"))
+
+    # Frame count is exact for minimal 3-phoneme inputs. If this ever produces
+    # different counts, frame emission timing has changed — worth knowing.
+    assert len(g_frames) == 3, (
+        f"Expected 3 voiced frames for /aɣa/, got {len(g_frames)}: {g_frames}"
+    )
+    assert len(l_frames) == 3, (
+        f"Expected 3 voiced frames for /ala/, got {len(l_frames)}: {l_frames}"
+    )
+
+    # Frame [1] is the consonant in V-C-V structure.
+    g = g_frames[1].frame_dict
+    l = l_frames[1].frame_dict
+
+    # F1 must differ by at least 50 Hz. Empirical delta is ~100 Hz; a 50 Hz
+    # threshold catches collapse without being so tight it false-fails on
+    # legitimate small parameter retunings.
+    f1_delta = abs(g["cf1"] - l["cf1"])
+    assert f1_delta > 50.0, (
+        f"/ɣ/ and /l/ collapsed to identical F1 (delta={f1_delta:.0f} Hz). "
+        f"This is the issue #84/#95 acoustic regression — the engine has "
+        f"lost the F1 distinction between intervocalic /g/-allophone and /l/. "
+        f"ɣ frame: F1={g['cf1']:.0f} F2={g['cf2']:.0f} vAmp={g['voiceAmplitude']:.2f}; "
+        f"l frame: F1={l['cf1']:.0f} F2={l['cf2']:.0f} vAmp={l['voiceAmplitude']:.2f}"
+    )
 
 
 # ---------------------------------------------------------------------------
