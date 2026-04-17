@@ -63,6 +63,8 @@ struct EditorVoicingToneV3 {
   uint32_t structVersion;
   uint32_t dspVersion;
   // Parameters
+  // >>> AUTO-GENERATED FROM src/voicingTone.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_voicing_tone.py) >>>
+  // V1 parameters
   double voicingPeakPos;
   double voicedPreEmphA;
   double voicedPreEmphMix;
@@ -70,21 +72,23 @@ struct EditorVoicingToneV3 {
   double highShelfFcHz;
   double highShelfQ;
   double voicedTiltDbPerOct;
+  // V2 parameters
   double noiseGlottalModDepth;
   double pitchSyncF1DeltaHz;
   double pitchSyncB1DeltaHz;
-  // V3 additions
+  // V3 parameters
   double speedQuotient;
   double aspirationTiltDbPerOct;
   double cascadeBwScale;
   double tremorDepth;
-  // V4 additions — vocal tract shape
+  // V4 parameters - vocal tract shape
   double nasalBwScale;
   double f4FreqScale;
   double nasalGainScale;
-  // V5 additions — dual-oscillator chorus
+  // V5 parameters - dual-oscillator chorus (vocal fold asymmetry)
   double chorusDepth;
   double chorusDetuneHz;
+  // <<< END AUTO-GENERATED <<<
 };
 
 // Alias for backward compatibility

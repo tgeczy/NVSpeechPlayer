@@ -64,29 +64,33 @@ if(WIN32 AND MSVC)
 endif()
 
 # -------------------------------------------------
-# Struct parity check (FrameEx mirrors)
+# Struct parity checks (FrameEx + VoicingTone mirrors)
 # -------------------------------------------------
-# src/frame.h is the canonical FrameEx struct definition. Five other places
-# in the repo must match it byte-for-byte (frontend C API, phoneme editor,
-# Linux render tool, and two Python ctypes mirrors). tools/gen_frame_ex.py
-# regenerates the mirrors; --check verifies they're in sync without writing.
+# Two C structs in this repo are mirrored across multiple files (because they
+# cross the C-DLL/Python-ctypes boundary and historically drifted silently —
+# see issue #93). Codegen scripts under tools/ regenerate the mirrors from a
+# canonical source; --check verifies sync without writing.
 #
-# This check runs on every build via the ALL target. If you edit src/frame.h
+#   FrameEx     canonical: src/frame.h        -> 5 mirrors
+#   VoicingTone canonical: src/voicingTone.h  -> 4 mirrors
+#
+# Both checks run on every build via the ALL target. If you edit a canonical
 # without regenerating, the build fails with a pointer to the regen command.
 # CI builds via CMake too, so this catches drift on PRs as well.
 #
-# Python3 is optional — if the interpreter isn't found, the check is silently
-# skipped (the script can still be invoked manually).
+# Python3 is optional — if the interpreter isn't found, the checks are silently
+# skipped (the scripts can still be invoked manually).
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
   add_custom_target(check_struct_parity ALL
     COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/gen_frame_ex.py" --check
+    COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/gen_voicing_tone.py" --check
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    COMMENT "Verifying FrameEx struct parity (src/frame.h -> 5 mirrors)..."
+    COMMENT "Verifying FrameEx + VoicingTone struct parity..."
     VERBATIM
   )
 else()
-  message(STATUS "Python3 not found; skipping FrameEx struct parity check at build time")
+  message(STATUS "Python3 not found; skipping FrameEx/VoicingTone struct parity checks at build time")
 endif()
 
 # -------------------------

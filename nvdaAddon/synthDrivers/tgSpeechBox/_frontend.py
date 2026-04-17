@@ -65,6 +65,7 @@ class FrameEx(ctypes.Structure):
 # VoicingTone struct matching nvspFrontend_VoicingTone in the DLL (ABI v2+)
 class VoicingTone(ctypes.Structure):
     _fields_ = [
+        # >>> AUTO-GENERATED FROM src/voicingTone.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_voicing_tone.py) >>>
         # V1 parameters
         ("voicingPeakPos", ctypes.c_double),
         ("voicedPreEmphA", ctypes.c_double),
@@ -82,13 +83,14 @@ class VoicingTone(ctypes.Structure):
         ("aspirationTiltDbPerOct", ctypes.c_double),
         ("cascadeBwScale", ctypes.c_double),
         ("tremorDepth", ctypes.c_double),
-        # V4 parameters — vocal tract shape
+        # V4 parameters - vocal tract shape
         ("nasalBwScale", ctypes.c_double),
         ("f4FreqScale", ctypes.c_double),
         ("nasalGainScale", ctypes.c_double),
-        # V5 parameters — dual-oscillator chorus
+        # V5 parameters - dual-oscillator chorus (vocal fold asymmetry)
         ("chorusDepth", ctypes.c_double),
         ("chorusDetuneHz", ctypes.c_double),
+        # <<< END AUTO-GENERATED <<<
     ]
 
 

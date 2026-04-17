@@ -187,18 +187,19 @@ TARGETS: list[dict] = [
 
 def replace_between_markers(text: str, comment_prefix: str, generated: str) -> str:
     cp = re.escape(comment_prefix)
-    begin_re = rf"{cp}\s*>>>\s*{re.escape(MARKER_BEGIN_TAG)}\s*>>>"
-    end_re = rf"{cp}\s*<<<\s*{re.escape(MARKER_END_TAG)}\s*<<<"
-    bm = re.search(begin_re, text)
-    em = re.search(end_re, text)
+    begin_re = re.compile(rf"{cp}\s*>>>\s*{re.escape(MARKER_BEGIN_TAG)}\s*>>>")
+    end_re = re.compile(rf"{cp}\s*<<<\s*{re.escape(MARKER_END_TAG)}\s*<<<")
+    bm = begin_re.search(text)
     if not bm:
         raise RuntimeError("BEGIN marker not found (expected `{} >>> {} >>>`)"
                            .format(comment_prefix, MARKER_BEGIN_TAG))
+    # Search for the END marker only AFTER the BEGIN position. The END marker
+    # text ("END AUTO-GENERATED") is shared with other codegen scripts, so files
+    # with multiple auto-generated regions need positional disambiguation.
+    em = end_re.search(text, bm.end())
     if not em:
-        raise RuntimeError("END marker not found (expected `{} <<< {} <<<`)"
+        raise RuntimeError("END marker not found after BEGIN (expected `{} <<< {} <<<`)"
                            .format(comment_prefix, MARKER_END_TAG))
-    if em.start() <= bm.end():
-        raise RuntimeError("END marker appears before BEGIN marker")
     # Detect indentation of the END marker's line (whitespace between the
     # preceding newline and the marker itself) so we preserve the caller's
     # chosen indent on regeneration. Important for Python where the END

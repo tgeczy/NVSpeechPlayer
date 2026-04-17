@@ -119,34 +119,32 @@ typedef struct {
   All fields have defaults that result in neutral/bypass behavior.
 */
 typedef struct nvspFrontend_VoicingTone {
-  /* V1 parameters */
-  double voicingPeakPos;        /* Glottal pulse peak position (0.0-1.0) */
-  double voicedPreEmphA;        /* Pre-emphasis coefficient A */
-  double voicedPreEmphMix;      /* Pre-emphasis mix (0.0-1.0) */
-  double highShelfGainDb;       /* High shelf EQ gain in dB */
-  double highShelfFcHz;         /* High shelf EQ center frequency */
-  double highShelfQ;            /* High shelf EQ Q factor */
-  double voicedTiltDbPerOct;    /* Spectral tilt in dB/octave */
-  
-  /* V2 parameters */
-  double noiseGlottalModDepth;  /* Noise modulation by glottal cycle */
-  double pitchSyncF1DeltaHz;    /* Pitch-synchronous F1 delta */
-  double pitchSyncB1DeltaHz;    /* Pitch-synchronous B1 delta */
-  
-  /* V3 parameters */
-  double speedQuotient;         /* Glottal speed quotient (2.0 = neutral) */
-  double aspirationTiltDbPerOct; /* Aspiration spectral tilt */
-  double cascadeBwScale;        /* Global cascade bandwidth multiplier (1.0 = neutral) */
-  double tremorDepth;           /* Tremor depth for elderly/shaky voice (0-0.5) */
-
-  /* V4 parameters — vocal tract shape */
-  double nasalBwScale;          /* Nasal resonator bandwidth multiplier (1.0 = neutral) */
-  double f4FreqScale;           /* F4 frequency multiplier for pharynx length (1.0 = neutral) */
-  double nasalGainScale;        /* Nasal pole coupling amplitude multiplier (1.0 = neutral) */
-
-  /* V5 parameters — dual-oscillator chorus (vocal fold asymmetry) */
-  double chorusDepth;           /* Blend amount of second oscillator (0.0-1.0, default 0.0 = off) */
-  double chorusDetuneHz;        /* Pitch offset of second oscillator in Hz (0.5-5.0, default 2.0) */
+  // >>> AUTO-GENERATED FROM src/voicingTone.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_voicing_tone.py) >>>
+  // V1 parameters
+  double voicingPeakPos;
+  double voicedPreEmphA;
+  double voicedPreEmphMix;
+  double highShelfGainDb;
+  double highShelfFcHz;
+  double highShelfQ;
+  double voicedTiltDbPerOct;
+  // V2 parameters
+  double noiseGlottalModDepth;
+  double pitchSyncF1DeltaHz;
+  double pitchSyncB1DeltaHz;
+  // V3 parameters
+  double speedQuotient;
+  double aspirationTiltDbPerOct;
+  double cascadeBwScale;
+  double tremorDepth;
+  // V4 parameters - vocal tract shape
+  double nasalBwScale;
+  double f4FreqScale;
+  double nasalGainScale;
+  // V5 parameters - dual-oscillator chorus (vocal fold asymmetry)
+  double chorusDepth;
+  double chorusDetuneHz;
+  // <<< END AUTO-GENERATED <<<
 } nvspFrontend_VoicingTone;
 
 /* Number of fields in VoicingTone struct */

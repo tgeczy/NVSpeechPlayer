@@ -186,41 +186,35 @@ class VoicingTone(Structure):
         ("structSize", c_uint32),         # sizeof(VoicingTone)
         ("structVersion", c_uint32),      # Must be SPEECHPLAYER_VOICINGTONE_VERSION
         ("dspVersion", c_uint32),         # DSP version (informational)
-        
-        # Original v1 parameters
-        ("voicingPeakPos", c_double),     # Glottal pulse peak position (0.85-0.95, default 0.91)
-        ("voicedPreEmphA", c_double),     # Pre-emphasis coefficient (0.0-0.97, default 0.92)
-        ("voicedPreEmphMix", c_double),   # Pre-emphasis mix (0.0-1.0, default 0.35)
-        ("highShelfGainDb", c_double),    # High-shelf EQ gain in dB (default 4.0)
-        ("highShelfFcHz", c_double),      # High-shelf corner frequency (default 2000.0)
-        ("highShelfQ", c_double),         # High-shelf Q factor (default 0.7)
-        ("voicedTiltDbPerOct", c_double), # Spectral tilt in dB/octave (default 0.0)
-        
-        # New v2 parameters
-        ("noiseGlottalModDepth", c_double),  # Noise modulation by glottal cycle (0.0-1.0, default 0.0)
-        ("pitchSyncF1DeltaHz", c_double),    # F1 delta during glottal open phase (default 0.0)
-        ("pitchSyncB1DeltaHz", c_double),    # B1 delta during glottal open phase (default 0.0)
-        
-        # New v3 parameters
-        ("speedQuotient", c_double),         # Glottal pulse asymmetry (0.5-4.0, default 2.0)
-        ("aspirationTiltDbPerOct", c_double),  # Aspiration noise tilt (default 0.0)
-        ("cascadeBwScale", c_double),            # Cascade bandwidth multiplier (0.4-1.4, default 1.0)
-        ("tremorDepth", c_double),               # Tremor depth for elderly/shaky voice (0-0.5)
 
-        # New v4 parameters — vocal tract shape
-        ("nasalBwScale", c_double),              # Nasal resonator bandwidth multiplier (0.5-2.0, default 1.0)
-        ("f4FreqScale", c_double),               # F4 frequency multiplier (0.7-1.5, default 1.0)
-        ("nasalGainScale", c_double),            # Nasal pole coupling amplitude multiplier (0.5-1.5, default 1.0)
-
-        # New v5 parameters — dual-oscillator chorus (vocal fold asymmetry)
-        # MUST stay in sync with speechPlayer_voicingTone_t in src/voicingTone.h.
-        # ctypes silently accepts attribute writes on undeclared fields, so missing
-        # entries here cause slider values to be stored as Python-only attributes
-        # that never reach the DLL — see issue #93 and commit ec60b11.
-        ("chorusDepth", c_double),               # Chorus blend amount (0.0-1.0, default 0.0 = off)
-        ("chorusDetuneHz", c_double),            # Chorus pitch offset in Hz (0.5-5.0, default 2.0)
+        # >>> AUTO-GENERATED FROM src/voicingTone.h - DO NOT EDIT MANUALLY (regenerate: python tools/gen_voicing_tone.py) >>>
+        # V1 parameters
+        ("voicingPeakPos", c_double),
+        ("voicedPreEmphA", c_double),
+        ("voicedPreEmphMix", c_double),
+        ("highShelfGainDb", c_double),
+        ("highShelfFcHz", c_double),
+        ("highShelfQ", c_double),
+        ("voicedTiltDbPerOct", c_double),
+        # V2 parameters
+        ("noiseGlottalModDepth", c_double),
+        ("pitchSyncF1DeltaHz", c_double),
+        ("pitchSyncB1DeltaHz", c_double),
+        # V3 parameters
+        ("speedQuotient", c_double),
+        ("aspirationTiltDbPerOct", c_double),
+        ("cascadeBwScale", c_double),
+        ("tremorDepth", c_double),
+        # V4 parameters - vocal tract shape
+        ("nasalBwScale", c_double),
+        ("f4FreqScale", c_double),
+        ("nasalGainScale", c_double),
+        # V5 parameters - dual-oscillator chorus (vocal fold asymmetry)
+        ("chorusDepth", c_double),
+        ("chorusDetuneHz", c_double),
+        # <<< END AUTO-GENERATED <<<
     ]
-    
+
     @classmethod
     def defaults(cls) -> "VoicingTone":
         """Return a VoicingTone with default values matching voicingTone.h."""
