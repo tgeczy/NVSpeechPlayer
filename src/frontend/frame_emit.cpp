@@ -11,6 +11,7 @@ Licensed under the MIT License. See LICENSE for details.
 
 #include "ipa_engine.h"
 #include "passes/pass_common.h"
+#include "utf8.h"
 #include "../utils.h"
 
 #include <cstring>
@@ -140,7 +141,9 @@ static void generateAcousticEvents(
   double speed,
   const nvspFrontend_FrameEx& frameExDefaults,
   TrajectoryState* trajectoryState,
-  Emitter emitFn
+  Emitter emitFn,
+  std::vector<tgsb_data::FrameTraceEntry>* traceSink = nullptr,
+  const int* traceFrameCounter = nullptr
 ) {
 
   // Compile-time layout guarantees
@@ -177,6 +180,13 @@ static void generateAcousticEvents(
   const double wbDipMs = lang.wordBoundaryDipMs;
 
   for (const Token& t : tokens) {
+    // Phoneme-boundary trace: one entry per token, captures frame index of
+    // this phoneme's first emission. Silence/gap tokens (def==nullptr) are
+    // skipped so callers see only real phonemes.
+    if (traceSink && traceFrameCounter && t.def) {
+      traceSink->push_back({*traceFrameCounter, u32ToUtf8(t.def->key)});
+    }
+
     // ============================================
     // VOICE BAR EMISSION (voiced stop closures)
     // ============================================
@@ -1339,15 +1349,19 @@ void emitFramesEx(
   const nvspFrontend_FrameEx& frameExDefaults,
   TrajectoryState* trajectoryState,
   nvspFrontend_FrameExCallback cb,
-  void* userData
+  void* userData,
+  std::vector<tgsb_data::FrameTraceEntry>* traceSink
 ) {
   if (!cb) return;
+  int traceFrameCount = 0;
   auto emitter = [&](const nvspFrontend_Frame* f, const nvspFrontend_FrameEx* fEx,
                      double dur, double fade) {
+    if (traceSink) ++traceFrameCount;
     cb(userData, f, fEx, dur, fade, userIndexBase);
   };
   generateAcousticEvents(pack, tokens, userIndexBase, speed, frameExDefaults,
-                         trajectoryState, emitter);
+                         trajectoryState, emitter,
+                         traceSink, traceSink ? &traceFrameCount : nullptr);
 }
 
 } // namespace nvsp_frontend

@@ -85,6 +85,12 @@ struct Handle {
 
   // Generic data query cache (ABI v5+).
   tgsb_data::DataCache dataCache;
+
+  // Per-utterance phoneme→frame-index trace (v3.10+).
+  // Populated by frame_emit at the start of each Token. Cleared at the
+  // start of queueIPA_ExImpl. Capacity is pre-reserved in nvspFrontend_create
+  // so synthesis never allocates. Read via nvspFrontend_queryData(NVSP_DATA_FRAMETRACE).
+  std::vector<tgsb_data::FrameTraceEntry> frameTrace;
 };
 
 inline Handle* asHandle(nvspFrontend_handle_t h) {

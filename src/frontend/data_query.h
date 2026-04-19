@@ -25,7 +25,8 @@ namespace tgsb_data {
 // ── Domain IDs (must match NVSP_DATA_* defines in nvspFrontend.h) ──
 constexpr int kDomainSettings   = 0;
 constexpr int kDomainPhonemes   = 1;
-constexpr int kDomainDictionary = 2;  // future
+constexpr int kDomainDictionary = 2;
+constexpr int kDomainFrameTrace = 3;  // per-utterance phoneme→frame-index map
 
 // ── Field types ──
 enum class FieldType { Float, Bool, String };
@@ -61,6 +62,16 @@ struct DictRecord {
   std::string category;
   std::string source;    // "main" or "user"
   bool masked = false;
+};
+
+// ── Frame-trace entry ──
+// One entry per phoneme per utterance. Emitted by frame_emit at the start
+// of each Token, capturing the output-frame index where that phoneme begins.
+// Lets tests correlate a word-context emission back to individual phonemes
+// without modifying the realtime FrameExCallback signature.
+struct FrameTraceEntry {
+  int frameIndex;          // output frame count at which this phoneme starts
+  std::string phonemeKey;  // UTF-8 IPA key (e.g. "ɣ", "l", "a")
 };
 
 // ── Per-domain cache ──

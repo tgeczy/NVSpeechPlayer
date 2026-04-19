@@ -592,7 +592,8 @@ NVSP_FRONTEND_API int nvspFrontend_previewPhoneme(
 /* Data domains. New values can be added without ABI break. */
 #define NVSP_DATA_SETTINGS   0
 #define NVSP_DATA_PHONEMES   1
-#define NVSP_DATA_DICTIONARY 2   /* reserved for future */
+#define NVSP_DATA_DICTIONARY 2
+#define NVSP_DATA_FRAMETRACE 3   /* per-utterance phoneme-boundary map, read via nvspFrontend_queryData */
 
 /*
   Count records in a data domain for a language, without loading them.

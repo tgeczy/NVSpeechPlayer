@@ -48,6 +48,9 @@ NVSP_FRONTEND_API nvspFrontend_handle_t nvspFrontend_create(const char* packDirU
     auto* h = new Handle();
     h->packDir = packDirUtf8 ? std::string(packDirUtf8) : std::string();
     h->lastError.clear();
+    // Pre-reserve frame-trace capacity so synthesis never allocates.
+    // 512 entries = ~30-50 word sentences; far more than real utterances need.
+    h->frameTrace.reserve(512);
     return reinterpret_cast<nvspFrontend_handle_t>(h);
   } catch (...) {
     return nullptr;
@@ -461,7 +464,11 @@ static int queueIPA_ExImpl(
   frameExDefaults.cf8 = 7500.0;
   frameExDefaults.cb8 = 1250.0;
 
-  emitFramesEx(h->pack, tokens, userIndexBase, speed, frameExDefaults, &h->trajectoryState, cb, userData);
+  // Reset per-utterance frame trace. Capacity was reserved at handle creation
+  // so this clear() is O(1) and emitFramesEx never allocates during synthesis.
+  h->frameTrace.clear();
+  emitFramesEx(h->pack, tokens, userIndexBase, speed, frameExDefaults,
+               &h->trajectoryState, cb, userData, &h->frameTrace);
 
   if (hasRealPhoneme) {
     h->streamHasSpeech = true;

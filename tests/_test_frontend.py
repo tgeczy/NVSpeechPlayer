@@ -10,11 +10,22 @@ Python wrapper here.
 from __future__ import annotations
 
 import ctypes
+import json
+from collections import namedtuple
 from ctypes import (
     c_char_p, c_void_p, c_int, c_double,
     CFUNCTYPE, POINTER, Structure,
 )
 from typing import Callable, List, Optional
+
+# Data domain constants (must match NVSP_DATA_* in src/frontend/nvspFrontend.h).
+NVSP_DATA_FRAMETRACE = 3
+
+# One entry per phoneme emitted during the most recent queueIPA_Ex call.
+# frame_index: position into the FrameRecord list that capture_frames() returned.
+#              records[frame_index] is the first frame of this phoneme.
+# phoneme_key: UTF-8 IPA string (e.g. "ɣ", "l", "a").
+TraceEntry = namedtuple("TraceEntry", ["frame_index", "phoneme_key"])
 
 # Frame struct (47 doubles, ABI-stable since v1).
 # Field names match nvspFrontend_Frame in src/frontend/nvspFrontend.h.
@@ -114,6 +125,11 @@ class TestFrontend:
         d.nvspFrontend_getABIVersion.argtypes = []
         d.nvspFrontend_getABIVersion.restype = c_int
 
+        d.nvspFrontend_queryData.argtypes = [
+            c_void_p, c_int, c_char_p, c_int, c_int,
+        ]
+        d.nvspFrontend_queryData.restype = c_void_p  # malloc'd — copy + free
+
     # ---- Lifecycle ----
 
     def create_handle(self, pack_dir: str) -> int:
@@ -212,3 +228,28 @@ def voiced_frames(records: List[FrameRecord]) -> List[FrameRecord]:
             if not r.is_silence
             and r.frame_dict
             and r.frame_dict["voiceAmplitude"] > 0.05]
+
+
+def read_frame_trace(fe: "TestFrontend", handle: int) -> List[TraceEntry]:
+    """Return the per-utterance phoneme→frame-index trace from the most recent
+    capture_frames() call on this handle.
+
+    Each entry's frame_index is the position into the FrameRecord list returned
+    by capture_frames() — records[entry.frame_index] is the first frame of that
+    phoneme. Silence/gap tokens are NOT included.
+
+    Use to pin word-context acoustic regressions: synthesize a whole word, then
+    pick out the frame for a specific phoneme by its IPA key to assert on
+    formants / amplitudes without being drowned out by vowel frames.
+    """
+    ptr = fe._dll.nvspFrontend_queryData(
+        handle, c_int(NVSP_DATA_FRAMETRACE), b"", c_int(0), c_int(0),
+    )
+    if not ptr:
+        return []
+    try:
+        raw = ctypes.string_at(ptr).decode("utf-8", "replace")
+    finally:
+        fe._dll.nvspFrontend_freeString(ptr)
+    data = json.loads(raw)
+    return [TraceEntry(int(e["frameIndex"]), e["phonemeKey"]) for e in data]

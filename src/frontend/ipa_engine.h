@@ -10,6 +10,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <string>
 #include <vector>
 
+#include "data_query.h"
 #include "pack.h"
 #include "nvspFrontend.h"
 
@@ -210,6 +211,9 @@ void emitFrames(
 // Convert tokens -> callback frames with extended parameters (ABI v2+).
 // frameExDefaults contains user-level defaults that are mixed with per-phoneme values.
 // trajectoryState is per-handle state for formant smoothing (must not be null).
+// traceSink (optional): if non-null, one FrameTraceEntry is appended at the
+// start of each Token with the phoneme's IPA key and the frame index of its
+// first emission. Caller must pre-reserve and clear the vector.
 void emitFramesEx(
   const PackSet& pack,
   const std::vector<Token>& tokens,
@@ -218,7 +222,8 @@ void emitFramesEx(
   const nvspFrontend_FrameEx& frameExDefaults,
   TrajectoryState* trajectoryState,
   nvspFrontend_FrameExCallback cb,
-  void* userData
+  void* userData,
+  std::vector<tgsb_data::FrameTraceEntry>* traceSink = nullptr
 );
 
 } // namespace nvsp_frontend

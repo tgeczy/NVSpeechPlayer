@@ -228,6 +228,11 @@ NVSP_FRONTEND_API int nvspFrontend_getDataCount(
     return tgsb_data::countDictionaryMatches(h->dataCache, search);
   }
 
+  if (domain == NVSP_DATA_FRAMETRACE) {
+    // Frame trace is per-utterance state on the handle; no cache build needed.
+    return static_cast<int>(h->frameTrace.size());
+  }
+
   // Unsupported domain.
   return -1;
 }
@@ -338,6 +343,34 @@ NVSP_FRONTEND_API char* nvspFrontend_queryData(
 
     std::string json = tgsb_data::serializeDictionaryJson(h->dataCache, offset, limit, search);
     if (json.empty()) return nullptr;
+
+    char* out = static_cast<char*>(std::malloc(json.size() + 1));
+    if (!out) return nullptr;
+    std::memcpy(out, json.c_str(), json.size() + 1);
+    return out;
+  }
+
+  if (domain == NVSP_DATA_FRAMETRACE) {
+    // Serialize the per-utterance phoneme→frame-index map as a JSON array.
+    // IPA keys are UTF-8 and do not contain JSON-escape-requiring characters
+    // (", \, or control chars), so naive concatenation is safe here.
+    const auto& trace = h->frameTrace;
+    const int total = static_cast<int>(trace.size());
+    int start = offset < 0 ? 0 : offset;
+    if (start > total) start = total;
+    int end = (limit <= 0) ? total : (start + limit);
+    if (end > total) end = total;
+
+    std::string json = "[";
+    for (int i = start; i < end; ++i) {
+      if (i > start) json += ',';
+      json += "{\"frameIndex\":";
+      json += std::to_string(trace[i].frameIndex);
+      json += ",\"phonemeKey\":\"";
+      json += trace[i].phonemeKey;
+      json += "\"}";
+    }
+    json += ']';
 
     char* out = static_cast<char*>(std::malloc(json.size() + 1));
     if (!out) return nullptr;
