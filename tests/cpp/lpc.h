@@ -157,6 +157,213 @@ inline std::vector<double> lpcSpectrum(const LpcCoeffs& c, std::size_t fftLen) {
     return env;
 }
 
+// ---- Laguerre's method: polynomial root-finding via complex iteration
+// on LPC coefficients, with forward deflation and root polishing on the
+// original polynomial. Gives exact formant frequency AND bandwidth, unlike
+// FFT-magnitude peak detection which gives only frequency.
+//
+// The LPC polynomial as stored is A(z) = 1 - sum_{k=1..p} a_k z^-k. Substituting
+// x = z^-1 makes it a standard ascending polynomial P(x) = 1 - a_1 x - a_2 x^2
+// - ... - a_p x^p with coefficients [1, -a_1, -a_2, ..., -a_p]. Laguerre finds
+// roots x_i; we then INVERT to get true z-plane roots z_i = 1 / x_i before
+// converting to Hz. Missing this inversion is a classic LPC bug.
+
+using Cplx = std::complex<double>;
+
+// Combined Horner evaluation of P, P', P''/2 at complex x.
+// Input: p[k] = coefficient of x^k, so p has degree = p.size() - 1.
+// Output fills P, P1 (first deriv), P2half (second deriv / 2).
+inline void evalPolyWithDerivatives(const std::vector<Cplx>& p, Cplx x,
+                                    Cplx& P, Cplx& P1, Cplx& P2half)
+{
+    const std::size_t n = p.size();
+    if (n == 0) { P = P1 = P2half = 0.0; return; }
+    P = p[n - 1];
+    P1 = 0.0;
+    P2half = 0.0;
+    for (std::size_t k = n - 1; k > 0; --k) {
+        P2half = P2half * x + P1;
+        P1     = P1     * x + P;
+        P      = P      * x + p[k - 1];
+    }
+}
+
+// One Laguerre iteration step. Returns the new x.
+inline Cplx laguerreStep(const std::vector<Cplx>& p, Cplx x)
+{
+    const double n = static_cast<double>(p.size() - 1);
+    if (n <= 0.0) return x;
+    Cplx P, P1, P2half;
+    evalPolyWithDerivatives(p, x, P, P1, P2half);
+    if (std::abs(P) < 1e-14) return x;  // root already nailed
+    const Cplx P2 = 2.0 * P2half;
+    const Cplx G  = P1 / P;
+    const Cplx H  = G * G - P2 / P;
+    const Cplx disc = std::sqrt((n - 1.0) * (n * H - G * G));
+    const Cplx denomA = G + disc;
+    const Cplx denomB = G - disc;
+    const Cplx denom  = (std::abs(denomA) > std::abs(denomB)) ? denomA : denomB;
+    if (std::abs(denom) < 1e-14) return x;
+    return x - n / denom;
+}
+
+// Iterate Laguerre until convergence (|delta| small or |P(x)| small).
+// Returns best root found within maxIters.
+inline Cplx laguerreFindRoot(const std::vector<Cplx>& p, Cplx start = {0.0, 0.0},
+                              int maxIters = 200)
+{
+    Cplx x = start;
+    for (int iter = 0; iter < maxIters; ++iter) {
+        Cplx next = laguerreStep(p, x);
+        const Cplx d = next - x;
+        x = next;
+        if (std::abs(d) < 1e-14 * (1.0 + std::abs(x))) break;
+        Cplx P, P1, P2half;
+        evalPolyWithDerivatives(p, x, P, P1, P2half);
+        if (std::abs(P) < 1e-14) break;
+    }
+    return x;
+}
+
+// Synthetic division: divide P(x) by (x - root), returning the quotient
+// polynomial of degree deg(P) - 1. Coefficients indexed ascending (p[0]
+// is x^0 term).
+inline std::vector<Cplx> deflateRoot(const std::vector<Cplx>& p, Cplx root)
+{
+    if (p.size() < 2) return {};
+    // P(x) = (x - root) Q(x) + remainder.
+    // Quotient coeffs computed via Horner-style reverse sweep:
+    //   q_{n-1} = p_n
+    //   q_{k-1} = p_k + root * q_k    (for k from n-1 down to 1)
+    const std::size_t n = p.size() - 1;  // degree
+    std::vector<Cplx> q(n);
+    q[n - 1] = p[n];
+    for (std::size_t k = n - 1; k > 0; --k) {
+        q[k - 1] = p[k] + root * q[k];
+    }
+    return q;
+}
+
+// Find all roots of an LPC polynomial via deflation, then polish each
+// against the ORIGINAL (non-deflated) polynomial to erase accumulated
+// forward-deflation error. Returns exactly deg(original) complex roots.
+//
+// The `coeffs` argument follows our LpcCoeffs sign convention: A(z) = 1
+// - sum_{k=1..p} a_k z^-k, so the polynomial-in-x = z^-1 has coefficients
+// [1, -a_1, -a_2, ..., -a_p].
+inline std::vector<Cplx> findLpcRoots(const LpcCoeffs& coeffs)
+{
+    const std::size_t p = coeffs.a.size() > 0 ? coeffs.a.size() - 1 : 0;
+    if (p == 0) return {};
+
+    // Build the polynomial in x = z^-1 with ASCENDING coefficients:
+    //   poly[0] = 1, poly[k] = -coeffs.a[k] for k = 1..p
+    std::vector<Cplx> poly(p + 1);
+    poly[0] = 1.0;
+    for (std::size_t k = 1; k <= p; ++k) poly[k] = -coeffs.a[k];
+
+    const std::vector<Cplx> original = poly;
+
+    std::vector<Cplx> roots;
+    roots.reserve(p);
+    std::vector<Cplx> working = poly;
+    for (std::size_t i = 0; i < p; ++i) {
+        Cplx start = {0.0, 0.0};  // Laguerre is globally convergent; start at origin
+        Cplx root = laguerreFindRoot(working, start, 200);
+        roots.push_back(root);
+        working = deflateRoot(working, root);
+        if (working.size() < 2) break;
+    }
+
+    // Polish each root against the original polynomial. One or two Laguerre
+    // iterations on the un-deflated polynomial snaps accumulated deflation
+    // error out of every root.
+    for (Cplx& r : roots) {
+        for (int k = 0; k < 3; ++k) {
+            r = laguerreStep(original, r);
+        }
+    }
+
+    return roots;
+}
+
+// Convert LPC polynomial roots in x = z^-1 space to formant (freq, bw)
+// pairs in z space. Applies the standard filters:
+//   - invert x_i -> z_i = 1 / x_i (the critical z^-1 unpacking step)
+//   - keep only roots with positive imaginary part (drop conjugate pairs)
+//   - drop roots with bandwidth > maxBandwidthHz (phantom poles from
+//     spectral tilt or from LPC's approximation of zeros)
+//   - drop roots with frequency outside [minHz, maxHz]
+// Returns sorted by frequency ascending.
+struct FormantRoot {
+    double freqHz;
+    double bandwidthHz;
+};
+
+inline std::vector<FormantRoot> rootsToFormants(
+    const std::vector<Cplx>& xRoots, int sampleRate,
+    double minHz = 200.0, double maxHz = 5000.0,
+    double maxBandwidthHz = 400.0)
+{
+    std::vector<FormantRoot> out;
+    out.reserve(xRoots.size() / 2);
+    const double fsOver2Pi = static_cast<double>(sampleRate) / (2.0 * M_PI);
+    const double fsOverPi  = static_cast<double>(sampleRate) / M_PI;
+
+    for (const Cplx& x : xRoots) {
+        if (std::abs(x) < 1e-12) continue;
+        const Cplx z = 1.0 / x;
+        if (z.imag() <= 0.0) continue;  // drop conjugate-pair negatives
+        const double f = fsOver2Pi * std::atan2(z.imag(), z.real());
+        if (f < minHz || f > maxHz) continue;
+        const double mag = std::abs(z);
+        if (mag >= 1.0 || mag <= 0.0) continue;  // pole outside unit circle
+        const double bw = -fsOverPi * std::log(mag);
+        if (bw > maxBandwidthHz) continue;  // phantom / too-damped
+        out.push_back({f, bw});
+    }
+    std::sort(out.begin(), out.end(),
+              [](const FormantRoot& a, const FormantRoot& b) {
+                  return a.freqHz < b.freqHz;
+              });
+    return out;
+}
+
+// High-level: extract formants via LPC + Laguerre root-finding + filtering.
+// This is the "sense without ears" version with bandwidths — use in place
+// of extractFormantsLPC() when you need to trust the numbers.
+struct LpcRootFormants {
+    std::vector<FormantRoot> formants;
+    bool valid = false;
+};
+
+inline LpcRootFormants extractFormantsViaRoots(
+    const std::vector<std::int16_t>& pcm,
+    std::size_t centerSample,
+    int sampleRate,
+    std::size_t windowLen = 512,
+    int lpcOrder = 14,
+    double maxBandwidthHz = 400.0)
+{
+    LpcRootFormants out;
+    if (centerSample < windowLen / 2) centerSample = windowLen / 2;
+    const std::size_t start = centerSample - windowLen / 2;
+
+    auto slice = pcmSlice(pcm, start, windowLen);
+    preEmphasize(slice, 0.97);
+    hammingWindow(slice);
+
+    auto r = autocorrelation(slice, static_cast<std::size_t>(lpcOrder));
+    if (r.empty() || r[0] <= 0.0) return out;
+    auto c = levinsonDurbin(r, static_cast<std::size_t>(lpcOrder));
+    auto roots = findLpcRoots(c);
+    out.formants = rootsToFormants(roots, sampleRate,
+                                   /*min*/ 150.0, /*max*/ static_cast<double>(sampleRate) / 2.0 - 100.0,
+                                   maxBandwidthHz);
+    out.valid = !out.formants.empty();
+    return out;
+}
+
 // High-level: extract the first `nFormants` formant frequencies from a
 // PCM slice using LPC. Returns them sorted ascending.
 struct LpcFormants {
