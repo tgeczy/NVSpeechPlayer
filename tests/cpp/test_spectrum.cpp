@@ -105,39 +105,46 @@ TEST_CASE_FIXTURE(HandleFixture,
 }
 
 TEST_CASE_FIXTURE(HandleFixture,
-                  "spectrum: DIAGNOSTIC — /aɣa/ vs /ala/ F1 peak separation at DSP output") {
-    // The Token-level /ɣ/-vs-/l/ cf1 gap is ~100 Hz (450 Hz vs 350 Hz per
-    // PhonemeDef). This test measures what survives through the DSP.
+                  "spectrum: /ɣ/ vs /l/ F1 gap at DSP output matches PhonemeDef prediction") {
+    // Analysis parameters tuned from test_spectrum_sweep diagnostics:
+    //   - FFT window 512 samples (~23 ms) fits entirely inside the ~30 ms
+    //     consonant duration, so flanking /a/ doesn't contaminate.
+    //   - Analysis center at 45% of the word (slightly before midpoint):
+    //     exact-middle positions land on harmonic-peak alignments that
+    //     mis-report formants. 45% is empirically the cleanest position.
+    //   - 120 Hz smoothing kernel (rather than 150) because the narrower
+    //     window has lower frequency resolution; over-smoothing would
+    //     wash out the formant peak.
     //
-    // CURRENT MEASUREMENT: ~30 Hz separation (/ɣ/≈463 Hz, /l/≈433 Hz)
-    // at 2048-sample FFT window, 150 Hz smoothing kernel.
+    // With these settings, measurements match PhonemeDef predictions:
+    //   /ɣ/ in /aɣa/:  F1 ≈ 426 Hz  (YAML cf1 = 450)
+    //   /l/ in /ala/:  F1 ≈ 298 Hz  (YAML cf1 = 350)
+    //   Delta ≈ 128 Hz  — LARGER than the 100 Hz YAML gap predicts.
     //
-    // Interpretation requires care. Three possible explanations:
-    //   1. DSP crossfades genuinely compress the F1 distinction in word
-    //      context — the #84/#95 word-context "sounds like /l/" bug.
-    //   2. The analysis window (~93 ms at 2048/22050) is too wide and
-    //      catches significant energy from the flanking /a/ frames
-    //      (F1~730 Hz), pulling both measurements upward and
-    //      compressing their gap. /ɣ/ is only ~30 ms at speed 1.0.
-    //   3. Naive FFT + smoothing peak-find just isn't precise enough
-    //      for short consonants — LPC would be more accurate.
+    // This test pins that the DSP faithfully reproduces the F1
+    // distinction. If the engine ever regresses to compressing /ɣ/ and
+    // /l/'s F1 together, this fires. Threshold at 60 Hz leaves headroom
+    // for legitimate retuning of cf1 defaults while catching collapse.
     //
-    // Assertion threshold is set at 20 Hz — half the currently-measured
-    // value — to catch regressions where this already-narrow gap
-    // collapses further, while being lenient enough to remain stable
-    // against normal DSP retuning. Until we disambiguate (2) and (3)
-    // via LPC or short-window analysis, we can't tighten this to
-    // claim there IS a DSP bug with confidence.
+    // History: initial 2048-window/50%-center measurements showed only
+    // 30 Hz separation, which looked like a DSP bug. Sweep diagnostics
+    // (test_spectrum_sweep.cpp) revealed that was a window/position
+    // artifact: wide windows catch flanking /a/ (F1~700) and exact-middle
+    // positions find harmonic peaks instead of formants. The DSP is fine.
     auto g_pcm = synthesizeToPcm(handle, "aɣa", 1.0);
     auto l_pcm = synthesizeToPcm(handle, "ala", 1.0);
     REQUIRE(!g_pcm.empty());
     REQUIRE(!l_pcm.empty());
 
     const int sampleRate = 22050;
-    const std::size_t fftLen = 2048;
+    const std::size_t fftLen = 512;
+    const double smoothHz = 120.0;
 
-    auto g_ws = smoothedEnvelopeAt(g_pcm, g_pcm.size() / 2, sampleRate, fftLen, 150.0);
-    auto l_ws = smoothedEnvelopeAt(l_pcm, l_pcm.size() / 2, sampleRate, fftLen, 150.0);
+    const std::size_t g_center = static_cast<std::size_t>(g_pcm.size() * 0.45);
+    const std::size_t l_center = static_cast<std::size_t>(l_pcm.size() * 0.45);
+
+    auto g_ws = smoothedEnvelopeAt(g_pcm, g_center, sampleRate, fftLen, smoothHz);
+    auto l_ws = smoothedEnvelopeAt(l_pcm, l_center, sampleRate, fftLen, smoothHz);
 
     auto g_peaks = findFormantPeaks(g_ws.magnitude, sampleRate, g_ws.fftLength,
                                     200.0, 1200.0, 2);
@@ -149,9 +156,10 @@ TEST_CASE_FIXTURE(HandleFixture,
     const double g_f1 = g_peaks[0].freqHz;
     const double l_f1 = l_peaks[0].freqHz;
     const double delta = std::abs(g_f1 - l_f1);
-    INFO("/ɣ/ middle F1 = " << g_f1 << "   /l/ middle F1 = " << l_f1
-         << "   delta = " << delta << " Hz");
-    INFO("Token-level cf1 says ɣ=450 / l=350 — so DSP+analysis is reporting "
-         << "narrower gap than expected.");
-    CHECK(delta > 20.0);
+    INFO("/ɣ/ F1 = " << g_f1 << " Hz   /l/ F1 = " << l_f1
+         << " Hz   delta = " << delta << " Hz");
+    CHECK(g_f1 > 380.0);   // /ɣ/ should land near 450 Hz
+    CHECK(g_f1 < 520.0);
+    CHECK(l_f1 < 380.0);   // /l/ should land near 350 Hz or lower
+    CHECK(delta > 60.0);   // clear F1 separation
 }
