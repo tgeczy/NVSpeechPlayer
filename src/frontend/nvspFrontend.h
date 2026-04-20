@@ -104,11 +104,12 @@ typedef struct {
   double transSourceHoldRatio;
   // Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
   double transVoicingHoldRatio;
+  double caN0;
 } nvspFrontend_FrameEx;
 // <<< END AUTO-GENERATED <<<
 
 /* Number of fields in FrameEx struct (for size validation) */
-#define NVSP_FRONTEND_FRAMEEX_NUM_PARAMS 29
+#define NVSP_FRONTEND_FRAMEEX_NUM_PARAMS 30
 
 /*
   VoicingTone parameters for DSP-level voice quality (ABI v2+).

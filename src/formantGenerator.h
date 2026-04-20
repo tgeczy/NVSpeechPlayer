@@ -89,10 +89,24 @@ void setCascadeBwScale(double scale) {
         // nasalBwScale widens/narrows nasal resonator bandwidths (female = wider).
         // nasalGainScale adjusts coupling amplitude (how much nasal bleeds through).
         const double n0Output = rN0.resonate(input, frame->cfN0, frame->cbN0 * nasalBwScale);
+
+        // DSP v9: independent cascade anti-resonator mix (caN0).
+        // Historically rN0 could only reach output via the nasal-pole path (gated by caNP).
+        // That coupling assumed every phoneme needing a zero is nasal. Laterals like
+        // Spanish /l/ need a side-branch anti-resonance WITHOUT a nasal pole. caN0
+        // mixes rN0's output directly into the cascade's input path, bypassing rNP.
+        // Default 0 preserves legacy behavior for every existing phoneme.
+        double directInput = input;
+        if (frameEx && frameEx->caN0 > 0.0) {
+            double caN0Mix = frameEx->caN0;
+            if (caN0Mix > 1.0) caN0Mix = 1.0;
+            directInput = calculateValueAtFadePosition(input, n0Output, caN0Mix);
+        }
+
         double scaledCaNP = frame->caNP * nasalGainScale;
         if (scaledCaNP > 1.0) scaledCaNP = 1.0;
         double output = calculateValueAtFadePosition(
-            input,
+            directInput,
             rNP.resonate(n0Output, frame->cfNP, frame->cbNP * nasalBwScale),
             scaledCaNP
         );

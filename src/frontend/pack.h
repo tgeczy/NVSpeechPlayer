@@ -105,6 +105,7 @@ struct PhonemeDef {
   bool hasJitter = false;
   bool hasShimmer = false;
   bool hasSharpness = false;
+  bool hasCaN0 = false;  // DSP v9: independent cascade anti-resonator amplitude
   
   // Formant end targets (for within-frame ramping)
   bool hasEndCf1 = false;
@@ -119,6 +120,7 @@ struct PhonemeDef {
   double jitter = 0.0;        // 0.0-1.0, additive with user default
   double shimmer = 0.0;       // 0.0-1.0, additive with user default
   double sharpness = 1.0;     // multiplier (1.0 = neutral, only >= 1.0 used)
+  double caN0 = 0.0;          // DSP v9: 0=disabled (legacy), 1=full rN0 mix into direct path
   
   // Formant end targets in Hz (NAN = no ramping)
   double endCf1 = NAN;

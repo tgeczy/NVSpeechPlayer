@@ -364,6 +364,11 @@ static void generateAcousticEvents(
     frameEx.jitter = clamp01(phonemeJitter + frameExDefaults.jitter);
     frameEx.shimmer = clamp01(phonemeShimmer + frameExDefaults.shimmer);
 
+    // DSP v9: caN0 — independent cascade anti-resonator amplitude.
+    // 0.0 = disabled (default, legacy coupling via caNP only).
+    // Phoneme opt-in for a side-branch zero without nasal pole (e.g. laterals).
+    frameEx.caN0 = (t.def && t.def->hasCaN0) ? clamp01(t.def->caN0) : 0.0;
+
     double userSharpness = (frameExDefaults.sharpness > 0.0) ? frameExDefaults.sharpness : 1.0;
     frameEx.sharpness = clampSharpness(phonemeSharpness * userSharpness);    
     // Formant end targets: phoneme-level (deliberate sweep) takes priority,

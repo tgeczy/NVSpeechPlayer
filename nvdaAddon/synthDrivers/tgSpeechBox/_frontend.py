@@ -58,6 +58,7 @@ class FrameEx(ctypes.Structure):
         ("transSourceHoldRatio", ctypes.c_double),
         # Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
         ("transVoicingHoldRatio", ctypes.c_double),
+        ("caN0", ctypes.c_double),
     ]
     # <<< END AUTO-GENERATED <<<
 

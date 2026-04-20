@@ -1665,28 +1665,34 @@ phonemes:
     voiceAmplitude: 0.9
   l_es:
     # The /l/ sound for Spanish. Keeping the tongue in a central way and not attaching it to the teeth or shrinking the lips, unlike the "l" alone.
+    # Lateral side-branch anti-resonance: rN0 at cfN0=1700 Hz (between F2 and F3)
+    # activated via the existing rNP-coupled path (caNP=1.0). rNP is tuned to a
+    # heavily-damped low pole (cfNP=200, cbNP=1200) so it adds minimal spectral
+    # coloring while still enabling the anti-resonator's output to reach the cascade.
+    # Issue #84/#95: distinguishes /l/ from /ɣ/ in word context by giving /l/
+    # its characteristic dark quality.
     _isLiquid: true
     _isNasal: false
     _isStop: false
     _isVoiced: true
     _isVowel: false
     aspirationAmplitude: 0
-    caNP: 0
+    caNP: 1.0
     cb1: 55
     cb2: 75
     cb3: 210
     cb4: 300
     cb5: 350
     cb6: 1300
-    cbN0: 100
-    cbNP: 100
+    cbN0: 250
+    cbNP: 1200
     cf1: 350
     cf2: 1400
     cf3: 2600
     cf4: 3400
     cf5: 3600
     cf6: 4900
-    cfN0: 250
+    cfN0: 1700
     cfNP: 200
     fricationAmplitude: 0
     pa1: 0

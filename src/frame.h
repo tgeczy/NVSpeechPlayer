@@ -185,6 +185,32 @@ typedef struct {
 	 * each source should have its own onset/offset schedule.
 	 */
 	double transVoicingHoldRatio;
+
+	/* =========================================================================
+	 * Independent cascade anti-resonator amplitude (DSP v9)
+	 * =========================================================================
+	 *
+	 * The cascade rN0 anti-resonator (controlled by cfN0/cbN0 on
+	 * speechPlayer_frame_t) has historically been coupled to the nasal pole
+	 * path — the anti-resonated signal only reaches the output when caNP
+	 * (cascade nasal POLE amplitude) is > 0. That coupling assumed every
+	 * phoneme needing an anti-resonance is nasal.
+	 *
+	 * Spanish /l/ (and other laterals) need a side-branch anti-resonance
+	 * WITHOUT a nasal pole. caN0 is the independent amplitude that mixes
+	 * the anti-resonated signal into the cascade's direct path, regardless
+	 * of caNP.
+	 *
+	 * 0.0 = disabled (legacy behavior — rN0 contributes only via nasal path
+	 *        when caNP > 0)
+	 * 1.0 = fully replace direct input with rN0-applied signal
+	 * 0<x<1 = crossfade mix (partial anti-resonance)
+	 *
+	 * Typical use: /l/ with cfN0 ≈ 1500-2500 Hz for the lateral zero,
+	 * cbN0 ≈ 200-300 Hz (broad notch matching the physical side cavity),
+	 * caN0 = 1.0. Leaves caNP at 0 so no nasal pole is added.
+	 */
+	double caN0;
 } speechPlayer_frameEx_t;
 
 // Default values for frameEx parameters. Used when:
@@ -221,7 +247,8 @@ static const speechPlayer_frameEx_t speechPlayer_frameEx_defaults = {
 	7500.0, // cf8: Rabiner 1968 default
 	1250.0, // cb8: Rabiner 1968 default
 	0.0,    // transSourceHoldRatio: no hold (legacy)
-	0.0     // transVoicingHoldRatio: no hold (legacy)
+	0.0,    // transVoicingHoldRatio: no hold (legacy)
+	0.0     // caN0: independent anti-resonator amp (DSP v9, disabled by default)
 };
 
 const int speechPlayer_frameEx_numParams=sizeof(speechPlayer_frameEx_t)/sizeof(double);

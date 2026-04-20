@@ -179,6 +179,9 @@ static bool loadPhonemes(const fs::path& packsRoot, PackSet& out, std::string& o
           } else if (fxKey == "sharpness") {
             def.hasSharpness = true;
             def.sharpness = fxVal;
+          } else if (fxKey == "caN0") {
+            def.hasCaN0 = true;
+            def.caN0 = fxVal;
           } else if (fxKey == "endCf1") {
             def.hasEndCf1 = true;
             def.endCf1 = fxVal;
@@ -1811,6 +1814,9 @@ static bool mergeLanguageFile(const fs::path& path, PackSet& out, std::string& o
               } else if (fxKey == "sharpness") {
                 def.hasSharpness = true;
                 def.sharpness = fxVal;
+              } else if (fxKey == "caN0") {
+                def.hasCaN0 = true;
+                def.caN0 = fxVal;
               } else if (fxKey == "endCf1") {
                 def.hasEndCf1 = true;
                 def.endCf1 = fxVal;

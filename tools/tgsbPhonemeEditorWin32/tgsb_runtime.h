@@ -146,6 +146,7 @@ struct EditorFrameEx {
   double transSourceHoldRatio;
   // Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
   double transVoicingHoldRatio;
+  double caN0;
 };
 // <<< END AUTO-GENERATED <<<
 

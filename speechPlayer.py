@@ -125,6 +125,7 @@ class FrameEx(Structure):
         ("transSourceHoldRatio", c_double),
         # Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
         ("transVoicingHoldRatio", c_double),
+        ("caN0", c_double),
     ]
     # <<< END AUTO-GENERATED <<<
 
