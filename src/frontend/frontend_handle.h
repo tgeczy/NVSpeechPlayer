@@ -91,6 +91,14 @@ struct Handle {
   // start of queueIPA_ExImpl. Capacity is pre-reserved in nvspFrontend_create
   // so synthesis never allocates. Read via nvspFrontend_queryData(NVSP_DATA_FRAMETRACE).
   std::vector<tgsb_data::FrameTraceEntry> frameTrace;
+
+  // Per-utterance per-pass token snapshots (v3.10+).
+  // Populated by pass_pipeline after each pass runs. Cleared at start of
+  // queueIPA_ExImpl. Pre-reserved in nvspFrontend_create. Read via
+  // nvspFrontend_queryData(NVSP_DATA_PASSTRACE). Lets tests observe how
+  // each pass mutates phoneme field state — essential for word-context
+  // regressions where a distinction may erode across the pipeline.
+  std::vector<tgsb_data::PassSnapshot> passSnapshots;
 };
 
 inline Handle* asHandle(nvspFrontend_handle_t h) {

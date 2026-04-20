@@ -27,6 +27,7 @@ constexpr int kDomainSettings   = 0;
 constexpr int kDomainPhonemes   = 1;
 constexpr int kDomainDictionary = 2;
 constexpr int kDomainFrameTrace = 3;  // per-utterance phoneme→frame-index map
+constexpr int kDomainPassTrace  = 4;  // per-utterance per-pass token snapshots
 
 // ── Field types ──
 enum class FieldType { Float, Bool, String };
@@ -72,6 +73,27 @@ struct DictRecord {
 struct FrameTraceEntry {
   int frameIndex;          // output frame count at which this phoneme starts
   std::string phonemeKey;  // UTF-8 IPA key (e.g. "ɣ", "l", "a")
+};
+
+// ── Pass snapshot ──
+// One entry per non-silence token per pass. Populated by pass_pipeline after
+// each pass runs, capturing the Token's acoustic field state at that point
+// in the pipeline. Lets tests observe how passes mutate phoneme parameters —
+// critical for diagnosing word-context regressions where a distinction
+// survives in isolation but gets compressed through the pass chain.
+struct PassSnapshot {
+  std::string passName;    // "coarticulation", "boundary_smoothing", etc.
+  int tokenIndex;          // index of this token in the current tokens vector
+  std::string phonemeKey;  // UTF-8 IPA key (empty if silence/gap — though silence is filtered out)
+  // Acoustic field state after the pass ran.
+  // Resolved from Token.field if setMask bit is set, else PhonemeDef default.
+  double cf1, cf2, cf3;
+  double pf1, pf2, pf3;
+  double voiceAmplitude;
+  double aspirationAmplitude;
+  double fricationAmplitude;
+  double durationMs;
+  double fadeMs;
 };
 
 // ── Per-domain cache ──

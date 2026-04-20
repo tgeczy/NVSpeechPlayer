@@ -193,7 +193,8 @@ bool convertIpaToTokens(
   double inflection,
   char clauseType,
   std::vector<Token>& outTokens,
-  std::string& outError
+  std::string& outError,
+  std::vector<tgsb_data::PassSnapshot>* passTraceSink = nullptr
 );
 
 // Convert tokens -> callback frames.

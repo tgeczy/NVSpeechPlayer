@@ -20,12 +20,24 @@ from typing import Callable, List, Optional
 
 # Data domain constants (must match NVSP_DATA_* in src/frontend/nvspFrontend.h).
 NVSP_DATA_FRAMETRACE = 3
+NVSP_DATA_PASSTRACE  = 4
 
 # One entry per phoneme emitted during the most recent queueIPA_Ex call.
 # frame_index: position into the FrameRecord list that capture_frames() returned.
 #              records[frame_index] is the first frame of this phoneme.
 # phoneme_key: UTF-8 IPA string (e.g. "ɣ", "l", "a").
 TraceEntry = namedtuple("TraceEntry", ["frame_index", "phoneme_key"])
+
+# One entry per non-silence token per pass. Captures the Token's acoustic state
+# immediately after that pass ran. Lets tests observe how phonemes mutate
+# through the pipeline.
+PassSnapshot = namedtuple("PassSnapshot", [
+    "pass_name", "token_index", "phoneme_key",
+    "cf1", "cf2", "cf3",
+    "pf1", "pf2", "pf3",
+    "voice_amplitude", "aspiration_amplitude", "frication_amplitude",
+    "duration_ms", "fade_ms",
+])
 
 # Frame struct (47 doubles, ABI-stable since v1).
 # Field names match nvspFrontend_Frame in src/frontend/nvspFrontend.h.
@@ -253,3 +265,40 @@ def read_frame_trace(fe: "TestFrontend", handle: int) -> List[TraceEntry]:
         fe._dll.nvspFrontend_freeString(ptr)
     data = json.loads(raw)
     return [TraceEntry(int(e["frameIndex"]), e["phonemeKey"]) for e in data]
+
+
+def read_pass_trace(fe: "TestFrontend", handle: int) -> List[PassSnapshot]:
+    """Return per-pass per-token snapshots of the Token state during the most
+    recent capture_frames() / queueIPA_Ex call.
+
+    Entries are ordered by pass execution order, then by token index within each
+    pass. Silence/gap tokens are skipped (no acoustic state to snapshot).
+
+    Typical usage: find all snapshots for a target phoneme (filter by
+    phoneme_key prefix), then compare cf1/cf2/voice_amplitude/etc. pass-by-pass
+    to see which pass is mutating the phoneme's acoustic state — essential for
+    diagnosing word-context regressions where a distinction survives in
+    minimal context but erodes through the pipeline.
+    """
+    ptr = fe._dll.nvspFrontend_queryData(
+        handle, c_int(NVSP_DATA_PASSTRACE), b"", c_int(0), c_int(0),
+    )
+    if not ptr:
+        return []
+    try:
+        raw = ctypes.string_at(ptr).decode("utf-8", "replace")
+    finally:
+        fe._dll.nvspFrontend_freeString(ptr)
+    data = json.loads(raw)
+    return [PassSnapshot(
+        pass_name=e["pass"],
+        token_index=int(e["tokenIndex"]),
+        phoneme_key=e["phonemeKey"],
+        cf1=float(e["cf1"]), cf2=float(e["cf2"]), cf3=float(e["cf3"]),
+        pf1=float(e["pf1"]), pf2=float(e["pf2"]), pf3=float(e["pf3"]),
+        voice_amplitude=float(e["voiceAmplitude"]),
+        aspiration_amplitude=float(e["aspirationAmplitude"]),
+        frication_amplitude=float(e["fricationAmplitude"]),
+        duration_ms=float(e["durationMs"]),
+        fade_ms=float(e["fadeMs"]),
+    ) for e in data]

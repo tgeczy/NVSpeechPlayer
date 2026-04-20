@@ -9,12 +9,24 @@ Licensed under the MIT License. See LICENSE for details.
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
+#include <locale>
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include "data_query.h"
 #include "pack.h"
 #include "utf8.h"
+
+// Locale-safe double→string for JSON serialization. Some NVDA locales set
+// LC_NUMERIC to ',' (Hungarian, Polish, etc.) which would break json.loads().
+// Cheap because pass-trace serialization only runs under tests / editor.
+static std::string dtoa(double v) {
+  std::ostringstream oss;
+  oss.imbue(std::locale::classic());
+  oss << v;
+  return oss.str();
+}
 
 // ── Generic Data Query API (ABI v5+) ──────────────────────────────
 
@@ -233,6 +245,10 @@ NVSP_FRONTEND_API int nvspFrontend_getDataCount(
     return static_cast<int>(h->frameTrace.size());
   }
 
+  if (domain == NVSP_DATA_PASSTRACE) {
+    return static_cast<int>(h->passSnapshots.size());
+  }
+
   // Unsupported domain.
   return -1;
 }
@@ -369,6 +385,59 @@ NVSP_FRONTEND_API char* nvspFrontend_queryData(
       json += ",\"phonemeKey\":\"";
       json += trace[i].phonemeKey;
       json += "\"}";
+    }
+    json += ']';
+
+    char* out = static_cast<char*>(std::malloc(json.size() + 1));
+    if (!out) return nullptr;
+    std::memcpy(out, json.c_str(), json.size() + 1);
+    return out;
+  }
+
+  if (domain == NVSP_DATA_PASSTRACE) {
+    // Serialize per-pass per-token snapshots as a JSON array.
+    const auto& snaps = h->passSnapshots;
+    const int total = static_cast<int>(snaps.size());
+    int start = offset < 0 ? 0 : offset;
+    if (start > total) start = total;
+    int end = (limit <= 0) ? total : (start + limit);
+    if (end > total) end = total;
+
+    std::string json;
+    json.reserve((end - start) * 200);  // rough estimate per entry
+    json += '[';
+    for (int i = start; i < end; ++i) {
+      const auto& s = snaps[i];
+      if (i > start) json += ',';
+      json += "{\"pass\":\"";
+      json += s.passName;
+      json += "\",\"tokenIndex\":";
+      json += std::to_string(s.tokenIndex);
+      json += ",\"phonemeKey\":\"";
+      json += s.phonemeKey;
+      json += "\",\"cf1\":";
+      json += dtoa(s.cf1);
+      json += ",\"cf2\":";
+      json += dtoa(s.cf2);
+      json += ",\"cf3\":";
+      json += dtoa(s.cf3);
+      json += ",\"pf1\":";
+      json += dtoa(s.pf1);
+      json += ",\"pf2\":";
+      json += dtoa(s.pf2);
+      json += ",\"pf3\":";
+      json += dtoa(s.pf3);
+      json += ",\"voiceAmplitude\":";
+      json += dtoa(s.voiceAmplitude);
+      json += ",\"aspirationAmplitude\":";
+      json += dtoa(s.aspirationAmplitude);
+      json += ",\"fricationAmplitude\":";
+      json += dtoa(s.fricationAmplitude);
+      json += ",\"durationMs\":";
+      json += dtoa(s.durationMs);
+      json += ",\"fadeMs\":";
+      json += dtoa(s.fadeMs);
+      json += '}';
     }
     json += ']';
 

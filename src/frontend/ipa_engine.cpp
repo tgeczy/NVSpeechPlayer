@@ -491,7 +491,8 @@ bool convertIpaToTokens(
   double inflection,
   char clauseType,
   std::vector<Token>& outTokens,
-  std::string& outError
+  std::string& outError,
+  std::vector<tgsb_data::PassSnapshot>* passTraceSink
 ) {
   outTokens.clear();
 
@@ -559,6 +560,7 @@ bool convertIpaToTokens(
 
   // Frontend passes: modular token-level rules (coarticulation, prosody, etc.).
   PassContext passCtx(pack, speed, basePitch, inflection, effectiveClauseType);
+  passCtx.passTraceSink = passTraceSink;
   if (!runPasses(passCtx, PassStage::PreTiming, outTokens, outError)) {
     return false;
   }

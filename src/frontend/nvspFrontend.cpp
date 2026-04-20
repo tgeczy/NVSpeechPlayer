@@ -51,6 +51,9 @@ NVSP_FRONTEND_API nvspFrontend_handle_t nvspFrontend_create(const char* packDirU
     // Pre-reserve frame-trace capacity so synthesis never allocates.
     // 512 entries = ~30-50 word sentences; far more than real utterances need.
     h->frameTrace.reserve(512);
+    // Pre-reserve pass-snapshot capacity. ~17 passes × 250 phonemes = 4250
+    // comfortable upper bound; 4096 covers any realistic utterance.
+    h->passSnapshots.reserve(4096);
     return reinterpret_cast<nvspFrontend_handle_t>(h);
   } catch (...) {
     return nullptr;
@@ -394,7 +397,11 @@ static int queueIPA_ExImpl(
 
   std::vector<Token> tokens;
   std::string err;
-  if (!convertIpaToTokens(h->pack, finalIpa, speed, basePitch, inflection, clauseType, tokens, err)) {
+  // Reset per-utterance pass trace. Capacity was reserved at handle creation
+  // so this clear() is O(1) and no allocation happens during the passes.
+  h->passSnapshots.clear();
+  if (!convertIpaToTokens(h->pack, finalIpa, speed, basePitch, inflection, clauseType,
+                          tokens, err, &h->passSnapshots)) {
     setError(h, err.empty() ? "IPA conversion failed" : err);
     return 0;
   }

@@ -11,6 +11,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include <unordered_map>
 #include <vector>
 
+#include "../data_query.h"
 #include "../pack.h"
 #include "../ipa_engine.h"
 
@@ -38,6 +39,12 @@ struct PassContext {
 
   // Passes can stash intermediate values here for later passes.
   std::unordered_map<std::string, double> scratchpad;
+
+  // Optional per-pass token-state sink. When non-null, pass_pipeline writes
+  // one PassSnapshot per non-silence token after each pass runs. Used by
+  // the test harness to observe how passes mutate phoneme parameters. Caller
+  // is responsible for pre-reserving capacity and clearing between utterances.
+  std::vector<tgsb_data::PassSnapshot>* passTraceSink = nullptr;
 
   PassContext(const PackSet& p, double s, double bp, double inf, char ct)
       : pack(p), speed(s), basePitch(bp), inflection(inf), clauseType(ct) {}

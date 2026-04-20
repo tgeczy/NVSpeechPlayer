@@ -23,9 +23,49 @@ Licensed under the MIT License. See LICENSE for details.
 #include "special_coartic.h"
 #include "prominence.h"
 
+#include "../utf8.h"
+
 namespace nvsp_frontend {
 
 namespace {
+
+// Capture the post-pass acoustic state of every non-silence token.
+// Resolves each field from Token.field if setMask bit is set, otherwise
+// falls back to the PhonemeDef default. Silence tokens (def == nullptr)
+// are skipped — they have no acoustic state to snapshot.
+void snapshotTokens(const char* passName,
+                    const std::vector<Token>& tokens,
+                    std::vector<tgsb_data::PassSnapshot>& sink) {
+  for (std::size_t i = 0; i < tokens.size(); ++i) {
+    const Token& t = tokens[i];
+    if (!t.def) continue;
+
+    auto resolve = [&](FieldId id) -> double {
+      const int idx = static_cast<int>(id);
+      const std::uint64_t bit = 1ULL << idx;
+      if (t.setMask & bit) return t.field[idx];
+      if (t.def->setMask & bit) return t.def->field[idx];
+      return 0.0;
+    };
+
+    tgsb_data::PassSnapshot s;
+    s.passName = passName;
+    s.tokenIndex = static_cast<int>(i);
+    s.phonemeKey = u32ToUtf8(t.def->key);
+    s.cf1 = resolve(FieldId::cf1);
+    s.cf2 = resolve(FieldId::cf2);
+    s.cf3 = resolve(FieldId::cf3);
+    s.pf1 = resolve(FieldId::pf1);
+    s.pf2 = resolve(FieldId::pf2);
+    s.pf3 = resolve(FieldId::pf3);
+    s.voiceAmplitude = resolve(FieldId::voiceAmplitude);
+    s.aspirationAmplitude = resolve(FieldId::aspirationAmplitude);
+    s.fricationAmplitude = resolve(FieldId::fricationAmplitude);
+    s.durationMs = t.durationMs;
+    s.fadeMs = t.fadeMs;
+    sink.push_back(std::move(s));
+  }
+}
 
 const PassDesc kPasses[] = {
     {"syllable_marking", PassStage::PreTiming, &passes::runSyllableMarking},
@@ -64,6 +104,12 @@ bool runPasses(
     if (!pass.fn(ctx, tokens, err)) {
       outError = std::string("pass '") + pass.name + "' failed: " + err;
       return false;
+    }
+
+    // Post-pass instrumentation. Nullptr sink (production path) is a single
+    // predictable branch per pass — no snapshot work performed.
+    if (ctx.passTraceSink) {
+      snapshotTokens(pass.name, tokens, *ctx.passTraceSink);
     }
   }
   return true;
