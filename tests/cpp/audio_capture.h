@@ -34,6 +34,11 @@ struct QueueContext {
     speechPlayer_handle_t player = nullptr;
     int sampleRate = 22050;
     double totalExpectedMs = 0.0;  // running sum of all frame durations
+    // Sample index at which each emitted frame begins. Index i of the
+    // frame callback invocations corresponds to samplePositions[i].
+    // Used to map phoneme frame_index from NVSP_DATA_FRAMETRACE into the
+    // right sample offset in the captured PCM buffer.
+    std::vector<std::size_t> samplePositions;
 };
 
 // Converts a ms value into an integer sample count at the given rate.
@@ -52,6 +57,13 @@ inline void queuingCallback(void* userData,
     auto* ctx = static_cast<QueueContext*>(userData);
     const unsigned int minSamples = std::max(1u, msToSamples(durationMs, ctx->sampleRate));
     const unsigned int fadeSamples = std::max(1u, msToSamples(fadeMs, ctx->sampleRate));
+
+    // Record the sample-index position of this frame's start so tests can
+    // later map frame_trace indices to PCM sample offsets.
+    const double msSoFar = ctx->totalExpectedMs;
+    const std::size_t samplePos = static_cast<std::size_t>(
+        msSoFar * static_cast<double>(ctx->sampleRate) / 1000.0);
+    ctx->samplePositions.push_back(samplePos);
 
     if (f) {
         // speechPlayer takes non-const pointers for historic reasons;
@@ -77,6 +89,25 @@ inline void queuingCallback(void* userData,
 // The pack must already be loaded on `frontendHandle` (via
 // nvspFrontend_setLanguage). `frontendHandle` can be from a live pack
 // fixture — this function neither creates nor destroys it.
+// Capture that also exposes the per-phoneme start-sample positions.
+// samplePositions[i] is the sample index at which the i-th frame
+// callback began. To find where phoneme K begins in the PCM buffer,
+// read the frame_trace via nvspFrontend_queryData(NVSP_DATA_FRAMETRACE)
+// and look up samplePositions[trace_entry.frameIndex].
+struct SynthesisResult {
+    std::vector<std::int16_t> pcm;
+    std::vector<std::size_t> samplePositions;  // one entry per emitted frame
+    int sampleRate = 22050;
+};
+
+inline SynthesisResult synthesizeToPcmWithTrace(
+    nvspFrontend_handle_t frontendHandle,
+    const std::string& ipa,
+    double speed = 1.0,
+    double basePitch = 140.0,
+    double inflection = 0.5,
+    int sampleRate = 22050);
+
 inline std::vector<std::int16_t> synthesizeToPcm(
     nvspFrontend_handle_t frontendHandle,
     const std::string& ipa,
@@ -129,12 +160,85 @@ inline std::vector<std::int16_t> synthesizeToPcm(
     return result;
 }
 
-// Convenience: same as synthesizeToPcm but uses a loaded PackSet rather
-// than going through a frontend handle. Useful when a test already has
-// a PackSet (e.g. from PackFixture) and wants to avoid the handle round-trip.
-// NOTE: this uses the convertIpaToTokens + manual emission path; if tests
-// need identical behavior to production they should use synthesizeToPcm
-// against a real handle instead.
+inline SynthesisResult synthesizeToPcmWithTrace(
+    nvspFrontend_handle_t frontendHandle,
+    const std::string& ipa,
+    double speed,
+    double basePitch,
+    double inflection,
+    int sampleRate)
+{
+    SynthesisResult res;
+    res.sampleRate = sampleRate;
+    if (!frontendHandle) return res;
+
+    QueueContext ctx;
+    ctx.sampleRate = sampleRate;
+    ctx.player = speechPlayer_initialize(sampleRate);
+    if (!ctx.player) return res;
+
+    const int rc = nvspFrontend_queueIPA_Ex(
+        frontendHandle, ipa.c_str(),
+        speed, basePitch, inflection,
+        ".", 0, &queuingCallback, &ctx);
+    if (rc == 0) {
+        speechPlayer_terminate(ctx.player);
+        return res;
+    }
+
+    const int expectedSamples = static_cast<int>(
+        std::ceil(ctx.totalExpectedMs * sampleRate / 1000.0));
+    const int maxSamples = expectedSamples + sampleRate / 5;
+    res.pcm.reserve(static_cast<std::size_t>(maxSamples));
+
+    std::vector<sample> chunk(1024);
+    int remaining = maxSamples;
+    while (remaining > 0) {
+        const unsigned int want = static_cast<unsigned int>(
+            std::min(remaining, static_cast<int>(chunk.size())));
+        const int got = speechPlayer_synthesize(ctx.player, want, chunk.data());
+        if (got <= 0) break;
+        for (int i = 0; i < got; ++i) {
+            res.pcm.push_back(chunk[static_cast<std::size_t>(i)].value);
+        }
+        remaining -= got;
+        if (static_cast<unsigned int>(got) < want) break;
+    }
+
+    res.samplePositions = std::move(ctx.samplePositions);
+    speechPlayer_terminate(ctx.player);
+    return res;
+}
+
+// Read NVSP_DATA_FRAMETRACE JSON and return a list of (frameIndex, phonemeKey).
+// Pure string parsing — no external JSON library. The JSON we emit is
+// flat and contains no escape sequences, so naive parsing is safe.
+struct TraceEntry { int frameIndex; std::string phonemeKey; };
+inline std::vector<TraceEntry> readFrameTrace(nvspFrontend_handle_t h) {
+    std::vector<TraceEntry> out;
+    char* raw = nvspFrontend_queryData(h, NVSP_DATA_FRAMETRACE, "", 0, 0);
+    if (!raw) return out;
+    std::string s(raw);
+    nvspFrontend_freeString(raw);
+    // Extremely minimal parse: look for "frameIndex":N,"phonemeKey":"K"
+    std::size_t p = 0;
+    while (true) {
+        const auto fi = s.find("\"frameIndex\":", p);
+        if (fi == std::string::npos) break;
+        const auto numStart = fi + 13;
+        const auto numEnd = s.find(',', numStart);
+        if (numEnd == std::string::npos) break;
+        const int idx = std::atoi(s.substr(numStart, numEnd - numStart).c_str());
+        const auto kStart = s.find("\"phonemeKey\":\"", numEnd);
+        if (kStart == std::string::npos) break;
+        const auto kBegin = kStart + 14;
+        const auto kEnd = s.find('"', kBegin);
+        if (kEnd == std::string::npos) break;
+        out.push_back({idx, s.substr(kBegin, kEnd - kBegin)});
+        p = kEnd + 1;
+    }
+    return out;
+}
 
 }  // namespace tgsb_test
 
