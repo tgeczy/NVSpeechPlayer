@@ -148,6 +148,22 @@ endif()
 set_target_properties(nvspFrontend PROPERTIES OUTPUT_NAME "nvspFrontend")
 
 # -------------------------
+# C++ unit test suite (opt-in, doctest-based)
+# -------------------------
+# Compiles tests/cpp/*.cpp into a standalone executable (tgsb_unit_tests)
+# that exercises individual passes and helpers. Enabled via:
+#   cmake -S . -B build-x86-nvda -DTGSB_BUILD_TESTS=ON
+# then
+#   cmake --build build-x86-nvda --target tgsb_unit_tests
+# or run all registered tests via CTest:
+#   ctest --test-dir build-x86-nvda -C MinSizeRel
+option(TGSB_BUILD_TESTS "Build the doctest C++ unit test suite" OFF)
+if(TGSB_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests/cpp)
+endif()
+
+# -------------------------
 # Optional command-line tools
 # -------------------------
 option(NVSP_BUILD_TOOLS "Build optional command-line tools (e.g. Speech Dispatcher helpers)" OFF)
