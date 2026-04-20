@@ -81,6 +81,20 @@ TEST_CASE_FIXTURE(HandleFixture,
     const std::size_t gc = static_cast<std::size_t>(g_start) + offSamp;
     const std::size_t lc = static_cast<std::size_t>(l_start) + offSamp;
 
+    // Log which phoneme key each side resolved to — ensures we're
+    // actually testing /l_es/ not some other /l/ variant.
+    std::string g_key, l_key;
+    for (const auto& e : g_tr)
+        if (e.phonemeKey.size() > 0 && e.phonemeKey[0] == char(0xC9)
+            && e.phonemeKey.size() > 1 && (unsigned char)e.phonemeKey[1] == 0xA3) {
+            g_key = e.phonemeKey; break;
+        }
+    for (const auto& e : l_tr)
+        if (e.phonemeKey.size() > 0 && e.phonemeKey[0] == 'l') {
+            l_key = e.phonemeKey; break;
+        }
+    MESSAGE("  resolved /ɣ/ key=" << g_key << "    /l/ key=" << l_key);
+
     auto gr = extractFormantsViaRoots(g.pcm, gc, 22050, /*win*/ 512, /*order*/ 14);
     auto lr = extractFormantsViaRoots(l.pcm, lc, 22050, 512, 14);
     REQUIRE(gr.valid);
