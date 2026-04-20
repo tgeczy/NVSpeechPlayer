@@ -19,6 +19,7 @@
 #include <filesystem>
 #include <string>
 
+#include "nvspFrontend.h"
 #include "pack.h"
 
 namespace tgsb_test {
@@ -63,6 +64,33 @@ struct PackFixture {
         if (def.setMask & bit) return def.field[idx];
         return 0.0;
     }
+};
+
+// Fixture that creates a real nvspFrontend handle through the public C API
+// (not just a PackSet). Needed for audio-capture tests that call
+// nvspFrontend_queueIPA_Ex. Automatically destroys the handle on teardown.
+struct HandleFixture {
+    nvspFrontend_handle_t handle = nullptr;
+
+    explicit HandleFixture(const std::string& lang = "es-mx") {
+        std::string packDir = findPackDir();
+        REQUIRE_MESSAGE(!packDir.empty(),
+                        "could not locate 'packs' directory by walking up from cwd");
+        handle = nvspFrontend_create(packDir.c_str());
+        REQUIRE_MESSAGE(handle != nullptr, "nvspFrontend_create failed");
+        const int ok = nvspFrontend_setLanguage(handle, lang.c_str());
+        if (!ok) {
+            const char* err = nvspFrontend_getLastError(handle);
+            FAIL("nvspFrontend_setLanguage('" << lang << "') failed: " << (err ? err : "(unknown)"));
+        }
+    }
+
+    ~HandleFixture() {
+        if (handle) nvspFrontend_destroy(handle);
+    }
+
+    HandleFixture(const HandleFixture&) = delete;
+    HandleFixture& operator=(const HandleFixture&) = delete;
 };
 
 }  // namespace tgsb_test

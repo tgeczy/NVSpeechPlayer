@@ -28,16 +28,21 @@ file(GLOB FRONTEND_CPP_FOR_TESTS CONFIGURE_DEPENDS
      "${CMAKE_CURRENT_SOURCE_DIR}/../../src/frontend/*.cpp")
 file(GLOB FRONTEND_PASSES_CPP_FOR_TESTS CONFIGURE_DEPENDS
      "${CMAKE_CURRENT_SOURCE_DIR}/../../src/frontend/passes/*.cpp")
+# DSP sources (speechPlayer) — linked so audio-capture tests can synthesize
+# directly into a buffer, bypassing the platform audio sinks.
+file(GLOB SPEECHPLAYER_CPP_FOR_TESTS CONFIGURE_DEPENDS
+     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/*.cpp")
 
 add_executable(tgsb_unit_tests
   ${TGSB_CPP_TESTS}
   ${FRONTEND_CPP_FOR_TESTS}
   ${FRONTEND_PASSES_CPP_FOR_TESTS}
+  ${SPEECHPLAYER_CPP_FOR_TESTS}
 )
 
 target_include_directories(tgsb_unit_tests PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}"                         # for doctest.h
-  "${CMAKE_CURRENT_SOURCE_DIR}/../../src"                # for ../utils.h
+  "${CMAKE_CURRENT_SOURCE_DIR}/../../src"                # for speechPlayer.h, frame.h, sample.h
   "${CMAKE_CURRENT_SOURCE_DIR}/../../src/frontend"       # for frontend headers
 )
 
