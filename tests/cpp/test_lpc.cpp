@@ -167,3 +167,73 @@ TEST_CASE_FIXTURE(HandleFixture,
             << "  ΔF3=" << (int)std::abs(gf.freqsHz[2] - lf.freqsHz[2]));
     CHECK(true);
 }
+
+TEST_CASE_FIXTURE(HandleFixture,
+                  "LPC: /ɣ/-vs-/l/ F2 separation exceeds JND (#84/#95 guard)") {
+    // Regression guard. The #84/#95 perceptual collapse was rooted in a
+    // 56 Hz F2 gap between /ɣ/ and /l/ in word context — below the ~100 Hz
+    // just-noticeable-difference for F2 contrast in this frequency range
+    // (Flanagan 1972; confirmed by native Spanish tester reports of
+    // "entregado → entrelado" and "hola → hoda"). This test locks in the
+    // invariant that any future parameter change must preserve.
+    //
+    // Measurement offset = 20 ms into the consonant. Rationale: Blumstein &
+    // Stevens (1979) established that listeners form categorical consonant
+    // place judgments using an ~26 ms spectral-invariance window at the
+    // consonant onset, and Delattre (1955) corroborates that transitions
+    // under 60 ms don't produce strong percepts — the auditory system
+    // weights the 20–30 ms post-onset window most heavily. Sampling earlier
+    // than ~15 ms catches trailing-vowel formant contamination before the
+    // consonant's own target has settled; 20 ms lands inside the invariance
+    // window while staying within the consonant's core duration.
+    //
+    // Additional direction check: /ɣ/ is velar (tongue back) → F2 LOWER
+    // than /l/ (alveolar/central). If this inverts, something is
+    // acoustically impossible regardless of the magnitude of the gap.
+    auto g = synthesizeToPcmWithTrace(handle, "entɾeɣaðo", 1.0, 140.0, 0.5, 22050);
+    auto g_tr = readFrameTrace(handle);
+    auto l = synthesizeToPcmWithTrace(handle, "entɾelaðo", 1.0, 140.0, 0.5, 22050);
+    auto l_tr = readFrameTrace(handle);
+    const long g_start = findPhonemeStart(g, g_tr, "ɣ");
+    const long l_start = findPhonemeStart(l, l_tr, "l");
+    REQUIRE(g_start > 0);
+    REQUIRE(l_start > 0);
+
+    const std::size_t off = 22050 * 20 / 1000;
+    auto gf = extractFormantsLPC(g.pcm,
+                                 static_cast<std::size_t>(g_start) + off,
+                                 22050, 512, 14);
+    auto lf = extractFormantsLPC(l.pcm,
+                                 static_cast<std::size_t>(l_start) + off,
+                                 22050, 512, 14);
+    REQUIRE(gf.valid);
+    REQUIRE(lf.valid);
+    REQUIRE(gf.freqsHz.size() >= 2);
+    REQUIRE(lf.freqsHz.size() >= 2);
+
+    // Find F2 by frequency range, not by LPC output index. /ɣ/ as an
+    // approximant has a weak F1 that LPC often doesn't surface as a pole —
+    // so freqsHz[0] for /ɣ/ can actually be its F2, while for /l/ freqsHz[0]
+    // is a properly-detected F1 and freqsHz[1] is its F2. Comparing by index
+    // would cross-reference /ɣ/'s F3 against /l/'s F2. Spanish vowel/liquid
+    // F2 range is roughly 1000–2200 Hz; the first LPC pole in that band is
+    // the F2 of whichever consonant we're looking at.
+    auto findF2 = [](const std::vector<double>& freqs) -> double {
+        for (double f : freqs) {
+            if (f >= 1000.0 && f <= 2200.0) return f;
+        }
+        return -1.0;
+    };
+
+    const double gF2 = findF2(gf.freqsHz);
+    const double lF2 = findF2(lf.freqsHz);
+    REQUIRE(gF2 > 0.0);
+    REQUIRE(lF2 > 0.0);
+
+    const double dF2 = std::abs(gF2 - lF2);
+    MESSAGE("  /ɣ/ F2=" << (int)gF2 << "  /l/ F2=" << (int)lF2
+            << "  ΔF2=" << (int)dF2);
+
+    CHECK(dF2 >= 100.0);     // above perceptual JND
+    CHECK(gF2 < lF2);        // /ɣ/ velar should sit below /l/ alveolar
+}
