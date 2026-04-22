@@ -100,8 +100,8 @@ inline Place getPlace(const std::u32string& key) {
   }
 
   // Velars
-  if (key == U"k" || key == U"g" || key == U"ŋ" ||
-      key == U"x" || key == U"ɣ" || key == U"ɰ") {
+  if (key == U"k" || key == U"g" || key == U"ɡ" ||  // both ASCII 0x67 and IPA U+0261
+      key == U"ŋ" || key == U"x" || key == U"ɣ" || key == U"ɰ") {
     return Place::Velar;
   }
 

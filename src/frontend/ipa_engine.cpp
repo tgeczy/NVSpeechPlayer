@@ -22,6 +22,8 @@ Licensed under the MIT License. See LICENSE for details.
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <type_traits>
 #include <sstream>

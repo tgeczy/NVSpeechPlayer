@@ -10,6 +10,30 @@ Licensed under the MIT License. See LICENSE for details.
 #include <algorithm>
 #include <cstring>
 
+// Debug logging for token-level stop-closure decisions.
+// Set to 1 to enable, 0 to disable.
+#define PARSER_DEBUG_LOG 0
+#if PARSER_DEBUG_LOG
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include "utf8.h"
+static FILE* parserLogFile() {
+  static FILE* f = nullptr;
+  if (!f) {
+    const char* tmp = std::getenv("TEMP");
+    if (!tmp) tmp = std::getenv("TMP");
+    if (!tmp) tmp = "/tmp";
+    std::string path = std::string(tmp) + "/tgsb_parser.log";
+    f = std::fopen(path.c_str(), "a");
+  }
+  return f;
+}
+#define PLOG(...) do { FILE* _f = parserLogFile(); if (_f) { std::fprintf(_f, __VA_ARGS__); std::fflush(_f); } } while(0)
+#else
+#define PLOG(...) ((void)0)
+#endif
+
 using nvsp_frontend::ipa_internal::isTieBar;
 using nvsp_frontend::ipa_internal::findPhoneme;
 using nvsp_frontend::ipa_internal::tokenIsVoiced;
@@ -535,6 +559,16 @@ bool parseToTokens(const PackSet& pack, const std::u32string& text, std::vector<
     }
 
     // Stop closure insertion.
+#if PARSER_DEBUG_LOG
+    {
+      std::string keyUtf = t.def ? nvsp_frontend::u32ToUtf8(t.def->key) : std::string("<null>");
+      PLOG("TOKEN key='%s' stress=%d isStop=%d isAfricate=%d flags=0x%x wordStart=%d\n",
+           keyUtf.c_str(), stress, tokenIsStop(t) ? 1 : 0,
+           tokenIsAfricate(t) ? 1 : 0,
+           (unsigned)(t.def ? t.def->flags : 0u),
+           t.wordStart ? 1 : 0);
+    }
+#endif
     if (stress == 0 && (tokenIsStop(t) || tokenIsAfricate(t))) {
       bool needGap = false;
       bool clusterGap = false;
@@ -572,6 +606,17 @@ bool parseToTokens(const PackSet& pack, const std::u32string& text, std::vector<
         // none
       }
 
+#if PARSER_DEBUG_LOG
+      {
+        std::string keyUtf = t.def ? nvsp_frontend::u32ToUtf8(t.def->key) : std::string("<null>");
+        std::string prevKeyUtf = haveLast() && outTokens[lastIndex].def
+            ? nvsp_frontend::u32ToUtf8(outTokens[lastIndex].def->key)
+            : std::string("<none>");
+        PLOG("  STOP-DECISION key='%s' prev='%s' mode='%s' needGap=%d clusterGap=%d nasal2stop=%d\n",
+             keyUtf.c_str(), prevKeyUtf.c_str(), lang.stopClosureMode.c_str(),
+             needGap ? 1 : 0, clusterGap ? 1 : 0, nasalToStopGap ? 1 : 0);
+      }
+#endif
       if (needGap) {
         Token gap;
         gap.silence = true;
