@@ -5802,6 +5802,67 @@ phonemes:
     pf5: 3750
     pf6: 4900
     voiceAmplitude: 0.92
+  "ɡ_es":
+    # Spanish softened velar stop. Acoustic parameters cloned from /ɡ/ but
+    # with durationScale: 0.27, which multiplies stopClosureVowelGapMs to
+    # yield ~8 ms intervocalic closure instead of the Spanish default 30 ms.
+    # Addresses testers' "hard G character preserved but word flows naturally"
+    # ask on #84/#95 — intervocalic /ɣ̞/ approximant was losing its consonant
+    # moment entirely ("entregado" heard as "entredado"), while the hard /ɡ/
+    # at default 30 ms closure introduced an audible word-break. 8 ms retains
+    # the velar closure cue while staying below the perceptual word-break
+    # threshold. Documented design choice: prioritize consonant intelligibility
+    # over textbook Spanish lenition for this phoneme class.
+    _isLiquid: false
+    _isNasal: false
+    _isStop: true
+    durationScale: 0.27
+    burstDurationMs: 11
+    burstDecayRate: 0.4
+    burstSpectralTilt: -0.15
+    voiceBarAmplitude: 0.50
+    voiceBarF1: 150
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 70
+    cb2: 100
+    cb3: 180
+    cb4: 450
+    cb5: 800
+    cb6: 1500
+    cbN0: 100
+    cbNP: 100
+    cf1: 220
+    cf2: 1800
+    cf3: 2400
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.50
+    pa1: 0.05
+    pa2: 0.55
+    pa3: 0.65
+    pa4: 0.20
+    pa5: 0.08
+    pa6: 0.04
+    parallelBypass: 0.08
+    pb1: 65
+    pb2: 130
+    pb3: 180
+    pb4: 450
+    pb5: 800
+    pb6: 1500
+    pf1: 220
+    pf2: 1500
+    pf3: 2100
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.92
   "ɣ":
     _isAfricate: false
     _isLiquid: false

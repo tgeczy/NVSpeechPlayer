@@ -106,21 +106,35 @@ TEST_CASE_FIXTURE(HandleFixture,
     REQUIRE(e_start > 0);
     REQUIRE(a_start > 0);
 
-    const std::size_t off = 22050 * 20 / 1000;  // 20 ms offset into phoneme
-    const std::size_t win = 22050 * 40 / 1000;  // 40 ms window
-    const double gRms = rmsAmplitude(res.pcm, g_start + off, win);
-    const double eRms = rmsAmplitude(res.pcm, e_start + off, win);
-    const double aRms = rmsAmplitude(res.pcm, a_start + off, win);
+    // Duration-aware window: use phoneme boundaries from the trace.
+    // Consonant window = middle 50% of /ɣ/'s duration (avoids transition
+    // contamination from flanking vowels). Vowel windows = 20 ms starting
+    // 10 ms into each vowel (conservative, stays well inside /e/ and /a/).
+    const std::size_t gDur = static_cast<std::size_t>(a_start - g_start);
+    const std::size_t gWinStart = static_cast<std::size_t>(g_start) + gDur / 4;
+    const std::size_t gWinLen = gDur / 2;
+
+    const std::size_t vOff = 22050 * 10 / 1000;
+    const std::size_t vWin = 22050 * 20 / 1000;
+
+    const double gRms = rmsAmplitude(res.pcm, gWinStart, gWinLen);
+    const double eRms = rmsAmplitude(res.pcm, e_start + vOff, vWin);
+    const double aRms = rmsAmplitude(res.pcm, a_start + vOff, vWin);
     const double avgVowelRms = (eRms + aRms) * 0.5;
 
     const double gDbVsE = dbRatio(gRms, eRms);
     const double gDbVsA = dbRatio(gRms, aRms);
     const double gDbVsAvg = dbRatio(gRms, avgVowelRms);
 
+    const double gDurMs = static_cast<double>(gDur) * 1000.0 / 22050.0;
+    const double gWinLenMs = static_cast<double>(gWinLen) * 1000.0 / 22050.0;
+
     MESSAGE("  ----- /ɣ/ INTENSITY REPORT (entɾeɣaðo) -----");
+    MESSAGE("  /ɣ/ duration: " << gDurMs << " ms,  measurement window: "
+            << gWinLenMs << " ms (middle 50%)");
     MESSAGE("  raw RMS (fraction of full-scale):");
     MESSAGE("    /e/ preceding: " << eRms);
-    MESSAGE("    /ɣ/:           " << gRms);
+    MESSAGE("    /ɣ/ core:      " << gRms);
     MESSAGE("    /a/ following: " << aRms);
     MESSAGE("  /ɣ/ dB relative to flanking vowels:");
     MESSAGE("    vs /e/:  " << gDbVsE << " dB");
@@ -136,6 +150,21 @@ TEST_CASE_FIXTURE(HandleFixture,
 
     writeWav("test_output_entregado.wav", res.pcm, 22050);
     MESSAGE("  WAV written: test_output_entregado.wav");
+
+    // Diagnostic comparison: what if /ɣ/ were the hard /ɡ/ stop instead?
+    // Renders "entregado" with medial /ɡ/ (no lenition) so we can A/B
+    // the approximant vs stop character in identical word context.
+    auto hardG = synthesizeToPcmWithTrace(handle, "entɾeɡaðo", 1.0, 140.0, 0.5, 22050);
+    if (!hardG.pcm.empty()) {
+        writeWav("test_output_entregado_hardG.wav", hardG.pcm, 22050);
+        MESSAGE("  WAV written: test_output_entregado_hardG.wav (diagnostic with /ɡ/ stop)");
+    }
+    // Voiceless stop intervocalic samples — check whether a reduced
+    // stopClosureVowelGapMs breaks /p/, /t/, /k/ word perception.
+    auto papa = synthesizeToPcmWithTrace(handle, "papa", 1.0, 140.0, 0.5, 22050);
+    if (!papa.pcm.empty()) writeWav("test_output_papa.wav", papa.pcm, 22050);
+    auto tapa = synthesizeToPcmWithTrace(handle, "tapa", 1.0, 140.0, 0.5, 22050);
+    if (!tapa.pcm.empty()) writeWav("test_output_tapa.wav", tapa.pcm, 22050);
 }
 
 TEST_CASE_FIXTURE(HandleFixture,
