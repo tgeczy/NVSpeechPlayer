@@ -354,7 +354,7 @@ normalization:
     # A slightly softened and less noisy /d/.
     - from: d
       to: d_es
-    # A softed g approximant. It is neutral, dialect independent, but this may change in the future.
+    # A softened g approximant. It is neutral, dialect independent, but this may change in the future.
     - from: "ɣ"
       to: ɣ_es
     # More clear diphthong transition for /j/.

@@ -302,7 +302,8 @@ static void applyRules(std::u32string& text, const PackSet& pack, const std::vec
     const bool useLooseTie = (rule.from.size() > 1) && (textHasTie || patHasTie);
 
     // Debug: trace rules that contain ɑ
-    bool traceThis = (rule.from.find(U'\u0251') != std::u32string::npos); // ɑ = U+0251
+    bool traceThis = (rule.from.find(U'\u0251') != std::u32string::npos)
+                  || (rule.from.find(U'\u0263') != std::u32string::npos); // added u0263 trace
     if (traceThis) {
       INLOG("RULE[%d] from='%s' useLooseTie=%d textHasTie=%d text='%s'\n",
             ruleIdx, u32toUtf8(rule.from).c_str(), useLooseTie, textHasTie,
