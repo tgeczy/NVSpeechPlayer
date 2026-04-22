@@ -29,8 +29,8 @@ android {
         applicationId = "com.tgspeechbox.tts"
         minSdk = 26
         targetSdk = 35
-        versionCode = 343
-        versionName = "3.10-beta2"
+        versionCode = 344
+        versionName = "3.10-beta2.01"
 
         externalNativeBuild {
             cmake {

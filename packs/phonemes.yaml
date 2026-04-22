@@ -5884,7 +5884,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.08
+    fricationAmplitude: 0.14
     pa1: 0.08
     pa2: 0.05
     pa3: 0.07
@@ -5904,7 +5904,7 @@ phonemes:
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    voiceAmplitude: 0.70
+    voiceAmplitude: 0.78
   "ɣ_cas":
     # Castilian velar approximant — more exaggerated than Latin American.
     # Tongue moves further back, more audible frication/noise component.
