@@ -169,6 +169,16 @@ struct PhonemeDef {
   double durationScale = 1.0;
   bool hasDurationScale = false;
 
+  // Per-phoneme override for the intervocalic stop closure gap (ms at speed=1.0;
+  // divided by current speed). When set, replaces lang.stopClosureVowelGapMs
+  // for THIS phoneme only — does NOT affect cluster-gap or nasal-to-stop paths.
+  // Decouples closure-gap timing from durationScale, which still controls the
+  // stop's own body length. Use case: Spanish /ɡ_es/ wants a short (~8 ms)
+  // intervocalic closure (audible velar cue without an unnatural word break)
+  // but a full-length burst (so it sounds like a stop, not an approximant).
+  double closureGapMs = 0.0;
+  bool hasClosureGapMs = false;
+
   // Higher cascade formants F7/F8 (DSP v8, Rabiner 1968 defaults).
   // These are vocal-tract-length properties, not vowel-dependent.
   // Per-phoneme override via YAML keys cf7/cb7/cf8/cb8.

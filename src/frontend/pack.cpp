@@ -242,6 +242,10 @@ static bool loadPhonemes(const fs::path& packsRoot, PackSet& out, std::string& o
         double v; if (val.asNumber(v)) { def.hasDurationScale = true; def.durationScale = v; }
         continue;
       }
+      if (fieldName == "closureGapMs") {
+        double v; if (val.asNumber(v)) { def.hasClosureGapMs = true; def.closureGapMs = v; }
+        continue;
+      }
       // Higher cascade formants F7/F8 (DSP v8, FrameEx fields)
       if (fieldName == "cf7") {
         double v; if (val.asNumber(v)) { def.hasCf7 = true; def.cf7 = v; }
@@ -1875,6 +1879,10 @@ static bool mergeLanguageFile(const fs::path& path, PackSet& out, std::string& o
           }
           if (fieldName == "durationScale") {
             double v; if (val.asNumber(v)) { def.hasDurationScale = true; def.durationScale = v; }
+            continue;
+          }
+          if (fieldName == "closureGapMs") {
+            double v; if (val.asNumber(v)) { def.hasClosureGapMs = true; def.closureGapMs = v; }
             continue;
           }
 

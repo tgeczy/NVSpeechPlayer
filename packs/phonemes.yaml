@@ -5804,19 +5804,26 @@ phonemes:
     voiceAmplitude: 0.92
   "ɡ_es":
     # Spanish softened velar stop. Acoustic parameters cloned from /ɡ/ but
-    # with durationScale: 0.27, which multiplies stopClosureVowelGapMs to
-    # yield ~8 ms intervocalic closure instead of the Spanish default 30 ms.
+    # with closureGapMs: 8.0, which sets the intervocalic preStopGap to 8 ms
+    # for THIS phoneme only — overrides the Spanish default 30 ms.
     # Addresses testers' "hard G character preserved but word flows naturally"
     # ask on #84/#95 — intervocalic /ɣ̞/ approximant was losing its consonant
     # moment entirely ("entregado" heard as "entredado"), while the hard /ɡ/
     # at default 30 ms closure introduced an audible word-break. 8 ms retains
     # the velar closure cue while staying below the perceptual word-break
-    # threshold. Documented design choice: prioritize consonant intelligibility
-    # over textbook Spanish lenition for this phoneme class.
+    # threshold.
+    #
+    # Earlier attempts used durationScale: 0.27 (which yielded the same 8 ms
+    # closure via 30 * 0.27) but ALSO chopped the stop's own body to 27% of
+    # its normal length, killing the burst — output sounded approximant-like
+    # despite the closure being correct. closureGapMs decouples closure
+    # timing from body length so the burst stays full-length.
+    # Documented design choice: prioritize consonant intelligibility over
+    # textbook Spanish lenition for this phoneme class.
     _isLiquid: false
     _isNasal: false
     _isStop: true
-    durationScale: 0.27
+    closureGapMs: 8.0
     burstDurationMs: 11
     burstDecayRate: 0.4
     burstSpectralTilt: -0.15

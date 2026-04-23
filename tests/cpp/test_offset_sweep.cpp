@@ -47,7 +47,8 @@ TEST_CASE_FIXTURE(HandleFixture,
         }
         return -1;
     };
-    g_start = findStart(g_res, g_trace, "ɣ");
+    // Post /ɣ/→/ɡ_es/ routing change: prefix-match "ɡ" finds /ɡ_es/.
+    g_start = findStart(g_res, g_trace, "ɡ");
     l_start = findStart(l_res, l_trace, "l");
     REQUIRE(g_start > 0);
     REQUIRE(l_start > 0);

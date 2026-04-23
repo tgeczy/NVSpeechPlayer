@@ -194,7 +194,14 @@ static void calculateTimes(std::vector<Token>& tokens, const PackSet& pack, doub
         dur = baseDur / curSpeed;
         fade = baseFade / curSpeed;
       } else {
-        dur = lang.stopClosureVowelGapMs * closureScale / curSpeed;
+        // Per-phoneme closureGapMs override (e.g. /ɡ_es/ wants 8ms intervocalic
+        // closure regardless of the language default 30ms). Decoupled from
+        // durationScale so the stop's own body length stays under separate control.
+        if (t.def && t.def->hasClosureGapMs) {
+          dur = t.def->closureGapMs / curSpeed;
+        } else {
+          dur = lang.stopClosureVowelGapMs * closureScale / curSpeed;
+        }
         fade = lang.stopClosureVowelFadeMs / curSpeed;
       }
     } else if (t.postStopAspiration) {

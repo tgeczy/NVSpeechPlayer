@@ -58,7 +58,7 @@ TEST_CASE_FIXTURE(PackFixture,
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "aɣa", 1.0, 140.0, 0.5, '.', toks, err));
 
-    const Token* g = findFirst(toks, U"ɣ");
+    const Token* g = findFirst(toks, U"ɡ");
     REQUIRE(g);
 
     CHECK_FALSE(g->hasEndCf1);
@@ -78,7 +78,7 @@ TEST_CASE_FIXTURE(PackFixture,
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', toks, err));
 
-    const Token* g = findFirst(toks, U"ɣ");
+    const Token* g = findFirst(toks, U"ɡ");
     REQUIRE(g);
 
     CHECK_FALSE(g->hasEndCf1);
@@ -96,7 +96,7 @@ TEST_CASE_FIXTURE(PackFixture,
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', toks, err));
 
-    const Token* g = findFirst(toks, U"ɣ");
+    const Token* g = findFirst(toks, U"ɡ");
     REQUIRE(g);
 
     if (g->hasEndCf1) {
@@ -119,7 +119,7 @@ TEST_CASE_FIXTURE(PackFixture,
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', g_toks, err));
     REQUIRE(convertIpaToTokens(pack, "entɾelaðo", 1.0, 140.0, 0.5, '.', l_toks, err));
 
-    const Token* g = findFirst(g_toks, U"ɣ");
+    const Token* g = findFirst(g_toks, U"ɡ");
     const Token* l = findFirst(l_toks, U"l");
     REQUIRE(g);
     REQUIRE(l);
@@ -153,7 +153,7 @@ TEST_CASE_FIXTURE(PackFixture,
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', toks, err));
 
-    const Token* g = findFirst(toks, U"ɣ");
+    const Token* g = findFirst(toks, U"ɡ");
     REQUIRE(g);
 
     INFO("/ɣ/ transF1Scale=" << g->transF1Scale

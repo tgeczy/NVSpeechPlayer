@@ -55,59 +55,61 @@ static const Token* findLast(const std::vector<Token>& tokens,
 }
 
 TEST_CASE_FIXTURE(PackFixture,
-                  "duration: /ɣ/ in /entɾeɣaðo/ at normal speed (1.0) ≥ 20 ms") {
+                  "duration: velar in /entɾeɣaðo/ at normal speed (1.0) is present") {
+    // After /ɣ/→/ɡ_es/ routing change, the velar is a stop (~6 ms burst body
+    // + 8 ms closure) instead of an approximant (~30 ms). Body durationMs is
+    // canonical-short for stops; intelligibility comes from closure+burst,
+    // not body length. Just guard presence here — duration check inadequate
+    // for stops. A future test should cover the closure+burst pattern.
     std::vector<Token> tokens;
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', tokens, err));
 
-    const Token* g = findFirst(tokens, U"ɣ");
-    REQUIRE_MESSAGE(g, "/ɣ/ token missing at speed 1.0");
+    const Token* g = findFirst(tokens, U"ɡ");
+    REQUIRE_MESSAGE(g, "/ɡ_es/ token missing at speed 1.0");
     INFO("key=" << std::string(g->def->key.begin(), g->def->key.end())
          << "  durationMs=" << g->durationMs);
-    CHECK(g->durationMs >= 20.0);
+    CHECK(g->durationMs >= 4.0);  // stop body, ~6 ms canonical
 }
 
 TEST_CASE_FIXTURE(PackFixture,
-                  "duration: /ɣ/ at NVDA synth cap (2.0) stays above audibility (≥ 10 ms)") {
+                  "duration: velar at NVDA synth cap (2.0) is still present") {
     // speed=2.0 is the hardest real-world case — NVDA caps the synth there
-    // and uses timeStretch for faster rates. If /ɣ/ falls below ~10 ms here,
-    // users at fast-but-common reading speeds literally cannot perceive it,
-    // and the /ɣ/-vs-/l/ distinction is dead on arrival regardless of what
-    // the formant parameters look like.
+    // and uses timeStretch for faster rates. After /ɣ/→/ɡ_es/, the velar
+    // is now a stop with a fixed-short canonical body (~6 ms / 2 = 3 ms at
+    // speed 2). Burst-presence guard only — the closure+burst pattern is
+    // what carries intelligibility, not body length per se.
     std::vector<Token> tokens;
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 2.0, 140.0, 0.5, '.', tokens, err));
 
-    const Token* g = findFirst(tokens, U"ɣ");
+    const Token* g = findFirst(tokens, U"ɡ");
     REQUIRE(g);
     INFO("key=" << std::string(g->def->key.begin(), g->def->key.end())
          << "  durationMs=" << g->durationMs);
-    CHECK_MESSAGE(g->durationMs >= 10.0,
-                  "/ɣ/ collapsed below 10 ms at NVDA max synth speed — "
-                  "engine cannot deliver /ɣ/-vs-/l/ distinction at common fast rates");
+    CHECK_MESSAGE(g->durationMs >= 2.0,
+                  "/ɡ_es/ stop body collapsed below 2 ms at NVDA max synth speed");
 }
 
 TEST_CASE_FIXTURE(PackFixture,
-                  "duration: /ɣ/ vs /l/ ratio stable in matched word context") {
-    // Both words have identical syllable structure except the target
-    // consonant. Durations should be comparable — if /ɣ/ is being
-    // disproportionately crushed, something in the pipeline is treating
-    // approximants as less important than laterals.
+                  "duration: /ɡ_es/ vs /l_es/ both present in matched word context") {
+    // After /ɣ/→/ɡ_es/, comparing a stop body (~6 ms canonical) to a
+    // sonorant (~30 ms) by ratio doesn't carry the same meaning the
+    // approximant-vs-lateral comparison did. Just ensure both are present
+    // — that's the regression guard worth keeping post-routing-change.
     std::vector<Token> g_toks, l_toks;
     std::string err;
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', g_toks, err));
     REQUIRE(convertIpaToTokens(pack, "entɾelaðo", 1.0, 140.0, 0.5, '.', l_toks, err));
 
-    const Token* g = findFirst(g_toks, U"ɣ");
+    const Token* g = findFirst(g_toks, U"ɡ");
     const Token* l = findFirst(l_toks, U"l");
     REQUIRE(g);
     REQUIRE(l);
 
-    const double ratio = g->durationMs / l->durationMs;
-    INFO("/ɣ/ = " << g->durationMs << " ms   /l/ = " << l->durationMs
-         << " ms   ratio = " << ratio);
-    CHECK(ratio > 0.5);
-    CHECK(ratio < 2.0);
+    INFO("/ɡ_es/ = " << g->durationMs << " ms   /l_es/ = " << l->durationMs << " ms");
+    CHECK(g->durationMs > 0.0);
+    CHECK(l->durationMs > 0.0);
 }
 
 TEST_CASE_FIXTURE(PackFixture,
@@ -140,8 +142,8 @@ TEST_CASE_FIXTURE(PackFixture,
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 1.0, 140.0, 0.5, '.', t1, err));
     REQUIRE(convertIpaToTokens(pack, "entɾeɣaðo", 2.0, 140.0, 0.5, '.', t2, err));
 
-    const Token* g1 = findFirst(t1, U"ɣ");
-    const Token* g2 = findFirst(t2, U"ɣ");
+    const Token* g1 = findFirst(t1, U"ɡ");
+    const Token* g2 = findFirst(t2, U"ɡ");
     REQUIRE(g1);
     REQUIRE(g2);
 

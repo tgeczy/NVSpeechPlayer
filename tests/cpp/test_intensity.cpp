@@ -96,7 +96,10 @@ TEST_CASE_FIXTURE(HandleFixture,
     REQUIRE(!res.pcm.empty());
     REQUIRE(!tr.empty());
 
-    const int gIdx = findPhonemeFrameIdx(tr, "ɣ");
+    // Post /ɣ/→/ɡ_es/ routing change: prefix-match "ɡ" finds /ɡ_es/.
+    // Note: the original /ɣ/ approximant-character assertions below may
+    // be inappropriate for /ɡ_es/ stop — kept for now as diagnostic.
+    const int gIdx = findPhonemeFrameIdx(tr, "ɡ");
     REQUIRE(gIdx >= 0);
     const long g_start = (gIdx < static_cast<int>(res.samplePositions.size()))
         ? static_cast<long>(res.samplePositions[gIdx]) : -1;
@@ -263,4 +266,113 @@ TEST_CASE_FIXTURE(HandleFixture,
 
     writeWav("test_output_gusano.wav", res.pcm, 22050);
     MESSAGE("  WAV written: test_output_gusano.wav");
+}
+
+TEST_CASE_FIXTURE(HandleFixture,
+                  "Hypothesis check: /ɣ/→/ɡ_es/ with closureGapMs=8 should match hardG_gap8") {
+    // Architectural verification for issues #84/#95.
+    //
+    // Earlier renders showed:
+    //   - test_output_entregado_hardG_gap8.wav (input "entɾeɡaðo" with global
+    //     stopClosureVowelGapMs=8): SOUNDS GOOD per Tomi — clear velar stop,
+    //     no audible word-break.
+    //   - test_output_entregado_gEs_durationScale.wav (input "entɾeɣaðo" with
+    //     /ɣ/→/ɡ_es/ where /ɡ_es/ used durationScale=0.27): SOUNDS BAD —
+    //     same as b2 approximant.
+    //
+    // Hypothesis: durationScale=0.27 was producing the right ~8 ms closure
+    // (30 * 0.27) but ALSO chopping the stop's body to 27% of normal,
+    // killing the burst. The new closureGapMs override decouples closure
+    // timing from body length — /ɡ_es/ now gets 8 ms closure + full burst.
+    //
+    // After this commit, /ɣ/ in "entɾeɣaðo" is routed through /ɡ_es/ with
+    // closureGapMs=8 + no durationScale. Output should match hardG_gap8.
+    // If they differ perceptually, there's a deeper architectural issue
+    // (replacement-path artifacts beyond closure/body timing) and we revert.
+
+    auto via_replacement = synthesizeToPcmWithTrace(
+        handle, "entɾeɣaðo", 1.0, 140.0, 0.5, 22050);
+    REQUIRE(!via_replacement.pcm.empty());
+    writeWav("test_output_entregado_b202_closureFix.wav",
+             via_replacement.pcm, 22050);
+
+    auto direct_input = synthesizeToPcmWithTrace(
+        handle, "entɾeɡaðo", 1.0, 140.0, 0.5, 22050);
+    REQUIRE(!direct_input.pcm.empty());
+    writeWav("test_output_entregado_b202_directG.wav",
+             direct_input.pcm, 22050);
+
+    // Sample-count proxy for "did the closure timing actually change?"
+    // hardG_gap8 (gap=8ms global) was ~19340 bytes ≈ 9648 samples.
+    // gEs_durationScale (gap=8ms via durationScale, body=27%) was ~21322 ≈ 10648 samples.
+    // The new approach should produce a sample count close to hardG_gap8
+    // (full body + 8ms closure), NOT to gEs_durationScale.
+    MESSAGE("  ----- HYPOTHESIS CHECK -----");
+    MESSAGE("  via /ɣ/→/ɡ_es/ replacement (new): "
+            << via_replacement.pcm.size() << " samples");
+    MESSAGE("  via direct /ɡ/ input:             "
+            << direct_input.pcm.size() << " samples");
+    MESSAGE("  Reference hardG_gap8.wav:         ~9648 samples");
+    MESSAGE("  Reference gEs_durationScale.wav:  ~10648 samples");
+    MESSAGE("  WAV: test_output_entregado_b202_closureFix.wav");
+    MESSAGE("  WAV: test_output_entregado_b202_directG.wav");
+
+    // tapa/papa regression check — these have no closureGapMs override,
+    // so /p/ and /t/ should still use the Spanish default 30ms global gap.
+    // Compare these against the pre-existing test_output_papa.wav and
+    // test_output_tapa.wav (rendered by the first TEST_CASE) — they
+    // should be byte-identical.
+    auto papa = synthesizeToPcmWithTrace(handle, "papa", 1.0, 140.0, 0.5, 22050);
+    auto tapa = synthesizeToPcmWithTrace(handle, "tapa", 1.0, 140.0, 0.5, 22050);
+    if (!papa.pcm.empty()) writeWav("test_output_papa_b202.wav", papa.pcm, 22050);
+    if (!tapa.pcm.empty()) writeWav("test_output_tapa_b202.wav", tapa.pcm, 22050);
+    MESSAGE("  Regression refs: test_output_papa_b202.wav, test_output_tapa_b202.wav");
+}
+
+TEST_CASE_FIXTURE(HandleFixture,
+                  "Audit: Spanish words with intervocalic /ɣ/ in varied contexts") {
+    // Tomi confirmed b202_closureFix sounds perfect for "entregado". This
+    // test renders a broader set of Spanish words containing /ɣ/ in
+    // different phonological contexts so we can audit whether the
+    // /ɣ/→/ɡ_es/ routing change is universally an improvement, or if it
+    // sounds over-articulated in some positions.
+    //
+    // If any sound too hard, we context-restrict the rule (e.g. intervocalic
+    // VOWEL_ɣ_VOWEL only). If all sound fine, the change is safe to ship.
+    //
+    // Files written: test_output_<word>_b202.wav
+
+    struct Word { const char* name; const char* ipa; const char* note; };
+    Word words[] = {
+        // Pure intervocalic /ɣ/ — the "easy" cases.
+        {"lago",        "laɣo",        "/laɣo/  - simple V_V"},
+        {"hago",        "aɣo",         "/aɣo/   - simple V_V (yo hago)"},
+        {"haga",        "aɣa",         "/aɣa/   - minimal /aɣa/"},
+        {"diga",        "diɣa",        "/diɣa/  - common subjunctive"},
+        {"amigo",       "amiɣo",       "/amiɣo/ - frequent word"},
+        {"pagar",       "paɣaɾ",       "/paɣaɾ/ - before tap"},
+
+        // /ɣ/ adjacent to semivowels.
+        {"agua",        "aɣwa",        "/aɣwa/  - before /w/ semivowel"},
+        {"luego",       "lweɣo",       "/lweɣo/ - between semivowel and V"},
+
+        // /ɣ/ in cluster contexts (pre-existing rules transform first).
+        {"algo",        "alɣo",        "/alɣo/  - after lateral (lɣ→lᵊɣ first)"},
+        {"largo",       "laɾɣo",       "/laɾɣo/ - after tap (ɾɣ→ɾᵊɣ first)"},
+        {"rasgar",      "rasɣaɾ",      "/rasɣaɾ/ - after /s/ (sɣ→sᵊɣ first)"},
+        {"regla",       "reɣla",       "/reɣla/ - before /l/ (ɣl→ɡᵊl, NOT ɡ_es)"},
+        {"siguiente",   "siɣjente",    "/siɣjente/ - /ɣj/→/ʝ/, NOT ɡ_es"},
+    };
+
+    for (const auto& w : words) {
+        auto res = synthesizeToPcmWithTrace(handle, w.ipa, 1.0, 140.0, 0.5, 22050);
+        if (res.pcm.empty()) {
+            MESSAGE("  SKIP " << w.name << " (synth returned empty)");
+            continue;
+        }
+        std::string fn = std::string("test_output_") + w.name + "_b202.wav";
+        writeWav(fn.c_str(), res.pcm, 22050);
+        MESSAGE("  " << w.name << ":  " << w.note
+                << "  →  " << fn << "  (" << res.pcm.size() << " samples)");
+    }
 }

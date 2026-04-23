@@ -566,6 +566,8 @@ NVSP_FRONTEND_API int nvspFrontend_setData(
           def.hasFricDecayMs = true; def.fricDecayMs = parseDouble(value);
         } else if (fieldPath == "durationScale") {
           def.hasDurationScale = true; def.durationScale = parseDouble(value);
+        } else if (fieldPath == "closureGapMs") {
+          def.hasClosureGapMs = true; def.closureGapMs = parseDouble(value);
         }
         // Frame fields (FieldId-based).
         else {

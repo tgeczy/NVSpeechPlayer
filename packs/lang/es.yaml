@@ -254,8 +254,11 @@ normalization:
     # ɾ+approximant clusters (e.g. "verde" = ɾð, "largo" = ɾɣ)
     - from: "ɾð"
       to: "ɾᵊð"
+    # /ɾɣ/ → /ɾᵊɡ/ (NOT /ɾᵊɣ/): plain /ɡ/'s 30 ms closure works after schwa,
+    # while /ɡ_es/'s 8 ms is masked by surrounding voicing. See rationale on
+    # the /lɣ/, /sɣ/ block below.
     - from: "ɾɣ"
-      to: "ɾᵊɣ"
+      to: "ɾᵊɡ"
     - from: "ɾβ"
       to: "ɾᵊβ"
     - from: "ɾθ"
@@ -292,8 +295,11 @@ normalization:
       to: "fᵊɾ"
     - from: "ɡɾ"
       to: "ɡᵊɾ"
+    # /ɣɾ/ → /ɡᵊɾ/ (NOT /ɣᵊɾ/): plain /ɡ/'s 30 ms closure works after the
+    # schwa, while /ɡ_es/'s 8 ms is masked by surrounding voicing. See
+    # rationale on the /lɣ/, /ɾɣ/, /sɣ/ block below.
     - from: "ɣɾ"
-      to: "ɣᵊɾ"
+      to: "ɡᵊɾ"
     - from: "kɾ"
       to: "kᵊɾ"
     - from: "pɾ"
@@ -307,17 +313,24 @@ normalization:
     # Reported: "algo", "carga", "rasgar", "regla" sound unclear.
     # MUST come before dialect replacements (ɣ→ɣ_es, l→l_es, s→s_es)
     # or cascade protection makes the patterns unmatchable.
+    #
+    # NOTE on /ɣ/ collapsing to /ɡ/ in these splits: after the dialect
+    # routing change to /ɣ/→/ɡ_es/ (closureGapMs: 8), an /ᵊ/ + /ɡ_es/
+    # combo sounds like an approximant /ð/ — the schwa's voicing masks
+    # the brief 8 ms closure (algo → "al-dho", largo → "lar-do"). Plain
+    # /ɡ/'s 30 ms Spanish default closure is enough silence after the
+    # schwa to read as a true stop.
     - from: "lɡ"
       to: "lᵊɡ"
     - from: "lɣ"
-      to: "lᵊɣ"
+      to: "lᵊɡ"
     - from: "ɾɡ"
       to: "ɾᵊɡ"
-    # Note: ɾɣ handled above (line ~228).
+    # Note: ɾɣ handled above (line ~228, also collapses to /ɡ/).
     - from: "sɡ"
       to: "sᵊɡ"
     - from: "sɣ"
-      to: "sᵊɣ"
+      to: "sᵊɡ"
     # Velar + lateral (regla = /reɣla/): use full stop [ɡ] in pre-lateral
     # clusters — Spanish /ɡ/ stays a stop before liquids, never approximant.
     - from: "ɣl"
@@ -354,9 +367,13 @@ normalization:
     # A slightly softened and less noisy /d/.
     - from: d
       to: d_es
-    # A softened g approximant. It is neutral, dialect independent, but this may change in the future.
+    # Velar stop with short (8 ms) intervocalic closure. Replaces the prior
+    # /ɣ/ → /ɣ_es/ approximant routing (issues #84/#95): testers reported the
+    # approximant lost its consonant moment entirely ("entregado" → "entredado").
+    # /ɡ_es/ uses closureGapMs: 8 to preserve velar character without an
+    # audible word-break. Word-initial /ɣ/ is already handled above (line ~196).
     - from: "ɣ"
-      to: ɣ_es
+      to: ɡ_es
     # More clear diphthong transition for /j/.
     - from: j
       to: j_es

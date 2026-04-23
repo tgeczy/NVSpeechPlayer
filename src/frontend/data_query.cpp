@@ -159,7 +159,7 @@ static constexpr size_t kNumFrameExKeys = sizeof(kFrameExKeys) / sizeof(kFrameEx
 static const char* const kMicroEventKeys[] = {
   "burstDurationMs", "burstDecayRate", "burstSpectralTilt",
   "voiceBarAmplitude", "voiceBarF1", "releaseSpreadMs",
-  "fricAttackMs", "fricDecayMs", "durationScale",
+  "fricAttackMs", "fricDecayMs", "durationScale", "closureGapMs",
   "cf7", "cb7", "cf8", "cb8"
 };
 static constexpr size_t kNumMicroEventKeys = sizeof(kMicroEventKeys) / sizeof(kMicroEventKeys[0]);
