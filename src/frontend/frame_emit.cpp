@@ -911,16 +911,23 @@ static void generateAcousticEvents(
             seg1[pa4i] = std::min(1.0, seg1[pa4i] * (1.0 + spectralTilt * 0.7));
           }
 
-          // b3: rate-dependent frication tilt for stop burst + decay.
+          // b3.1: rate-dependent frication tilt — VELAR STOPS ONLY.
           // At slow/normal rates (speed <= 1.2): flat (tiltDb=0, no effect).
-          // At fast rates: progressively darken pa4/pa5/pa6 so velar bursts
-          // don't drift into alveolar-tap territory (issue #95 Bug 1,
-          // 29-Bloo's "Pegue → Pere" report at rate 1.3+).
+          // At fast rates for velars: progressively darken pa4/pa5/pa6 so
+          // velar bursts don't drift into alveolar-tap territory (issue #95
+          // Bug 1, 29-Bloo's "Pegue → Pere" report at rate 1.3+).
           //   speed=1.3 → -1 dB, speed=1.7 → -5 dB, speed=2.0 → -8 dB.
-          // Applied only to stops (this block); reset below so subsequent
-          // phonemes are unaffected.
+          //
+          // b3 applied this to all stop places and regressed alveolar/labial
+          // crispness at fast rates (Mario Percinic's Mastodon report: TTS
+          // "sounds like it lost its front teeth" — /t/, /p/ bursts dulled).
+          // Gating on Place::Velar preserves the fix for our validated test
+          // cases (pegue, fuego, lago, amigo are all velars) while keeping
+          // natural high-freq burst energy on every other place of articulation.
           const double savedFricationTiltDb = frameEx.fricationTiltDb;
-          frameEx.fricationTiltDb = (speed > 1.2) ? -((speed - 1.2) * 10.0) : 0.0;
+          frameEx.fricationTiltDb = (place == Place::Velar && speed > 1.2)
+              ? -((speed - 1.2) * 10.0)
+              : 0.0;
 
           nvspFrontend_Frame burstFrame;
           std::memcpy(&burstFrame, seg1, sizeof(burstFrame));
