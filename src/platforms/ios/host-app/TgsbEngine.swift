@@ -759,6 +759,7 @@ class TgsbEngine: ObservableObject {
         ("frameEx.endPf1", "Diphthong End Parallel F1"),
         ("frameEx.endPf2", "Diphthong End Parallel F2"),
         ("frameEx.endPf3", "Diphthong End Parallel F3"),
+        ("frameEx.fricationTiltDb", "Frication Tilt (dB, neg=darker)"),
         // Micro-events
         ("burstDurationMs", "Burst Duration (ms)"), ("burstDecayRate", "Burst Decay Rate"),
         ("burstSpectralTilt", "Burst Spectral Tilt"),
@@ -766,6 +767,7 @@ class TgsbEngine: ObservableObject {
         ("releaseSpreadMs", "Release Spread (ms)"),
         ("fricAttackMs", "Frication Attack (ms)"), ("fricDecayMs", "Frication Decay (ms)"),
         ("durationScale", "Duration Scale"),
+        ("closureGapMs", "Closure Gap (ms, stops)"),
     ]
 
     private static let phonemeFieldOrder: [String: Int] = {

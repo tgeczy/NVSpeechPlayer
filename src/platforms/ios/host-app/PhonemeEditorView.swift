@@ -422,6 +422,10 @@ func phonemeFieldRange(_ fieldName: String, _ value: Float) -> ClosedRange<Float
     case ["preFormantGain", "parallelBypass", "glottalOpenQuotient",
           "breathiness", "creakiness", "jitter", "shimmer", "sharpness"].contains(fieldName):
         return 0...1
+    case fieldName == "fricationTiltDb":
+        return -15...15
+    case fieldName == "closureGapMs":
+        return 0...60
     case value >= 0 && value <= 1:
         return 0...1.5
     case value > 1:
@@ -452,7 +456,7 @@ func phonemeFieldStep(_ fieldName: String) -> Float {
          ["preFormantGain", "parallelBypass", "glottalOpenQuotient",
           "breathiness", "creakiness", "jitter", "shimmer", "sharpness",
           "outputGain", "burstDecayRate", "burstSpectralTilt",
-          "durationScale"].contains(fieldName):
+          "durationScale", "fricationTiltDb"].contains(fieldName):
         return 0.1
     // Duration in ms: 1 ms steps
     case fieldName.contains("Ms"):

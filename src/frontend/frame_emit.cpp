@@ -364,11 +364,6 @@ static void generateAcousticEvents(
     frameEx.jitter = clamp01(phonemeJitter + frameExDefaults.jitter);
     frameEx.shimmer = clamp01(phonemeShimmer + frameExDefaults.shimmer);
 
-    // DSP v9: caN0 — independent cascade anti-resonator amplitude.
-    // 0.0 = disabled (default, legacy coupling via caNP only).
-    // Phoneme opt-in for a side-branch zero without nasal pole (e.g. laterals).
-    frameEx.caN0 = (t.def && t.def->hasCaN0) ? clamp01(t.def->caN0) : 0.0;
-
     double userSharpness = (frameExDefaults.sharpness > 0.0) ? frameExDefaults.sharpness : 1.0;
     frameEx.sharpness = clampSharpness(phonemeSharpness * userSharpness);    
     // Formant end targets: phoneme-level (deliberate sweep) takes priority,
@@ -916,6 +911,17 @@ static void generateAcousticEvents(
             seg1[pa4i] = std::min(1.0, seg1[pa4i] * (1.0 + spectralTilt * 0.7));
           }
 
+          // b3: rate-dependent frication tilt for stop burst + decay.
+          // At slow/normal rates (speed <= 1.2): flat (tiltDb=0, no effect).
+          // At fast rates: progressively darken pa4/pa5/pa6 so velar bursts
+          // don't drift into alveolar-tap territory (issue #95 Bug 1,
+          // 29-Bloo's "Pegue → Pere" report at rate 1.3+).
+          //   speed=1.3 → -1 dB, speed=1.7 → -5 dB, speed=2.0 → -8 dB.
+          // Applied only to stops (this block); reset below so subsequent
+          // phonemes are unaffected.
+          const double savedFricationTiltDb = frameEx.fricationTiltDb;
+          frameEx.fricationTiltDb = (speed > 1.2) ? -((speed - 1.2) * 10.0) : 0.0;
+
           nvspFrontend_Frame burstFrame;
           std::memcpy(&burstFrame, seg1, sizeof(burstFrame));
           emitFn(&burstFrame, &frameEx, burstMs, stopMainFade);
@@ -956,6 +962,9 @@ static void generateAcousticEvents(
           double decayDur = stopMainDur - burstMs;
           double decayFade = std::min(burstMs * 0.8, decayDur);
           emitFn(&decayFrame, &frameEx, decayDur, decayFade);
+
+          // Restore fricationTiltDb so next phoneme emits without rate tilt.
+          frameEx.fricationTiltDb = savedFricationTiltDb;
 
           trajectoryState->prevCf2 = burstFrame.cf2;
           trajectoryState->prevCf3 = burstFrame.cf3;

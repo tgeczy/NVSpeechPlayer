@@ -362,10 +362,30 @@ TEST_CASE_FIXTURE(HandleFixture,
         {"rasgar",      "rasɣaɾ",      "/rasɣaɾ/ - after /s/ (sɣ→sᵊɣ first)"},
         {"regla",       "reɣla",       "/reɣla/ - before /l/ (ɣl→ɡᵊl, NOT ɡ_es)"},
         {"siguiente",   "siɣjente",    "/siɣjente/ - /ɣj/→/ʝ/, NOT ɡ_es"},
+
+        // b201 failure cases reported by Greg on #95 (2026-04-23). Needed
+        // for burst-COG analysis to test the preceding-phoneme F2 bleed
+        // hypothesis — do /o/-context intervocalic and /l+ɣ/ clusters
+        // produce low burst COG (alveolar-tap territory, ~620 Hz) rather
+        // than velar COG (~1100-1200 Hz)?
+        {"dialogo",     "djaloɣo",     "/djaloɣo/ - /o/ before /ɣ/, /o/ after (Greg: broken)"},
+        {"dialogar",    "djaloɣaɾ",    "/djaloɣaɾ/ - /o/ before /ɣ/, /a/ after (Greg: broken)"},
+        {"salga",       "salɣa",       "/salɣa/ - /l/+/ɣ/ cluster (Greg: sarga)"},
+        {"algunas",     "alɣunas",     "/alɣunas/ - /l/+/ɣ/ cluster (Greg: argunas)"},
+        // Control: dialogar minus the word-final /ɾ/ — tests whether /ɾ/
+        // is exerting backward influence on /ɡ/ rendering. If this probe
+        // sounds right but dialogar doesn't, the /ɾ/ is part of the bug.
+        {"dialoga",     "djaloɣa",     "/djaloɣa/ - dialogar minus final ɾ (probe)"},
+        // 29-Bloo's specific example on #95: "Pegue" at normal speed could
+        // sound like "Pere" — fast-rate intelligibility probe for /e/+/ɣ/+/e/.
+        {"pegue",       "peɣe",        "/peɣe/ - 29-Bloo probe (should not sound like 'pere')"},
     };
 
+    // Pitch 110 Hz matches Adam voice baseline (~110 Hz at NVDA/Orca default
+    // after the 0.92 voicePitch_mul fix in 394dcb0). Previous 140 Hz was
+    // noticeably higher than what testers actually hear.
     for (const auto& w : words) {
-        auto res = synthesizeToPcmWithTrace(handle, w.ipa, 1.0, 140.0, 0.5, 22050);
+        auto res = synthesizeToPcmWithTrace(handle, w.ipa, 1.0, 110.0, 0.5, 22050);
         if (res.pcm.empty()) {
             MESSAGE("  SKIP " << w.name << " (synth returned empty)");
             continue;
@@ -374,5 +394,46 @@ TEST_CASE_FIXTURE(HandleFixture,
         writeWav(fn.c_str(), res.pcm, 22050);
         MESSAGE("  " << w.name << ":  " << w.note
                 << "  →  " << fn << "  (" << res.pcm.size() << " samples)");
+    }
+}
+
+TEST_CASE_FIXTURE(HandleFixture,
+                  "Audit: /ɣ/ rate sweep — fast-speech intelligibility per #95 feedback") {
+    // 29-Bloo on #95: "at normal or fast speeds it could sound like a
+    // weak R sound" for words like "Pegue". Testing the critical /ɣ/
+    // words across multiple speeds to see which contexts collapse at
+    // fast rates. Speed 1.0 = normal, 1.5 = fast, 2.0 = very fast.
+    //
+    // Adam baseline pitch 110 Hz so outputs match what testers hear.
+
+    struct Word { const char* name; const char* ipa; };
+    Word words[] = {
+        {"pegue",       "peɣe"},       // 29-Bloo's specific example
+        {"dialogo",     "djaloɣo"},    // /o/-context Greg flagged
+        {"dialogar",    "djaloɣaɾ"},   // word-final /ɾ/ variant
+        {"lago",        "laɣo"},       // WIN control — should not regress
+        {"algo",        "alɣo"},       // /lɣ/ cluster
+    };
+
+    struct Rate { const char* tag; double speed; };
+    Rate rates[] = {
+        {"rate070", 0.7},   // slow / careful speech
+        {"rate100", 1.0},   // normal (matches existing _b202 files)
+        {"rate130", 1.3},   // moderately fast
+        {"rate170", 1.7},   // fast (NVDA rate 75-80 range)
+        {"rate200", 2.0},   // very fast (NVDA rate 90+ range)
+    };
+
+    for (const auto& w : words) {
+        for (const auto& r : rates) {
+            auto res = synthesizeToPcmWithTrace(handle, w.ipa, r.speed,
+                                                 110.0, 0.5, 22050);
+            if (res.pcm.empty()) continue;
+            std::string fn = std::string("test_output_") + w.name
+                             + "_" + r.tag + ".wav";
+            writeWav(fn.c_str(), res.pcm, 22050);
+            MESSAGE("  " << w.name << " @ speed=" << r.speed
+                    << "  →  " << fn << "  (" << res.pcm.size() << " samples)");
+        }
     }
 }

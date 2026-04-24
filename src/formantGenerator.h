@@ -90,23 +90,10 @@ void setCascadeBwScale(double scale) {
         // nasalGainScale adjusts coupling amplitude (how much nasal bleeds through).
         const double n0Output = rN0.resonate(input, frame->cfN0, frame->cbN0 * nasalBwScale);
 
-        // DSP v9: independent cascade anti-resonator mix (caN0).
-        // Historically rN0 could only reach output via the nasal-pole path (gated by caNP).
-        // That coupling assumed every phoneme needing a zero is nasal. Laterals like
-        // Spanish /l/ need a side-branch anti-resonance WITHOUT a nasal pole. caN0
-        // mixes rN0's output directly into the cascade's input path, bypassing rNP.
-        // Default 0 preserves legacy behavior for every existing phoneme.
-        double directInput = input;
-        if (frameEx && frameEx->caN0 > 0.0) {
-            double caN0Mix = frameEx->caN0;
-            if (caN0Mix > 1.0) caN0Mix = 1.0;
-            directInput = calculateValueAtFadePosition(input, n0Output, caN0Mix);
-        }
-
         double scaledCaNP = frame->caNP * nasalGainScale;
         if (scaledCaNP > 1.0) scaledCaNP = 1.0;
         double output = calculateValueAtFadePosition(
-            directInput,
+            input,
             rNP.resonate(n0Output, frame->cfNP, frame->cbNP * nasalBwScale),
             scaledCaNP
         );
@@ -267,12 +254,37 @@ public:
         const double hs1 = (f4FreqScale != 1.0) ? pow(f4FreqScale, 0.2) : 1.0;
         const double hs2 = (f4FreqScale != 1.0) ? pow(f4FreqScale, 0.5) : 1.0;
         const double hs3 = (f4FreqScale != 1.0) ? pow(f4FreqScale, 0.8) : 1.0;
-        output+=(r1.resonate(input,frame->pf1 * hs1,pb1)-input)*frame->pa1;
-        output+=(r2.resonate(input,frame->pf2 * hs2,pb2)-input)*frame->pa2;
-        output+=(r3.resonate(input,frame->pf3 * hs3,pb3)-input)*frame->pa3;
-        output+=(r4.resonate(input,frame->pf4 * f4FreqScale,frame->pb4)-input)*frame->pa4;
-        output+=(r5.resonate(input,frame->pf5 * f4FreqScale,frame->pb5)-input)*frame->pa5;
-        output+=(r6.resonate(input,frame->pf6 * f4FreqScale,frame->pb6)-input)*frame->pa6;
+
+        // DSP v9: frication spectral tilt.
+        // Scales each parallel amplitude by a frequency-dependent factor when
+        // frameEx->fricationTiltDb is non-zero. Pivot 1500 Hz, slope 3000 Hz
+        // per dB unit. Only attenuates above pivot (asymmetric rolloff) — pa1
+        // and pa2 are untouched, pa3 barely touched, pa4/pa5/pa6 progressively
+        // darkened. Preserves the velar F3 signature while removing the
+        // high-frequency tap-click that causes /ɡ/→/ɾ/ misperception at fast
+        // rates (issue #95 Bug 1, pegue/lago rate 1.3+).
+        const double tilt = (frameEx) ? frameEx->fricationTiltDb : 0.0;
+        auto tiltScale = [tilt](double fHz) -> double {
+            if (tilt == 0.0) return 1.0;
+            constexpr double pivotHz = 1500.0, slopeHz = 3000.0;
+            const double excess = fHz - pivotHz;
+            if (excess <= 0.0) return 1.0;
+            return std::pow(10.0, tilt * excess / (20.0 * slopeHz));
+        };
+
+        const double pf1e = frame->pf1 * hs1;
+        const double pf2e = frame->pf2 * hs2;
+        const double pf3e = frame->pf3 * hs3;
+        const double pf4e = frame->pf4 * f4FreqScale;
+        const double pf5e = frame->pf5 * f4FreqScale;
+        const double pf6e = frame->pf6 * f4FreqScale;
+
+        output+=(r1.resonate(input,pf1e,pb1)-input)*frame->pa1*tiltScale(pf1e);
+        output+=(r2.resonate(input,pf2e,pb2)-input)*frame->pa2*tiltScale(pf2e);
+        output+=(r3.resonate(input,pf3e,pb3)-input)*frame->pa3*tiltScale(pf3e);
+        output+=(r4.resonate(input,pf4e,frame->pb4)-input)*frame->pa4*tiltScale(pf4e);
+        output+=(r5.resonate(input,pf5e,frame->pb5)-input)*frame->pa5*tiltScale(pf5e);
+        output+=(r6.resonate(input,pf6e,frame->pb6)-input)*frame->pa6*tiltScale(pf6e);
 
         // Higher parallel formants F7/F8 (DSP v8).
         // Extend fricative spectral envelope above F6 for "presence" and "air."

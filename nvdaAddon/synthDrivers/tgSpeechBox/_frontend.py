@@ -58,7 +58,8 @@ class FrameEx(ctypes.Structure):
         ("transSourceHoldRatio", ctypes.c_double),
         # Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
         ("transVoicingHoldRatio", ctypes.c_double),
-        ("caN0", ctypes.c_double),
+        # Frication spectral tilt (DSP v9). 0=flat, negative=darken high-freq parallels.
+        ("fricationTiltDb", ctypes.c_double),
     ]
     # <<< END AUTO-GENERATED <<<
 

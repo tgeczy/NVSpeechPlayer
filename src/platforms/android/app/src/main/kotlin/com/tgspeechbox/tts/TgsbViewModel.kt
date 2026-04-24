@@ -1137,6 +1137,7 @@ class TgsbViewModel(application: Application) : AndroidViewModel(application) {
         "frameEx.endPf1" to "Diphthong End Parallel F1",
         "frameEx.endPf2" to "Diphthong End Parallel F2",
         "frameEx.endPf3" to "Diphthong End Parallel F3",
+        "frameEx.fricationTiltDb" to "Frication Tilt (dB, neg=darker)",
         // ── Micro-events ──
         "burstDurationMs" to "Burst Duration (ms)",
         "burstDecayRate" to "Burst Decay Rate",
@@ -1147,6 +1148,7 @@ class TgsbViewModel(application: Application) : AndroidViewModel(application) {
         "fricAttackMs" to "Frication Attack (ms)",
         "fricDecayMs" to "Frication Decay (ms)",
         "durationScale" to "Duration Scale",
+        "closureGapMs" to "Closure Gap (ms, stops)",
     )
 
     /** Sort order: fields in phonemeFieldInfo map order, unknowns at end. */

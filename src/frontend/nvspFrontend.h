@@ -104,7 +104,8 @@ typedef struct {
   double transSourceHoldRatio;
   // Voicing onset hold (DSP v8). 0.0 = legacy, no hold.
   double transVoicingHoldRatio;
-  double caN0;
+  // Frication spectral tilt (DSP v9). 0=flat, negative=darken high-freq parallels.
+  double fricationTiltDb;
 } nvspFrontend_FrameEx;
 // <<< END AUTO-GENERATED <<<
 

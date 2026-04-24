@@ -88,6 +88,8 @@ static std::wstring paramHintW(const std::string& key) {
   if (key == "fricAttackMs") return L"frication onset (ms)";
   if (key == "fricDecayMs") return L"frication offset (ms)";
   if (key == "durationScale") return L"duration multiplier";
+  if (key == "closureGapMs") return L"closure gap (ms, stops)";
+  if (key == "frameEx.fricationTiltDb") return L"parallel tilt (dB, neg=darker)";
 
   return L"";
 }
@@ -798,6 +800,9 @@ static const std::vector<std::string>& getStandardPhonemeTypeFlags() {
     "frameEx.endPf1",
     "frameEx.endPf2",
     "frameEx.endPf3",
+    // Frication spectral tilt (DSP v9): 0=flat, negative=darken high-freq parallels.
+    // Rate-modulated automatically by engine; per-phoneme value here is a baseline.
+    "frameEx.fricationTiltDb",
     // Micro-event shaping (stop burst, voice bar, fricative envelope, release)
     "burstDurationMs",
     "burstDecayRate",
@@ -807,7 +812,10 @@ static const std::vector<std::string>& getStandardPhonemeTypeFlags() {
     "releaseSpreadMs",
     "fricAttackMs",
     "fricDecayMs",
-    "durationScale"
+    "durationScale",
+    // Per-phoneme closure gap override (b2, issue #84/#95).
+    // Decouples closure silence from stop body duration. Default: language-level stopClosureVowelGapMs.
+    "closureGapMs"
   };
   return flags;
 }

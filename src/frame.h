@@ -187,30 +187,30 @@ typedef struct {
 	double transVoicingHoldRatio;
 
 	/* =========================================================================
-	 * Independent cascade anti-resonator amplitude (DSP v9)
+	 * Frication spectral tilt (DSP v9)
 	 * =========================================================================
 	 *
-	 * The cascade rN0 anti-resonator (controlled by cfN0/cbN0 on
-	 * speechPlayer_frame_t) has historically been coupled to the nasal pole
-	 * path — the anti-resonated signal only reaches the output when caNP
-	 * (cascade nasal POLE amplitude) is > 0. That coupling assumed every
-	 * phoneme needing an anti-resonance is nasal.
+	 * Applies a per-frequency scale to the parallel formant amplitudes
+	 * (pa1..pa6) at synthesis time. Negative values darken the high end
+	 * (attenuates pa4/pa5/pa6 more than pa1/pa2/pa3); positive values
+	 * brighten. Pivot frequency is 1500 Hz, slope is 2000 Hz per dB — so
+	 * pa_i is scaled by 10^(fricationTiltDb * (pf_i - 1500) / 2000 / 20)
+	 * = pow(10, fricationTiltDb * (pf_i - 1500) / 40000).
 	 *
-	 * Spanish /l/ (and other laterals) need a side-branch anti-resonance
-	 * WITHOUT a nasal pole. caN0 is the independent amplitude that mixes
-	 * the anti-resonated signal into the cascade's direct path, regardless
-	 * of caNP.
+	 * Primary use: rate-dependent attenuation of the high-frequency burst
+	 * click that causes velar stops to be misperceived as alveolar taps
+	 * at fast speech rates (issue #95 Bug 1, 29-Bloo's "Pegue → Pere"
+	 * report). The ipa_engine applies a negative tilt during stop burst
+	 * emission when curSpeed > 1.2, scaling linearly with rate.
 	 *
-	 * 0.0 = disabled (legacy behavior — rN0 contributes only via nasal path
-	 *        when caNP > 0)
-	 * 1.0 = fully replace direct input with rN0-applied signal
-	 * 0<x<1 = crossfade mix (partial anti-resonance)
+	 * 0.0 = flat (legacy behavior, no scaling)
+	 * -6.0 = -6 dB at pa6 (4900 Hz), ~-3 dB at pa5, roughly flat at pa3
+	 * +6.0 = opposite (brighten high-freq, rare)
 	 *
-	 * Typical use: /l/ with cfN0 ≈ 1500-2500 Hz for the lateral zero,
-	 * cbN0 ≈ 200-300 Hz (broad notch matching the physical side cavity),
-	 * caN0 = 1.0. Leaves caNP at 0 so no nasal pole is added.
+	 * Preserves the velar F3 signature (pa3 region ≈ 2100 Hz) that
+	 * distinguishes /ɡ/ from /p/ — so /ɡ/ stays /ɡ/ even when darkened.
 	 */
-	double caN0;
+	double fricationTiltDb;
 } speechPlayer_frameEx_t;
 
 // Default values for frameEx parameters. Used when:
@@ -248,7 +248,7 @@ static const speechPlayer_frameEx_t speechPlayer_frameEx_defaults = {
 	1250.0, // cb8: Rabiner 1968 default
 	0.0,    // transSourceHoldRatio: no hold (legacy)
 	0.0,    // transVoicingHoldRatio: no hold (legacy)
-	0.0     // caN0: independent anti-resonator amp (DSP v9, disabled by default)
+	0.0     // fricationTiltDb: flat spectral tilt (DSP v9, rate-modulated for stops)
 };
 
 const int speechPlayer_frameEx_numParams=sizeof(speechPlayer_frameEx_t)/sizeof(double);

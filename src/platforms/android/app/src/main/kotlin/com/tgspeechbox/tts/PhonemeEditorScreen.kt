@@ -321,7 +321,7 @@ private fun phonemeFieldSteps(fieldName: String, range: ClosedFloatingPointRange
         fieldName in listOf("preFormantGain", "parallelBypass", "glottalOpenQuotient",
             "breathiness", "creakiness", "jitter", "shimmer", "sharpness",
             "outputGain", "burstDecayRate", "burstSpectralTilt",
-            "durationScale") -> 0.1f
+            "durationScale", "fricationTiltDb") -> 0.1f
         fieldName == "caNP" -> 0.1f
         // Duration in ms: 1 ms steps
         fieldName.contains("Ms") -> 1f
@@ -352,6 +352,10 @@ private fun phonemeFieldRange(fieldName: String, value: Float): ClosedFloatingPo
         fieldName in listOf("preFormantGain", "parallelBypass",
             "glottalOpenQuotient", "breathiness", "creakiness",
             "jitter", "shimmer", "sharpness") -> 0f..1f
+        // Frication tilt in dB (negative = darker high-freq parallels)
+        fieldName == "fricationTiltDb" -> -15f..15f
+        // Per-phoneme closure gap override in ms (stops)
+        fieldName == "closureGapMs" -> 0f..60f
         // Fallback: relative range around current value
         value in 0f..1f -> 0f..1.5f
         value > 1f -> 0f..maxOf(value * 2.5f, 100f)

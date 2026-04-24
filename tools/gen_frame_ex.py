@@ -53,6 +53,7 @@ SECTION_TITLES = [
     ("cf7",                   "Higher cascade formants F7/F8 (DSP v8, Rabiner 1968 defaults)"),
     ("transSourceHoldRatio",  "Source amplitude timing (DSP v8). 0.0 = legacy, no hold."),
     ("transVoicingHoldRatio", "Voicing onset hold (DSP v8). 0.0 = legacy, no hold."),
+    ("fricationTiltDb",       "Frication spectral tilt (DSP v9). 0=flat, negative=darken high-freq parallels."),
 ]
 
 MARKER_BEGIN_TAG = (
