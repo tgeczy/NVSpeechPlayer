@@ -151,7 +151,8 @@ static constexpr size_t kNumFlagKeys = sizeof(kFlagKeys) / sizeof(kFlagKeys[0]);
 // Known frameEx sub-keys.
 static const char* const kFrameExKeys[] = {
   "creakiness", "breathiness", "jitter", "shimmer", "sharpness",
-  "endCf1", "endCf2", "endCf3", "endPf1", "endPf2", "endPf3"
+  "endCf1", "endCf2", "endCf3", "endPf1", "endPf2", "endPf3",
+  "fricationTiltDb"
 };
 static constexpr size_t kNumFrameExKeys = sizeof(kFrameExKeys) / sizeof(kFrameExKeys[0]);
 

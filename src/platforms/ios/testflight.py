@@ -25,7 +25,7 @@ import sys
 import time
 
 # ── Config ──────────────────────────────────────────────────────────────
-KEY_ID = "Y5KKT3T33Q"
+KEY_ID = "BVT5H3NP87"
 ISSUER_ID = "69a6de72-61a0-47e3-e053-5b8c7c11a4d1"
 KEY_FILE = os.path.expanduser(f"~/.appstoreconnect/private_keys/AuthKey_{KEY_ID}.p8")
 APP_ID = "6759512621"
