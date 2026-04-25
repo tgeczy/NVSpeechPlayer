@@ -7,8 +7,10 @@ settings:
   trillModulationFadeMs: 2
 
   # Croatian eSpeak IPA uses the length mark (ː) for long vowels.
-  # Make it a bit more audible than the global default.
-  lengthenedScale: 1.15
+  # Per Pletikos 2007 (Acoustic description of Croatian accents),
+  # long vowels avg 190ms vs 123ms short = ~1.55x ratio. Raise from
+  # the prior conservative 1.15 toward that empirical target.
+  lengthenedScale: 1.4
 
   # Nasal+stop clusters — protect stop from being swallowed at speed
   stopClosureNasalToStopGapMs: 10
@@ -42,12 +44,31 @@ normalization:
 
     # === CROATIAN VOWEL TUNING ===
     # Croatian has 5 pure vowels. Base phonemes too centralized.
+    #
+    # Per Bašić 2023 (Croatian/Serbian formant normalization study),
+    # Croatian /u/ and /o/ are MORE FRONTAL than their Finnish/Hungarian
+    # counterparts — because Slavic 5-vowel systems have no front-rounded
+    # vowels (y, ø) pushing /u/ /o/ back. Spanish 5-vowel cardinals are
+    # closer to Slavic targets than Finnish 7-vowel /u/ /o/.
+    #
+    # Borrow comparison (cf1 / cf2):
+    #   u_fi: 290 / 630   ← previous borrow, too back
+    #   u_es: 300 / 780   ← Slavic-appropriate frontality
+    #   o_fi: 390 / 730   ← previous borrow, too back
+    #   o_es: 490 / 910   ← Slavic-appropriate frontality
+    #
+    # i_hu (275/2320) and e_fi (395/2070) and a_open (720/1200)
+    # are within reasonable tolerance of Croatian targets.
+    #
+    # NOTE: same logic likely applies to Slovak (sk.yaml) and Czech
+    # (cs.yaml) which share the identical Finnish-borrow pattern.
+    # Not propagating without their respective tester validation.
     - from: i
       to: i_hu
     - from: u
-      to: u_fi
+      to: u_es
     - from: o
-      to: o_fi
+      to: o_es
     - from: e
       to: e_fi
     - from: a
