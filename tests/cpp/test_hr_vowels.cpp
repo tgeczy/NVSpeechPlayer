@@ -113,3 +113,21 @@ TEST_CASE_FIXTURE(HrHandleFixture,
                 << " phonemes traced)");
     }
 }
+
+TEST_CASE_FIXTURE(HrHandleFixture,
+                  "Audit: Croatian slow renders for ear-test (speed 0.6)") {
+    // Slower renders for the non-Croatian-speaking engineer to hear vowel
+    // quality and consonant clusters more clearly.
+    struct Word { const char* name; const char* ipa; };
+    Word words[] = {
+        {"kruh", "kɾˈuh"}, {"put", "pˈut"}, {"uvod", "ˈuvod"},
+        {"novo", "nˈovo"}, {"voda", "vˈoda"},
+    };
+    for (const auto& w : words) {
+        auto res = synthesizeToPcmWithTrace(handle, w.ipa, 0.6, 110.0, 0.5, 22050);
+        if (res.pcm.empty()) continue;
+        std::string fn = std::string("test_output_hr_") + w.name + "_tgsb_slow.wav";
+        writeWav(fn.c_str(), res.pcm, 22050);
+        MESSAGE("  slow " << w.name << "  ->  " << fn);
+    }
+}
