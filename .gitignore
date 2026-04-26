@@ -23,6 +23,12 @@ release/
 installer/Output/
 nul
 
+# ── Test artifacts ───────────────────────────────────────────
+# Rendered audio + phoneme-trace sidecars from tgsb_unit_tests audit
+# tests, formant-comparison drivers, etc. Regenerable, large, binary —
+# never commit (the dir gets caught accidentally by `git add .`).
+tests/wav_samples/
+
 # ── Mobile (platforms/) ──────────────────────────────────────
 # Android
 src/platforms/android/local.properties
