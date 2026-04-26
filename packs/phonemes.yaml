@@ -2323,6 +2323,12 @@ phonemes:
     # Mexican laminal /s/ — tongue blade produces a brighter, more diffuse
     # sibilant than Castilian apical s_es. Energy spread across F5+F6 rather
     # than concentrated at F5. Slightly higher spectral center.
+    # pa4 zeroed (was 0.15) — Tomi's ear 2026-04-26 caught /s_mx/ in /sj/
+    # and /ts/ contexts (percepción "ción" → "shón", pizza "pitsa" →
+    # "pizsha") rendering /ʃ/-thick. Parallel energy at pa4=3300 Hz sits
+    # in /ʃ/ peak territory (typically 2500-3500 Hz). Removing it kills
+    # the /ʃ/-coloration while keeping pa5 (3750) for the diffuseness vs
+    # apical s_es. pa6 (4900) remains the dominant /s/ peak.
     _isLiquid: false
     _isNasal: false
     _isStop: false
@@ -2350,9 +2356,9 @@ phonemes:
     pa1: 0
     pa2: 0
     pa3: 0
-    pa4: 0.15
-    pa5: 0.35
-    pa6: 0.65
+    pa4: 0
+    pa5: 0
+    pa6: 0.75
     parallelBypass: 0
     pb1: 200
     pb2: 80
@@ -2361,7 +2367,7 @@ phonemes:
     pb5: 500
     pb6: 1815
     pf1: 320
-    pf2: 1390
+    pf2: 1700
     pf3: 2530
     pf4: 3300
     pf5: 3850

@@ -329,8 +329,12 @@ normalization:
     # Note: ɾɣ handled above (line ~228, also collapses to /ɡ/).
     - from: "sɡ"
       to: "sᵊɡ"
-    - from: "sɣ"
-      to: "sᵊɡ"
+    # /sɣ/ — Tomi's ear 2026-04-26 caught the prior "sᵊɡ" rule producing
+    # too-hard "as-go" separation in "hasgo" vs eSpeak's smooth "asgo".
+    # Letting /ɣ/ pass through to the dialect replacement (→ ɣ_es) keeps
+    # the velar approximant continuous, matching the eSpeak es-mx output
+    # /ˈasɣo/ which Mario/Greg's testers heard as natural.
+    # (Was: sɣ → sᵊɡ.)
     # Velar + lateral (regla = /reɣla/): use full stop [ɡ] in pre-lateral
     # clusters — Spanish /ɡ/ stays a stop before liquids, never approximant.
     - from: "ɣl"
