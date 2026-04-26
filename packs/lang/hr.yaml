@@ -16,6 +16,16 @@ settings:
   stopClosureNasalToStopGapMs: 10
   stopClosureNasalToStopFadeMs: 2
 
+  # Single-word utterance final-fade. Without this, word-final stops like
+  # /t/ in "let" or "put" get their release bursts truncated by abrupt
+  # utterance cutoff — Mario reported TGSB sounds "German" partly because
+  # word-final stops drop entirely. Match the German/Bulgarian/Danish
+  # ~18ms fade so the release burst can decay through the cascade.
+  singleWordTuningEnabled: true
+  singleWordFinalHoldMs: 30
+  singleWordFinalFadeMs: 30
+  clauseFinalFadeMs: 15
+
   thousandsSeparatorCommaToSpace: true
 
   dictSuffixes:
@@ -38,9 +48,14 @@ normalization:
     - from: "ɾ"
       to: "r"
 
-    # Some eSpeak voices may output "æ" in contexts where Croatian should use plain "a".
+    # eSpeak hr emits /æ/ for word-final unstressed /a/ ("kava" → kˈavæ).
+    # Earlier this was collapsed to a_open assuming "Croatian wants plain /a/",
+    # but Tomi's ear-test 2026-04-26 confirmed Croatian listeners hear a
+    # subtle stressed/unstressed vowel quality shift. Mapping /æ/ to base /æ/
+    # (cf1=620, cf2=1780) was too front ("káveh"); base /a/ (cf1=600,
+    # cf2=1430) gives a subtle central raise without the front pull.
     - from: "æ"
-      to: a_open
+      to: a
 
     # === CROATIAN VOWEL TUNING ===
     # Croatian has 5 pure vowels. Base phonemes too centralized.
@@ -69,7 +84,14 @@ normalization:
       to: u_es
     - from: o
       to: o_es
+    # Croatian /e/ is open-mid like Hungarian /ɛ/, not closed like Finnish /e/.
+    # Bašić 2023 Croatian /e/ ≈ F1=470, F2=1900. ɛ_hu (555/1870) is the
+    # closest existing borrow (~90 Hz Euclidean); e_fi (395/2070) sounded
+    # like Hungarian "é" (close /e/) per Tomi's ear-test on `let` 2026-04-26.
+    # Also map raw /ɛ/ which eSpeak hr emits for "let", "selo" etc.
     - from: e
-      to: e_fi
+      to: ɛ_hu
+    - from: ɛ
+      to: ɛ_hu
     - from: a
       to: a_open

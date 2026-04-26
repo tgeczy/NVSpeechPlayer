@@ -80,8 +80,10 @@ TEST_CASE_FIXTURE(HrHandleFixture,
         {"most",  "mˈost",  "/o/ stressed before cluster"},
         {"voda",  "vˈoda",  "/o/ stressed before /a/"},
 
-        // /a/ — sanity check on a_open borrow (unchanged by abbd858)
-        {"kava",  "kˈava",  "/a/ stressed first syllable"},
+        // /a/ — sanity check on a_open borrow (unchanged by abbd858).
+        // IPA matches `espeak-ng -v hr -q --ipa "<word>"` output, including
+        // eSpeak's word-final unstressed /æ/ allophone in "kava" → kˈavæ.
+        {"kava",  "kˈavæ", "/a/+/æ/ stress→unstress raise"},
         {"vrat",  "vɾˈat",  "/a/ monosyllable"},
         {"rad",   "ɾˈad",   "/a/ short word"},
 
