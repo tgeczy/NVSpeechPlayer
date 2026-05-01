@@ -322,8 +322,14 @@ normalization:
     # schwa to read as a true stop.
     - from: "lɡ"
       to: "lᵊɡ"
+    # 2026-05-01: was lɣ→lᵊɡ. Tomi ear-test caught regla/salga sounding
+    # too-hard ("americanized G") vs eSpeak's softer fricative. The original
+    # /ɡ/ routing was justified when /ɣ_es/ was a silent approximant
+    # (fric=0.14) — schwa masked it. With /ɣ_es/ retuned as a salient
+    # fricative (fric=0.45), schwa+fricative noise should provide its own
+    # perceptual boundary. Mirrors the precedent set by /sɣ/ on 2026-04-26.
     - from: "lɣ"
-      to: "lᵊɡ"
+      to: "lᵊɣ_es"
     - from: "ɾɡ"
       to: "ɾᵊɡ"
     # Note: ɾɣ handled above (line ~228, also collapses to /ɡ/).
@@ -335,10 +341,14 @@ normalization:
     # the velar approximant continuous, matching the eSpeak es-mx output
     # /ˈasɣo/ which Mario/Greg's testers heard as natural.
     # (Was: sɣ → sᵊɡ.)
-    # Velar + lateral (regla = /reɣla/): use full stop [ɡ] in pre-lateral
-    # clusters — Spanish /ɡ/ stays a stop before liquids, never approximant.
+    # 2026-05-01: was ɣl→ɡᵊl. Same Tomi ear-test cycle as lɣ above caught
+    # regla too-hard. Original "Spanish /ɡ/ stays a stop before liquids"
+    # claim was based on Mateo's tuning intent + the silent-/ɣ_es/ era;
+    # in fluent Spanish, pre-liquid velars CAN spirantize ([ˈreɣla]). With
+    # /ɣ_es/ now salient-fricative, the schwa+fricative path matches
+    # eSpeak's natural realization.
     - from: "ɣl"
-      to: "ɡᵊl"
+      to: "ɣ_esᵊl"
     - from: "ɡl"
       to: "ɡᵊl"
     # Velar approximant + palatal glide coalescence.  In natural Spanish,
@@ -371,13 +381,18 @@ normalization:
     # A slightly softened and less noisy /d/.
     - from: d
       to: d_es
-    # Velar stop with short (8 ms) intervocalic closure. Replaces the prior
-    # /ɣ/ → /ɣ_es/ approximant routing (issues #84/#95): testers reported the
-    # approximant lost its consonant moment entirely ("entregado" → "entredado").
-    # /ɡ_es/ uses closureGapMs: 8 to preserve velar character without an
-    # audible word-break. Word-initial /ɣ/ is already handled above (line ~196).
+    # Spanish velar fricative [ɣ] — intervocalic lenited realization.
+    # 2026-05-01: reverted from b201's /ɡ_es/ stop routing back to /ɣ_es/
+    # after Tomi ear-tested vs eSpeak and confirmed eSpeak does the buzzy
+    # roof-of-mouth fricative (canonical Spanish lenition per Hualde et al.,
+    # Martínez-Celdrán & Mackenzie). The /ɡ_es/ stop routing was
+    # hyperarticulated for native ears. The current /ɣ_es/ phoneme has been
+    # retuned with fricationAmplitude=0.45 + parallel amp lift to be
+    # audible-fricative rather than the old silent-approximant version that
+    # caused the "entredado" inaudibility report. Word-initial /ɣ/ still
+    # handled above (line ~196).
     - from: "ɣ"
-      to: ɡ_es
+      to: ɣ_es
     # More clear diphthong transition for /j/.
     - from: j
       to: j_es

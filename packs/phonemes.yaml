@@ -5923,17 +5923,22 @@ phonemes:
     pf6: 4900
     voiceAmplitude: 0.85
   "ɣ_es":
-    # Spanish velar approximant [ɣ̞] — intervocalic lenited realization.
-    # Per Martínez-Celdrán and Mackenzie, this is an APPROXIMANT in normal
-    # intervocalic position, not a fricative. Near-zero turbulent frication;
-    # the lenition cue is intensity difference (IntDiff) relative to flanking
-    # vowels (Kingston 2008), carried by voiceAmplitude reduction, not noise.
-    # Canonical approximant range per Grokipedia/Wikipedia: F1≈400, F2≈800-1200.
-    # cf2 held at 1250 (above the 1200 floor where "siguiente"→"sigüiente"
-    # /u/-coloring emerged in earlier testing) to balance the /ɣ/↔/l/ F2 gap
-    # against front-vowel coarticulation risk. Frication cut 0.20→0.08 and
-    # voiceAmplitude 0.82→0.70 supply the perceptual distinction from /l_es/
-    # (which stays at voiceAmplitude 0.9 — ~2 dB IntDiff). Issue #84/#95.
+    # Spanish velar fricative [ɣ] — intervocalic lenited realization.
+    # Per Tomi 2026-05-01 ear-test vs eSpeak NG es-mx: native realization is
+    # a buzzy "roof-of-mouth" velar fricative, NOT a stop and NOT a silent
+    # approximant. Earlier approximant tune (fricationAmplitude=0.14) was
+    # too soft — testers couldn't hear it ("entredado" report). b201 stop
+    # routing /ɣ/→/ɡ_es/ swung too far the OTHER way — natives now hear
+    # hyperarticulated /g/ where Spanish lenition expects [ɣ].
+    #
+    # New tune (Approach FRIC 2026-05-01): boost frication to 0.45 (matching
+    # base /ɣ/'s frication strength) so the buzzy velar character is
+    # audible. Lift parallel amps in mid-frequency band (pa3 0.07→0.25,
+    # pa4 0.06→0.15) for "buzzy" timbre. Modest cf2/cf3 compactness lift
+    # (1250→1500, 2500→2300) for clearer velar place — staying within the
+    # 1450 Hz cf2 zone proven safe by cieguito context (see es.yaml line
+    # ~350). Voice amp slightly down (0.78→0.75) so frication character
+    # cuts through. UNCOMMITTED prototype pending Tomi ear-test.
     _isAfricate: false
     _isLiquid: false
     _isNasal: false
@@ -5951,19 +5956,19 @@ phonemes:
     cbN0: 100
     cbNP: 100
     cf1: 450
-    cf2: 1250
-    cf3: 2500
+    cf2: 1500
+    cf3: 2300
     cf4: 3300
     cf5: 3750
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.14
+    fricationAmplitude: 0.45
     pa1: 0.08
-    pa2: 0.05
-    pa3: 0.07
-    pa4: 0.06
-    pa5: 0
+    pa2: 0.10
+    pa3: 0.25
+    pa4: 0.15
+    pa5: 0.05
     pa6: 0
     parallelBypass: 0
     pb1: 90
@@ -5973,12 +5978,12 @@ phonemes:
     pb5: 1000
     pb6: 1800
     pf1: 450
-    pf2: 1250
-    pf3: 2500
+    pf2: 1450
+    pf3: 2200
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    voiceAmplitude: 0.78
+    voiceAmplitude: 0.75
   "ɣ_cas":
     # Castilian velar approximant — more exaggerated than Latin American.
     # Tongue moves further back, more audible frication/noise component.
