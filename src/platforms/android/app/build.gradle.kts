@@ -32,6 +32,8 @@ android {
         versionCode = 349
         versionName = "3.10-beta4"
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         externalNativeBuild {
             cmake {
                 cppFlags += listOf("-std=c++17", "-fvisibility=hidden")
@@ -77,6 +79,9 @@ android {
     sourceSets {
         getByName("main") {
             kotlin.srcDirs("src/main/kotlin")
+        }
+        getByName("androidTest") {
+            kotlin.srcDirs("src/androidTest/kotlin")
         }
     }
 }
@@ -129,4 +134,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // Android probe instrumentation test (issue #100 / #95 /s/->/z/ investigation).
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("junit:junit:4.13.2")
 }
