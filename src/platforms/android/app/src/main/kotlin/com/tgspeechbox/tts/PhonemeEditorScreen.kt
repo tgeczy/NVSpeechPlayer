@@ -9,6 +9,7 @@
 
 package com.tgspeechbox.tts
 
+import com.tgspeechbox.tts.compose.AccessibleSlider
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -714,23 +715,19 @@ private fun PhonemeFieldRow(
                         modifier = Modifier.size(20.dp).clearAndSetSemantics {}
                     )
                 }
-                Slider(
+                AccessibleSlider(
+                    label = "${field.displayName}$statusSuffix",
+                    displayValue = fmtVal(sliderValue),
                     value = sliderValue.coerceIn(range),
                     onValueChange = { newVal ->
                         sliderValue = newVal
                         onValueChanged(fmtVal(newVal))
                     },
-                    onValueChangeFinished = {
-                        onPreview()
-                    },
+                    onValueChangeFinished = { onPreview() },
                     valueRange = range,
                     steps = steps,
-                    modifier = Modifier
-                        .weight(1f)
-                        .semantics {
-                            contentDescription =
-                                "${field.displayName}$statusSuffix, ${fmtVal(sliderValue)}"
-                        }
+                    showLabel = false,
+                    modifier = Modifier.weight(1f)
                 )
             }
             if (field.isOverridden) {

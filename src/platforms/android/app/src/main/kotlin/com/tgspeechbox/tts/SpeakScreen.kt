@@ -9,6 +9,7 @@
 
 package com.tgspeechbox.tts
 
+import com.tgspeechbox.tts.compose.AccessibleSlider
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -123,48 +124,26 @@ fun SpeakScreen(viewModel: TgsbViewModel) {
 
             // Speed slider — visual label hidden from TalkBack; slider carries
             // the full accessible name so it's a single swipe target.
-            val speedText = stringResource(R.string.speed_value, speed)
-            val speedLabel = stringResource(R.string.speed_label)
-            Text(
-                text = "$speedLabel: $speedText",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.clearAndSetSemantics {}
-            )
-            Slider(
+            AccessibleSlider(
+                label = stringResource(R.string.speed_label),
+                displayValue = stringResource(R.string.speed_value, speed),
                 value = speed,
                 onValueChange = { viewModel.speedRate.value = it },
                 valueRange = 0.3f..3.0f,
-                steps = 26,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics {
-                        contentDescription = "$speedLabel: $speedText"
-                        stateDescription = speedText
-                    }
+                steps = 26
             )
 
             Spacer(Modifier.height(8.dp))
 
             // Pitch slider
             val pitchInt = pitch.roundToInt()
-            val pitchText = stringResource(R.string.pitch_value, pitchInt)
-            val pitchLabel = stringResource(R.string.pitch_label)
-            Text(
-                text = "$pitchLabel: $pitchText",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.clearAndSetSemantics {}
-            )
-            Slider(
+            AccessibleSlider(
+                label = stringResource(R.string.pitch_label),
+                displayValue = stringResource(R.string.pitch_value, pitchInt),
                 value = pitch,
                 onValueChange = { viewModel.pitchHz.value = it },
                 valueRange = 40f..300f,
-                steps = 51,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics {
-                        contentDescription = "$pitchLabel: $pitchText"
-                        stateDescription = pitchText
-                    }
+                steps = 51
             )
 
         }

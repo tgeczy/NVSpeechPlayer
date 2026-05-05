@@ -13,6 +13,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.PowerManager
 import android.provider.Settings
+import com.tgspeechbox.tts.compose.AccessibleSlider
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -297,27 +298,14 @@ fun AdvancedScreen(
             }
 
             val globalRateVal by viewModel.globalRate.collectAsState()
-            val rateLabel = "${stringResource(R.string.global_rate_label)}: ${"%.1f".format(globalRateVal)}x"
-
-            Text(
-                text = rateLabel,
-                style = MaterialTheme.typography.bodyLarge,
-                color = if (overrideRate) MaterialTheme.colorScheme.onSurface
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.clearAndSetSemantics {}
-            )
-            Slider(
+            AccessibleSlider(
+                label = stringResource(R.string.global_rate_label),
+                displayValue = "${"%.1f".format(globalRateVal)}x",
                 value = globalRateVal,
                 onValueChange = { viewModel.onGlobalRateChanged(it) },
                 valueRange = 0.3f..4.0f,
                 steps = 36,
-                enabled = overrideRate,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics {
-                        contentDescription = rateLabel
-                        stateDescription = "${"%.1f".format(globalRateVal)}x"
-                    }
+                enabled = overrideRate
             )
         }
 
@@ -362,24 +350,13 @@ fun AdvancedScreen(
 
             val volumeVal by viewModel.systemVolume.collectAsState()
             val volumePercent = (volumeVal * 100).roundToInt()
-            val volumeLabel = "${stringResource(R.string.system_volume_label)}: $volumePercent%"
-
-            Text(
-                text = volumeLabel,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.clearAndSetSemantics {}
-            )
-            Slider(
+            AccessibleSlider(
+                label = stringResource(R.string.system_volume_label),
+                displayValue = "$volumePercent%",
                 value = volumeVal,
                 onValueChange = { viewModel.onSystemVolumeChanged(it) },
                 valueRange = 0.05f..1.0f,
-                steps = 18,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics {
-                        contentDescription = volumeLabel
-                        stateDescription = "$volumePercent%"
-                    }
+                steps = 18
             )
 
             Spacer(Modifier.height(8.dp))
@@ -387,24 +364,13 @@ fun AdvancedScreen(
             val sampleRateIdx by viewModel.sampleRateIndex.collectAsState()
             val sampleRates = TgsbViewModel.SAMPLE_RATES
             val currentRate = sampleRates[sampleRateIdx.roundToInt().coerceIn(0, sampleRates.size - 1)]
-            val sampleRateLabel = "${stringResource(R.string.sample_rate_label)}: $currentRate Hz"
-
-            Text(
-                text = sampleRateLabel,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.clearAndSetSemantics {}
-            )
-            Slider(
+            AccessibleSlider(
+                label = stringResource(R.string.sample_rate_label),
+                displayValue = "$currentRate Hz",
                 value = sampleRateIdx,
                 onValueChange = { viewModel.onSampleRateChanged(it) },
                 valueRange = 0f..(sampleRates.size - 1).toFloat(),
-                steps = sampleRates.size - 2,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics {
-                        contentDescription = sampleRateLabel
-                        stateDescription = "$currentRate Hz"
-                    }
+                steps = sampleRates.size - 2
             )
 
             Spacer(Modifier.height(8.dp))
@@ -755,6 +721,7 @@ private fun EditingVoiceDropdown(viewModel: TgsbViewModel) {
 
 /**
  * Reusable slider with accessible label (single TalkBack swipe target).
+ * Delegates to [AccessibleSlider] for keyboard + TalkBack semantics.
  */
 @Composable
 private fun VoicingToneSlider(
@@ -764,27 +731,14 @@ private fun VoicingToneSlider(
     format: (Float) -> String
 ) {
     val value by flow.collectAsState()
-    val displayValue = format(value)
-    val fullLabel = "$label: $displayValue"
-
-    Text(
-        text = fullLabel,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.clearAndSetSemantics {}
-    )
-    Slider(
+    AccessibleSlider(
+        label = label,
+        displayValue = format(value),
         value = value,
         onValueChange = { onChange(it) },
         valueRange = 0f..100f,
-        steps = 99,
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics {
-                contentDescription = fullLabel
-                stateDescription = displayValue
-            }
+        steps = 99
     )
-    Spacer(Modifier.height(4.dp))
 }
 
 /**
