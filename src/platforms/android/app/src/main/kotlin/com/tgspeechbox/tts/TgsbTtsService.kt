@@ -163,6 +163,16 @@ class TgsbTtsService : TextToSpeechService() {
 
     @Volatile
     private var stopRequested = false
+    /** Any settings change (app UI, editor) marks this dirty; the next
+     *  utterance re-applies voice + advanced settings + overrides once.
+     *  Replaces re-applying everything on every utterance. */
+    @Volatile
+    private var settingsDirty = true
+    /* SharedPreferences holds listeners weakly — keep a strong reference. */
+    private val prefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key != PREF_LAST_LANG) settingsDirty = true
+        }
     private var nativeHandle: Long = 0L
     private var currentPreset: String = DEFAULT_PRESET
     private var currentSampleRate: Int = SAMPLE_RATE
@@ -229,6 +239,7 @@ class TgsbTtsService : TextToSpeechService() {
         Log.i(TAG, "onCreate: extracting assets and initializing engine")
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
         loadPresetFromPrefs()
 
         extractAssets()
@@ -440,6 +451,7 @@ class TgsbTtsService : TextToSpeechService() {
     }
 
     override fun onDestroy() {
+        prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
         if (nativeHandle != 0L) {
             nativeDestroy(nativeHandle)
             nativeHandle = 0L
@@ -532,7 +544,7 @@ class TgsbTtsService : TextToSpeechService() {
 
         val ld = findLangDef(lang, country) ?: return TextToSpeech.LANG_NOT_SUPPORTED
         currentLang = ld
-        if (setNativeLanguage(ld)) {
+        if (confirmedNativeLang != ld && setNativeLanguage(ld)) {
             Log.i(TAG, "Language loaded: ${ld.espeakLang} / ${ld.tgsbLang}")
         }
         return availability
@@ -576,6 +588,13 @@ class TgsbTtsService : TextToSpeechService() {
     override fun onLoadVoice(voiceName: String): Int {
         val ld = parseVoiceName(voiceName) ?: return TextToSpeech.ERROR
 
+        // Hot path: screen readers call onLoadVoice before nearly every
+        // utterance. When the pack is already loaded, skip the reload
+        // chain — settings freshness is handled by the dirty flag in
+        // onSynthesizeText.
+        currentLang = ld
+        if (confirmedNativeLang == ld) return TextToSpeech.SUCCESS
+
         // Re-read preset and advanced voice quality settings
         loadPresetFromPrefs()
         if (nativeHandle != 0L) {
@@ -585,7 +604,6 @@ class TgsbTtsService : TextToSpeechService() {
         // Set language BEFORE advanced settings — setPitchMode and
         // setInflectionScale write to h->pack which is only initialized
         // after setLanguage loads the pack.
-        currentLang = ld
         if (setNativeLanguage(ld)) {
             Log.i(TAG, "Voice loaded: $voiceName → lang=${ld.espeakLang}/${ld.tgsbLang} preset=$currentPreset")
         }
@@ -606,8 +624,6 @@ class TgsbTtsService : TextToSpeechService() {
     // ---- Synthesis ----
 
     override fun onSynthesizeText(request: SynthesisRequest, callback: SynthesisCallback) {
-        stopRequested = false
-
         if (nativeHandle == 0L) {
             Log.e(TAG, "Engine not initialized")
             callback.error(TextToSpeech.ERROR_SYNTHESIS)
@@ -640,25 +656,37 @@ class TgsbTtsService : TextToSpeechService() {
             }
         }
 
-        // Re-read timbre preset + advanced voice quality settings
-        loadPresetFromPrefs()
-        applyCurrentVoice()
-
-        // Ensure the native side has the right language loaded BEFORE
-        // applying advanced settings — setPitchMode writes to h->pack
-        // which requires a loaded language pack.
         // Check overrides version: if the editor changed overrides, force
         // a full pack reload so cleared/changed overrides take effect.
         val overridesVer = prefs.getInt("pack_overrides_version", 0)
         val overridesChanged = overridesVer != cachedOverridesVersion
         cachedOverridesVersion = overridesVer
+        val langChanged = confirmedNativeLang != currentLang
 
-        if (confirmedNativeLang != currentLang || overridesChanged) {
-            setNativeLanguage(currentLang)
-        } else {
+        // Voice, overrides, and advanced settings are engine state that
+        // persists across utterances — re-apply only when something
+        // actually changed (prefs listener sets settingsDirty). This was
+        // previously done on every utterance and dominated time-to-first-
+        // audio on slow devices.
+        val applySettings = settingsDirty || langChanged || overridesChanged
+        if (applySettings) {
+            settingsDirty = false
+            loadPresetFromPrefs()
+            applyCurrentVoice()
+        }
+
+        // Language must be loaded BEFORE advanced settings — setPitchMode
+        // writes to h->pack which requires a loaded language pack.
+        if (langChanged || overridesChanged) {
+            setNativeLanguage(currentLang)  // applies stored overrides itself
+        } else if (applySettings) {
+            // Editor writes that don't bump pack_overrides_version
+            // (phoneme overrides, dict overlays/exclusions) land here.
             applyStoredOverrides(currentLang.tgsbLang)
         }
-        applyAdvancedSettings()
+        if (applySettings) {
+            applyAdvancedSettings()
+        }
 
         // Start audio stream
         val ret = callback.start(
@@ -689,6 +717,13 @@ class TgsbTtsService : TextToSpeechService() {
         if (prefs.getBoolean("adv_rateBoostEnabled", false)) {
             effectiveRate = effectiveRate * 2
         }
+        // Stale-stop guard: onStop() arrives on a binder thread with no
+        // utterance identity, so a stop aimed at the PREVIOUS utterance
+        // can land any time during the setup above. Arm the flag only
+        // now, when this utterance becomes the one a stop should kill.
+        // (nativeQueueText resets the native-side flag on entry, so the
+        // two views stay consistent at this boundary.)
+        stopRequested = false
         try {
             nativeQueueText(nativeHandle, text, effectiveRate, request.pitch)
         } catch (e: Exception) {
@@ -698,24 +733,21 @@ class TgsbTtsService : TextToSpeechService() {
         }
 
         // Stream PCM as it's synthesized — audio starts playing immediately
-        val buf = ByteArray(8192) // ~93ms at 22050Hz s16le
-        var totalBytes = 0
+        val buf = ByteArray(8192) // 4096 samples ≈ 186ms at 22050Hz s16le
         while (!stopRequested) {
             val n = nativePullAudio(nativeHandle, buf, buf.size)
             if (n <= 0) break
-            val writeResult = callback.audioAvailable(buf, 0, n)
-            if (writeResult != TextToSpeech.SUCCESS) {
-                callback.error(TextToSpeech.ERROR_OUTPUT)
-                return
+            if (callback.audioAvailable(buf, 0, n) != TextToSpeech.SUCCESS) {
+                // Framework already abandoned this item (stopped or client
+                // died) — an interruption, not a failure.
+                break
             }
-            totalBytes += n
         }
 
-        if (stopRequested) {
-            callback.error(TextToSpeech.ERROR_SERVICE)
-            return
-        }
-
+        // A stop is an interruption, not an error. Reporting error() here
+        // made screen readers treat the utterance as FAILED and go silent
+        // on fast navigation (issue #100 side report); eSpeak reports
+        // completion on abort and clients recover.
         callback.done()
     }
 
