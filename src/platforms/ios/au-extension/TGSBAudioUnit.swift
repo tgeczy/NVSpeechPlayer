@@ -26,6 +26,19 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
     private var volume: Float32 = 1.0
     private var outputMutex = DispatchSemaphore(value: 1)
 
+    // Cancellation generation counter — protected by outputMutex.
+    // The AU API carries no utterance identity: cancelSpeechRequest()
+    // can execute concurrently with (or stale, after) a synthesis. The
+    // engine-side stop flag alone had two races: a cancel landing during
+    // utterance setup was wiped by tgsb_queue_text's flag reset (the
+    // utterance then spoke IN FULL), and a stale cancel aimed at
+    // utterance N could clear utterance N+1's buffer (element silenced).
+    // Each request now takes a generation at entry; cancel records the
+    // generation it saw; a request only hands audio to the render block
+    // if its generation was never cancelled and is still current.
+    private var requestGen = 0
+    private var cancelledGen = -1
+
     // ASBD output rate — always 22050.
     // Lower rates (11025/16000) alias on the iPhone DAC; 44100 clicks.
     // 22050 is the sweet spot. DSP rate is resampled to match.
@@ -40,6 +53,7 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
     private var cachedEspeakLang: String = ""
     private var cachedTgsbLang: String = ""
     private var cachedSettingsVersion: Int = -1
+    private var cachedOverridesVersion: Int = -1
     private var requestCount: Int = 0
 
     // Reusable synthesis buffers to avoid per-utterance allocation
@@ -239,6 +253,14 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
     public override func synthesizeSpeechRequest(
         _ speechRequest: AVSpeechSynthesisProviderRequest
     ) {
+        // Claim a generation FIRST — before any setup work — so a cancel
+        // arriving from here on is attributed to this utterance and a
+        // stale cancel for the previous one can no longer touch us.
+        outputMutex.wait()
+        requestGen += 1
+        let myGen = requestGen
+        outputMutex.signal()
+
         // Extract voice name and language from identifier
         let parts = speechRequest.voice.identifier.split(separator: ".")
         let voiceName = parts.count >= 3 ? String(parts[2]) : "adam"
@@ -374,10 +396,21 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
             applyEngineSettings(eng, voice: voiceName)
             cachedSettingsVersion = curVersion
         }
-        applyPhonemeOverrides()
-        applyStoredOverrides(tgsbLang)
-        applyDictOverrides(tgsbLang)
-        applyDictDisabled(tgsbLang)
+        // Pack/phoneme/dict overrides persist in the engine across
+        // utterances — re-apply only when the host app bumped
+        // pack_overrides_version, or when the pack was reloaded above
+        // (language change / settings-version reload wipes them).
+        // Previously these four ran on EVERY utterance: UserDefaults
+        // reads + JSON parses + N sets of tgsb_set_data each.
+        let curOverridesVersion = ud?.integer(forKey: "pack_overrides_version") ?? 0
+        if curOverridesVersion != cachedOverridesVersion
+            || languageChanged || settingsChanged {
+            applyPhonemeOverrides()
+            applyStoredOverrides(tgsbLang)
+            applyDictOverrides(tgsbLang)
+            applyDictDisabled(tgsbLang)
+            cachedOverridesVersion = curOverridesVersion
+        }
 
         tgsb_queue_text(eng, plainText, speed, pitch)
 
@@ -413,11 +446,20 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
             samples = resample(samples, from: curDspRate, to: asbdRate)
         }
 
-        // Hand complete buffer to the render block
+        // Hand complete buffer to the render block — unless this
+        // utterance was cancelled while we were synthesizing (the engine
+        // stop aborts the pull loop early, but a cancel that raced with
+        // setup may have been wiped by tgsb_queue_text's flag reset; the
+        // generation check catches it either way), or a newer request
+        // has already claimed the buffer.
         outputMutex.wait()
-        output = samples
-        outputOffset = 0
-        volume = vol
+        if myGen != cancelledGen && myGen == requestGen {
+            output = samples
+            outputOffset = 0
+            volume = vol
+        }
+        // If suppressed, output stays empty; the next render cycle
+        // signals offlineUnitRenderAction_Complete so the host proceeds.
         outputMutex.signal()
     }
 
@@ -425,6 +467,7 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
         if let e = engine { tgsb_stop(e) }
 
         outputMutex.wait()
+        cancelledGen = requestGen
         output.removeAll()
         outputOffset = 0
         outputMutex.signal()

@@ -1297,6 +1297,10 @@ class TgsbEngine: ObservableObject {
                 d?.set(json, forKey: "dict_disabled_\(langTag)")
             }
         }
+        // Siblings (phoneme/dict overrides) bump on every save; this one
+        // didn't — harmless while the AU re-applied overrides on every
+        // utterance, load-bearing now that the AU gates on the version.
+        bumpOverridesVersion()
         d?.synchronize()
     }
 
