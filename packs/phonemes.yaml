@@ -2275,6 +2275,12 @@ phonemes:
   s_es:
     # This tuned phoneme tries to provide more noise brightness, but it may need future adjustments. Maybe equalization / high / low pass filters, or some extra DSP tasks.
     # The goal is, the tongue should stick to the palate to achieve this brightness.
+    # pf6 6500 / pb6 2000 / pa6 0.9 (was 5250/1815/0.1) — issue #100 /s/->/z/
+    # leak on Android devices with voice-processing DSP. Peak energy moved up
+    # to where a real /s/ lives so it survives device HF ducking (~2x HF
+    # retention in the -15dB duck sim). Tomi's ear 2026-07-02: clearer,
+    # no hiss on the apical /s/, no /z/ creep. Keeps pa5 0.9 @ 3750 as the
+    # apical Castilian character.
     _isLiquid: false
     _isNasal: false
     _isStop: false
@@ -2304,31 +2310,36 @@ phonemes:
     pa3: 0
     pa4: 0.1
     pa5: 0.9
-    pa6: 0.1
+    pa6: 0.9
     parallelBypass: 0
     pb1: 200
     pb2: 80
     pb3: 200
     pb4: 350
     pb5: 500
-    pb6: 1815
+    pb6: 2000
     pf1: 320
     pf2: 1390
     pf3: 2530
     pf4: 3300
     pf5: 3750
-    pf6: 5250
+    pf6: 6500
     voiceAmplitude: 0
   s_mx:
     # Mexican laminal /s/ — tongue blade produces a brighter, more diffuse
     # sibilant than Castilian apical s_es. Energy spread across F5+F6 rather
     # than concentrated at F5. Slightly higher spectral center.
-    # pa4 zeroed (was 0.15) — Tomi's ear 2026-04-26 caught /s_mx/ in /sj/
-    # and /ts/ contexts (percepción "ción" → "shón", pizza "pitsa" →
-    # "pizsha") rendering /ʃ/-thick. Parallel energy at pa4=3300 Hz sits
-    # in /ʃ/ peak territory (typically 2500-3500 Hz). Removing it kills
-    # the /ʃ/-coloration while keeping pa5 (3750) for the diffuseness vs
-    # apical s_es. pa6 (4900) remains the dominant /s/ peak.
+    # pa4+pa5 zeroed (were 0.15/0.35) — Tomi's ear 2026-04-26 caught /s_mx/
+    # in /sj/ and /ts/ contexts (percepción "ción" → "shón", pizza "pitsa"
+    # → "pizsha") rendering /ʃ/-thick. Parallel energy at pf4=3300 Hz sits
+    # in /ʃ/ peak territory (typically 2500-3500 Hz).
+    # CAUTION: that change also cut total frication energy ~35% and left a
+    # single fragile peak — issue #100 (/s/->/z/ on devices with
+    # voice-processing DSP) was filed within hours of the b4 tag.
+    # pf6 6500 / pb6 2000 / pa6 0.9 (was 5250/1815/0.75) restores the
+    # energy where a real /s/ peaks; survives device HF ducking (~2x HF
+    # retention). Tomi's ear 2026-07-02: clearest variant, no /ʃ/ or /z/
+    # regression on pizza/percepción.
     _isLiquid: false
     _isNasal: false
     _isStop: false
@@ -2358,20 +2369,20 @@ phonemes:
     pa3: 0
     pa4: 0
     pa5: 0
-    pa6: 0.75
+    pa6: 0.9
     parallelBypass: 0
     pb1: 200
     pb2: 80
     pb3: 200
     pb4: 350
     pb5: 500
-    pb6: 1815
+    pb6: 2000
     pf1: 320
     pf2: 1700
     pf3: 2530
     pf4: 3300
     pf5: 3850
-    pf6: 5250
+    pf6: 6500
     voiceAmplitude: 0
   t:
     # Voiceless alveolar stop
