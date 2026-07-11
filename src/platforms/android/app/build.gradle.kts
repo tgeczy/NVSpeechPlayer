@@ -63,6 +63,9 @@ android {
         }
     }
 
+    // Instrument the installed release app (signature must match).
+    testBuildType = "release"
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

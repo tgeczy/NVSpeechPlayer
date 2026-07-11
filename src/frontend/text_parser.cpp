@@ -36,10 +36,17 @@ Licensed under the MIT License. See LICENSE for details.
 static FILE* tparserLogFile() {
   static FILE* f = nullptr;
   if (!f) {
+#ifdef __ANDROID__
+    // App-writable external dir (adb-pullable), same location the
+    // instrumentation probes use.
+    std::string path =
+        "/sdcard/Android/data/com.tgspeechbox.tts/files/tgsb_textparser.log";
+#else
     const char* tmp = std::getenv("TEMP");
     if (!tmp) tmp = std::getenv("TMP");
     if (!tmp) tmp = "/tmp";
     std::string path = std::string(tmp) + "/tgsb_textparser.log";
+#endif
     f = std::fopen(path.c_str(), "a");
   }
   return f;

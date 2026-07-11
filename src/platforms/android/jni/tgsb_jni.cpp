@@ -1329,4 +1329,96 @@ Java_com_tgspeechbox_tts_TgsbSpeakEngine_nativeTextToIpa(
         env, thiz, handle, text);
 }
 
+/* ------------------------------------------------------------------ */
+/* DebugNatives — instrumentation-only surface (issue #100 forensics)  */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Full-pipeline render from raw IPA, selecting the production path
+ * (queueIPA_ExWithText, withText=true) or the desktop-harness path
+ * (queueIPA_Ex, withText=false) so the two can be A/B'd on-device
+ * with identical inputs. Unlike nativeQueueIpa this runs the whole
+ * pass pipeline (allophones, dialect replacements, prosody).
+ */
+JNIEXPORT jint JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativeDebugQueueIpaEx(
+    JNIEnv *env, jobject thiz,
+    jlong handle, jstring text, jstring ipa,
+    jdouble speed, jdouble basePitch, jboolean withText
+) {
+    TgsbEngine *engine = (TgsbEngine *)(intptr_t)handle;
+    if (!engine || !engine->player || !engine->frontend) return -1;
+
+    engine->stopRequested = 0;
+    speechPlayer_queueFrame(engine->player, NULL, 0, 0, -1, true);
+
+    const char *ipaChars = env->GetStringUTFChars(ipa, NULL);
+    if (!ipaChars || !*ipaChars) {
+        if (ipaChars) env->ReleaseStringUTFChars(ipa, ipaChars);
+        return -1;
+    }
+    const char *textChars = text ? env->GetStringUTFChars(text, NULL) : NULL;
+
+    FrameCtx ctx;
+    ctx.engine = engine;
+    ctx.frameCount = 0;
+
+    int ok;
+    if (withText) {
+        ok = nvspFrontend_queueIPA_ExWithText(
+            engine->frontend, textChars ? textChars : "", ipaChars,
+            speed, basePitch, engine->inflection, ".", 0, onFrame, &ctx);
+    } else {
+        ok = nvspFrontend_queueIPA_Ex(
+            engine->frontend, ipaChars,
+            speed, basePitch, engine->inflection, ".", 0, onFrame, &ctx);
+    }
+
+    env->ReleaseStringUTFChars(ipa, ipaChars);
+    if (textChars) env->ReleaseStringUTFChars(text, textChars);
+    return ok ? ctx.frameCount : -1;
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativeCreate(
+    JNIEnv *env, jobject thiz,
+    jstring espeakDataPath, jstring packDirPath, jint sampleRate
+) {
+    return Java_com_tgspeechbox_tts_TgsbTtsService_nativeCreate(
+        env, thiz, espeakDataPath, packDirPath, sampleRate);
+}
+
+JNIEXPORT jint JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativeSetLanguage(
+    JNIEnv *env, jobject thiz, jlong handle,
+    jstring espeakLang, jstring tgsbLang
+) {
+    return Java_com_tgspeechbox_tts_TgsbTtsService_nativeSetLanguage(
+        env, thiz, handle, espeakLang, tgsbLang);
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativeTextToIpa(
+    JNIEnv *env, jobject thiz, jlong handle, jstring text
+) {
+    return Java_com_tgspeechbox_tts_TgsbTtsService_nativeTextToIpa(
+        env, thiz, handle, text);
+}
+
+JNIEXPORT jint JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativePullAudio(
+    JNIEnv *env, jobject thiz,
+    jlong handle, jbyteArray outBuffer, jint maxBytes
+) {
+    return Java_com_tgspeechbox_tts_TgsbTtsService_nativePullAudio(
+        env, thiz, handle, outBuffer, maxBytes);
+}
+
+JNIEXPORT void JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativeDestroy(
+    JNIEnv *env, jobject thiz, jlong handle
+) {
+    Java_com_tgspeechbox_tts_TgsbTtsService_nativeDestroy(env, thiz, handle);
+}
+
 } /* extern "C" */
