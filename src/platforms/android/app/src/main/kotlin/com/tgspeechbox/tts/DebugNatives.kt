@@ -34,5 +34,15 @@ object DebugNatives {
         handle: Long, outBuffer: ByteArray, maxBytes: Int
     ): Int
 
+    /**
+     * nativeQueueText replica with per-step skip flags (latch bisection):
+     * bit0 skip prepareText, bit1 skip padEmoji, bit2 skip setTimeStretch,
+     * bit3 skip purge frame.
+     */
+    external fun nativeDebugQueueText(
+        handle: Long, text: String, speed: Double, pitchHz: Double, flags: Int,
+        fixedIpa: String?
+    )
+
     external fun nativeDestroy(handle: Long)
 }

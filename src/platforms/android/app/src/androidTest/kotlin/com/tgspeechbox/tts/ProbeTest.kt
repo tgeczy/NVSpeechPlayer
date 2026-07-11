@@ -196,10 +196,21 @@ class ProbeTest {
      * Live-playback variant. Uses tts.speak() instead of synthesizeToFile,
      * so the audio actually goes through the AudioTrack/playback path.
      * Bug-reported words played twice with brief pause for ear-test.
+     *
+     * Engine selectable via instrumentation arg, e.g.
+     *   -e engine com.redzoc.ramees.tts.espeak
+     * for the #100 cold-start-duck A/B: if another engine's first utterance
+     * ducks the same way on this device, the duck is the phone's output DSP,
+     * not anything in our audio delivery.
      */
     @Test
     fun playWordsLive() {
-        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        // Bind from the TEST app's context: its manifest <queries> TTS engines,
+        // so foreign engines resolve; the instrumented target app is
+        // auto-visible, so our own engine works as before.
+        val ctx = InstrumentationRegistry.getInstrumentation().context
+        val engine = InstrumentationRegistry.getArguments()
+            .getString("engine") ?: "com.tgspeechbox.tts"
         val initLatch = CountDownLatch(1)
         var initStatus = -1
         val tts = TextToSpeech(
@@ -208,7 +219,7 @@ class ProbeTest {
                 initStatus = status
                 initLatch.countDown()
             },
-            "com.tgspeechbox.tts"
+            engine
         )
         check(initLatch.await(20, TimeUnit.SECONDS)) { "TTS init timeout" }
         check(initStatus == TextToSpeech.SUCCESS) {
@@ -243,6 +254,368 @@ class ProbeTest {
         }
 
         tts.shutdown()
+    }
+
+    /**
+     * Rapid-repeat live probe for the "hammering the rotor on one word" case:
+     * short word repeated N times on the real playback path.
+     *   -e engine <pkg>  -e word wish  -e count 8  -e gapMs 350
+     *   -e repMode flush|waitDone
+     * flush: speak(QUEUE_FLUSH) every gapMs regardless of completion —
+     *   mimics arrowing quickly (TalkBack flushes on navigation; the
+     *   framework discards buffered-unplayed tail = the word-final fricative).
+     * waitDone: wait for onDone + gapMs — polite baseline, no interruption.
+     * If flush randomly yields "wiss" and waitDone never does, the residual
+     * bug is tail-discard-on-interrupt, not acoustics.
+     */
+    @Test
+    fun rapidRepeat() {
+        val args = InstrumentationRegistry.getArguments()
+        val engine = args.getString("engine") ?: "com.tgspeechbox.tts"
+        val word = args.getString("word") ?: "wish"
+        val count = (args.getString("count") ?: "8").toInt()
+        val gapMs = (args.getString("gapMs") ?: "350").toLong()
+        val repMode = args.getString("repMode") ?: "flush"
+
+        val ctx = InstrumentationRegistry.getInstrumentation().context
+        val initLatch = CountDownLatch(1)
+        var initStatus = -1
+        val tts = TextToSpeech(
+            ctx,
+            TextToSpeech.OnInitListener { status ->
+                initStatus = status
+                initLatch.countDown()
+            },
+            engine
+        )
+        check(initLatch.await(20, TimeUnit.SECONDS)) { "TTS init timeout" }
+        check(initStatus == TextToSpeech.SUCCESS) { "TTS init failed: $initStatus" }
+        tts.setLanguage(Locale.US)
+        tts.setSpeechRate(1.0f)
+
+        if (repMode == "waitDone") {
+            for (i in 0 until count) {
+                val latch = CountDownLatch(1)
+                tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {}
+                    override fun onDone(utteranceId: String?) { latch.countDown() }
+                    @Deprecated("legacy")
+                    override fun onError(utteranceId: String?) { latch.countDown() }
+                    override fun onError(utteranceId: String?, errorCode: Int) { latch.countDown() }
+                })
+                tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "rep_$i")
+                check(latch.await(15, TimeUnit.SECONDS)) { "timeout rep $i" }
+                Thread.sleep(gapMs)
+            }
+        } else {
+            for (i in 0 until count) {
+                tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, "rep_$i")
+                Thread.sleep(gapMs)
+            }
+            Thread.sleep(1500)  // let the last one finish
+        }
+        tts.shutdown()
+    }
+
+    /**
+     * Arg-driven synthesizeToFile probe (playback path bypassed):
+     *   -e lang en-US -e words "wish,fish" -e outdir word_probe
+     * Defaults target the issue #100 English sharpness check: word-final
+     * /ʃ/ reported dull on Android ("wish"->"wiss") while Windows is clean.
+     * If these WAVs are sharp, the live playback path is the culprit; if
+     * dull, the installed engine build is.
+     */
+    @Test
+    fun synthesizeWordsToFile() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val args = InstrumentationRegistry.getArguments()
+        val langTag = args.getString("lang") ?: "en-US"
+        val wordsCsv = args.getString("words")
+            ?: "wish,fish,shoe,sheep,miss,recent,Facebook"
+        val dirName = args.getString("outdir") ?: "word_probe"
+        // repeat > 1: render the SAME word N times through the full
+        // production path (service+JNI+framework file writer) into
+        // <base>_NN.wav — determinism check for the random "wiss" hunt.
+        val repeat = (args.getString("repeat") ?: "1").toInt()
+
+        val outDir = File(ctx.getExternalFilesDir(null), dirName)
+        outDir.mkdirs()
+
+        val initLatch = CountDownLatch(1)
+        var initStatus = -1
+        val tts = TextToSpeech(
+            ctx,
+            TextToSpeech.OnInitListener { status ->
+                initStatus = status
+                initLatch.countDown()
+            },
+            "com.tgspeechbox.tts"
+        )
+        check(initLatch.await(20, TimeUnit.SECONDS)) { "TTS init timeout" }
+        check(initStatus == TextToSpeech.SUCCESS) { "TTS init failed: $initStatus" }
+        val langStatus = tts.setLanguage(Locale.forLanguageTag(langTag))
+        File(outDir, "INIT_LOG.txt").writeText(
+            "lang=$langTag lang_status=$langStatus\n"
+        )
+
+        for (word in wordsCsv.split(',').map { it.trim() }.filter { it.isNotEmpty() }) {
+            for (rep in 0 until repeat) {
+                val stem = word.lowercase(Locale.US).replace(Regex("[^a-z0-9]"), "_")
+                val basename = if (repeat > 1)
+                    String.format(Locale.US, "%s_%02d", stem, rep) else stem
+                val out = File(outDir, "$basename.wav")
+                val latch = CountDownLatch(1)
+                tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {}
+                    override fun onDone(utteranceId: String?) { latch.countDown() }
+                    @Deprecated("legacy")
+                    override fun onError(utteranceId: String?) { latch.countDown() }
+                    override fun onError(utteranceId: String?, errorCode: Int) { latch.countDown() }
+                })
+                val res = tts.synthesizeToFile(word, Bundle(), out, basename)
+                if (res != TextToSpeech.SUCCESS) {
+                    File(outDir, "$basename.err").writeText("synthesizeToFile returned $res\n")
+                    continue
+                }
+                check(latch.await(25, TimeUnit.SECONDS)) { "Synth timeout for $word rep $rep" }
+            }
+        }
+
+        tts.shutdown()
+    }
+
+    /**
+     * 20x same-word repeat on ONE DebugNatives handle with FIXED IPA via
+     * the production WithText path — on-device split for the "renders
+     * degrade after ~2 utterances" latch. eSpeak and synthesizeClauses are
+     * bypassed for the queue (fixed IPA), but each iteration's fresh
+     * nativeTextToIpa output is logged to catch espeak drift separately.
+     * If these WAVs degrade -> ARM frontend/DSP state; if stable -> the
+     * latch is in the nativeQueueText clause pipeline / espeak.
+     */
+    @Test
+    fun debugRepeat20() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val dirName = InstrumentationRegistry.getArguments()
+            .getString("outdir") ?: "wish20dbg"
+        val outDir = File(ctx.getExternalFilesDir(null), dirName)
+        outDir.mkdirs()
+
+        val sr = 22050
+        val handle = DebugNatives.nativeCreate(
+            ctx.filesDir.absolutePath,
+            File(ctx.filesDir, "tgsb").absolutePath,
+            sr
+        )
+        check(handle != 0L) { "nativeCreate failed" }
+        check(DebugNatives.nativeSetLanguage(handle, "en-us", "en-us") == 0) {
+            "setLanguage failed"
+        }
+
+        fun pullAllPcm(): ByteArray {
+            val buf = ByteArray(8192)
+            val out = java.io.ByteArrayOutputStream()
+            while (true) {
+                val n = DebugNatives.nativePullAudio(handle, buf, buf.size)
+                if (n <= 0) break
+                out.write(buf, 0, n)
+            }
+            return out.toByteArray()
+        }
+
+        fun writeWav(f: File, pcm: ByteArray) {
+            val hdr = java.nio.ByteBuffer.allocate(44)
+                .order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            hdr.put("RIFF".toByteArray()).putInt(36 + pcm.size)
+            hdr.put("WAVE".toByteArray()).put("fmt ".toByteArray())
+            hdr.putInt(16).putShort(1).putShort(1).putInt(sr)
+            hdr.putInt(sr * 2).putShort(2).putShort(16)
+            hdr.put("data".toByteArray()).putInt(pcm.size)
+            f.outputStream().use { s ->
+                s.write(hdr.array())
+                s.write(pcm)
+            }
+        }
+
+        // ipaMode=fixed: queue the same first-call IPA every time (stable
+        // baseline). ipaMode=fresh: call espeak each iteration and queue ITS
+        // output — the split that isolates espeak-drift as the latch trigger.
+        val args = InstrumentationRegistry.getArguments()
+        val ipaMode = args.getString("ipaMode") ?: "fixed"
+        val pitch = (args.getString("pitch") ?: "110.0").toDouble()
+
+        val ipa0 = DebugNatives.nativeTextToIpa(handle, "wish")
+        val log = StringBuilder("mode=$ipaMode pitch=$pitch fixed ipa=[$ipa0]\n")
+        for (i in 0 until 20) {
+            val ipaI = DebugNatives.nativeTextToIpa(handle, "wish")
+            log.append("iter $i espeak_ipa=[$ipaI]\n")
+            val queued = if (ipaMode == "fresh") ipaI else ipa0
+            DebugNatives.nativeDebugQueueIpaEx(
+                handle, "wish", queued, 1.0, pitch, true)
+            writeWav(File(outDir, String.format(Locale.US, "wish_%02d.wav", i)),
+                     pullAllPcm())
+        }
+        File(outDir, "ipa_log.txt").writeText(log.toString())
+        DebugNatives.nativeDestroy(handle)
+    }
+
+    /**
+     * On-device bisection for the cross-utterance fricative latch:
+     * 20x 'wish' through TgsbSpeakEngine's REAL natives (nativeQueueText ->
+     * synthesizeClauses -> WithText, same ARM pipeline as the TTS service)
+     * on a fresh handle, with each service config ingredient toggleable:
+     *   -e cfg "voice,tone,frameex,pitchmode,inflscale,overrides"
+     *   -e outdir bisect_all
+     * Empty cfg = bare pipeline. Values mirror Tomi's device prefs.
+     */
+    @Test
+    fun bisectRepeat() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val args = InstrumentationRegistry.getArguments()
+        val cfg = (args.getString("cfg") ?: "")
+            .split(',').map { it.trim() }.filter { it.isNotEmpty() }.toSet()
+        val outName = args.getString("outdir") ?: "bisect"
+        val outDir = File(ctx.getExternalFilesDir(null), outName)
+        outDir.mkdirs()
+
+        val eng = TgsbSpeakEngine(ctx)
+        val cls = TgsbSpeakEngine::class.java
+        fun m(name: String, vararg t: Class<*>) =
+            cls.getDeclaredMethod(name, *t).apply { isAccessible = true }
+        val jl = java.lang.Long.TYPE
+        val ji = Integer.TYPE
+        val jd = java.lang.Double.TYPE
+        val js = String::class.java
+        val mCreate = m("nativeCreate", js, js, ji)
+        val mSetLang = m("nativeSetLanguage", jl, js, js)
+        val mSetVoice = m("nativeSetVoice", jl, js)
+        val mTone = m("nativeSetVoicingTone",
+            jl, jd, jd, jd, jd, jd, jd, jd, jd, jd, jd, jd, jd, jd)
+        val mFx = m("nativeSetFrameExDefaults", jl, jd, jd, jd, jd, jd)
+        val mPm = m("nativeSetPitchMode", jl, js)
+        val mIs = m("nativeSetInflectionScale", jl, jd)
+        val mIn = m("nativeSetInflection", jl, jd)
+        val mSd = m("nativeSetData", jl, ji, js, js, js)
+        val mQt = m("nativeQueueText", jl, js, jd, jd)
+        val mPa = m("nativePullAudio", jl, ShortArray::class.java, ji)
+        val mDest = m("nativeDestroy", jl)
+
+        val handle = mCreate.invoke(eng, ctx.filesDir.absolutePath,
+            File(ctx.filesDir, "tgsb").absolutePath, 22050) as Long
+        check(handle != 0L) { "nativeCreate failed" }
+        check(mSetLang.invoke(eng, handle, "en-us", "en-us") as Int == 0) {
+            "setLanguage failed"
+        }
+
+        if ("voice" in cfg) mSetVoice.invoke(eng, handle, "adam")
+        if ("tone" in cfg) mTone.invoke(eng, handle,
+            0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.985)
+        if ("frameex" in cfg) mFx.invoke(eng, handle, 0.0, 0.0, 0.0, 0.0, 1.0)
+        if ("pitchmode" in cfg) mPm.invoke(eng, handle, "espeak_style")
+        if ("inflscale" in cfg) {
+            mIs.invoke(eng, handle, 0.58)
+            mIn.invoke(eng, handle, 0.5)
+        }
+        if ("overrides" in cfg) {
+            mSd.invoke(eng, handle, 1, "", "E.cf2", "1680")
+            mSd.invoke(eng, handle, 1, "", "3.aspirationAmplitude", "0.1")
+        }
+
+        fun writeWav(f: File, pcm: ByteArray) {
+            val hdr = java.nio.ByteBuffer.allocate(44)
+                .order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            hdr.put("RIFF".toByteArray()).putInt(36 + pcm.size)
+            hdr.put("WAVE".toByteArray()).put("fmt ".toByteArray())
+            hdr.putInt(16).putShort(1).putShort(1).putInt(22050)
+            hdr.putInt(22050 * 2).putShort(2).putShort(16)
+            hdr.put("data".toByteArray()).putInt(pcm.size)
+            f.outputStream().use { s ->
+                s.write(hdr.array())
+                s.write(pcm)
+            }
+        }
+
+        val buf = ShortArray(4096)
+        for (i in 0 until 20) {
+            mQt.invoke(eng, handle, "wish", 1.0, 110.0)
+            val out = java.io.ByteArrayOutputStream()
+            while (true) {
+                val n = mPa.invoke(eng, handle, buf, buf.size) as Int
+                if (n <= 0) break
+                val bb = java.nio.ByteBuffer.allocate(n * 2)
+                    .order(java.nio.ByteOrder.LITTLE_ENDIAN)
+                for (j in 0 until n) bb.putShort(buf[j])
+                out.write(bb.array())
+            }
+            writeWav(File(outDir, String.format(Locale.US, "wish_%02d.wav", i)),
+                     out.toByteArray())
+        }
+        File(outDir, "CFG.txt").writeText("cfg=$cfg\n")
+        mDest.invoke(eng, handle)
+    }
+
+    /**
+     * Flag-matrix latch bisection: 20x 'wish' through the nativeQueueText
+     * replica with skip flags. -e flags N -e outdir <dir>
+     * flags: bit0 skip prepareText, bit1 skip padEmoji,
+     *        bit2 skip setTimeStretch, bit3 skip purge.
+     */
+    @Test
+    fun flagRepeat20() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val args = InstrumentationRegistry.getArguments()
+        val flags = (args.getString("flags") ?: "0").toInt()
+        val dirName = args.getString("outdir") ?: "flag_probe"
+        val outDir = File(ctx.getExternalFilesDir(null), dirName)
+        outDir.mkdirs()
+
+        val sr = 22050
+        val handle = DebugNatives.nativeCreate(
+            ctx.filesDir.absolutePath,
+            File(ctx.filesDir, "tgsb").absolutePath,
+            sr
+        )
+        check(handle != 0L) { "nativeCreate failed" }
+        check(DebugNatives.nativeSetLanguage(handle, "en-us", "en-us") == 0) {
+            "setLanguage failed"
+        }
+
+        fun pullAllPcm(): ByteArray {
+            val buf = ByteArray(8192)
+            val out = java.io.ByteArrayOutputStream()
+            while (true) {
+                val n = DebugNatives.nativePullAudio(handle, buf, buf.size)
+                if (n <= 0) break
+                out.write(buf, 0, n)
+            }
+            return out.toByteArray()
+        }
+
+        fun writeWav(f: File, pcm: ByteArray) {
+            val hdr = java.nio.ByteBuffer.allocate(44)
+                .order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            hdr.put("RIFF".toByteArray()).putInt(36 + pcm.size)
+            hdr.put("WAVE".toByteArray()).put("fmt ".toByteArray())
+            hdr.putInt(16).putShort(1).putShort(1).putInt(sr)
+            hdr.putInt(sr * 2).putShort(2).putShort(16)
+            hdr.put("data".toByteArray()).putInt(pcm.size)
+            f.outputStream().use { s ->
+                s.write(hdr.array())
+                s.write(pcm)
+            }
+        }
+
+        // bit4: skip internal espeak, feed IPA obtained once out-of-band
+        val fixedIpa = if (flags and 16 != 0)
+            DebugNatives.nativeTextToIpa(handle, "wish") else null
+        for (i in 0 until 20) {
+            DebugNatives.nativeDebugQueueText(
+                handle, "wish", 1.0, 110.0, flags, fixedIpa)
+            writeWav(File(outDir, String.format(Locale.US, "wish_%02d.wav", i)),
+                     pullAllPcm())
+        }
+        File(outDir, "FLAGS.txt").writeText("flags=$flags\n")
+        DebugNatives.nativeDestroy(handle)
     }
 
     /**

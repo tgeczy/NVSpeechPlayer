@@ -16,6 +16,7 @@
 #include <math.h>
 
 #include <string>
+#include <mutex>
 
 #include <espeak-ng/speak_lib.h>
 #include "speechPlayer.h"
@@ -24,6 +25,41 @@
 #define TAG "TgsbJNI"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
+
+/* ------------------------------------------------------------------ */
+/* eSpeak lifecycle — refcounted process-global                        */
+/*                                                                     */
+/* eSpeak has process-global state, but multiple engines share it in   */
+/* this process (TgsbTtsService, TgsbSpeakEngine, DebugNatives).       */
+/* Unconditional espeak_Terminate() in nativeDestroy tore eSpeak down  */
+/* under whichever engine was still alive.  Refcount instead: first    */
+/* engine initializes, last one out terminates.                        */
+/* ------------------------------------------------------------------ */
+
+static int g_espeakRefCount = 0;
+static std::mutex g_espeakLock;
+
+static bool espeakAcquire(const char *dataPath) {
+    std::lock_guard<std::mutex> lock(g_espeakLock);
+    if (g_espeakRefCount == 0) {
+        int sr = espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, 0, dataPath, 0);
+        if (sr <= 0) {
+            LOGE("espeak_Initialize failed: %d", sr);
+            return false;
+        }
+        LOGI("eSpeak initialized (sr=%d)", sr);
+    }
+    g_espeakRefCount++;
+    return true;
+}
+
+static void espeakRelease() {
+    std::lock_guard<std::mutex> lock(g_espeakLock);
+    if (g_espeakRefCount > 0 && --g_espeakRefCount == 0) {
+        espeak_Terminate();
+        LOGI("eSpeak terminated (last engine destroyed)");
+    }
+}
 
 /* ------------------------------------------------------------------ */
 /* Emoji spacing — pad emoji codepoints with spaces so eSpeak treats  */
@@ -416,10 +452,8 @@ Java_com_tgspeechbox_tts_TgsbTtsService_nativeCreate(
 
     LOGI("nativeCreate: espeakData=%s packDir=%s sr=%d", dataPath, packDir, sampleRate);
 
-    /* Initialize eSpeak */
-    int espeakSr = espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, 0, dataPath, 0);
-    if (espeakSr <= 0) {
-        LOGE("espeak_Initialize failed: %d", espeakSr);
+    /* Initialize eSpeak (refcounted — see espeakAcquire) */
+    if (!espeakAcquire(dataPath)) {
         env->ReleaseStringUTFChars(espeakDataPath, dataPath);
         env->ReleaseStringUTFChars(packDirPath, packDir);
         return 0;
@@ -430,7 +464,6 @@ Java_com_tgspeechbox_tts_TgsbTtsService_nativeCreate(
         voice_spec.languages = "en-us";
         espeak_SetVoiceByProperties(&voice_spec);
     }
-    LOGI("eSpeak initialized (sr=%d)", espeakSr);
 
     /* Create TGSpeechBox components */
     speechPlayer_handle_t player = speechPlayer_initialize(sampleRate);
@@ -438,7 +471,7 @@ Java_com_tgspeechbox_tts_TgsbTtsService_nativeCreate(
     if (!fe) {
         LOGE("nvspFrontend_create failed");
         speechPlayer_terminate(player);
-        espeak_Terminate();
+        espeakRelease();
         env->ReleaseStringUTFChars(espeakDataPath, dataPath);
         env->ReleaseStringUTFChars(packDirPath, packDir);
         return 0;
@@ -481,7 +514,7 @@ Java_com_tgspeechbox_tts_TgsbTtsService_nativeDestroy(
 
     if (engine->frontend) nvspFrontend_destroy(engine->frontend);
     if (engine->player) speechPlayer_terminate(engine->player);
-    espeak_Terminate();
+    espeakRelease();
     free(engine);
     LOGI("Engine destroyed");
 }
@@ -1419,6 +1452,96 @@ Java_com_tgspeechbox_tts_DebugNatives_nativeDestroy(
     JNIEnv *env, jobject thiz, jlong handle
 ) {
     Java_com_tgspeechbox_tts_TgsbTtsService_nativeDestroy(env, thiz, handle);
+}
+
+/*
+ * nativeDebugQueueText — nativeQueueText replica with per-step skip flags,
+ * for bisecting the cross-utterance fricative latch (issue #100 forensics).
+ *   bit0 (1): skip nvspFrontend_prepareText
+ *   bit1 (2): skip padEmojiWithSpaces
+ *   bit2 (4): skip speechPlayer_setTimeStretch
+ *   bit3 (8): skip the leading purge frame
+ *   bit4 (16): skip the internal espeak call; use fixedIpa from the caller
+ * Logs the prepared clause and assembled IPA per call so drift is visible
+ * in logcat (tag TgsbJNI, "dbgQT").
+ */
+JNIEXPORT void JNICALL
+Java_com_tgspeechbox_tts_DebugNatives_nativeDebugQueueText(
+    JNIEnv *env, jobject thiz,
+    jlong handle, jstring text, jdouble speed, jdouble pitchHz, jint flags,
+    jstring fixedIpa
+) {
+    TgsbEngine *engine = (TgsbEngine *)(intptr_t)handle;
+    if (!engine || !engine->player || !engine->frontend) return;
+
+    engine->stopRequested = 0;
+    if (!(flags & 8))
+        speechPlayer_queueFrame(engine->player, NULL, 0, 0, -1, true);
+
+    const char *textChars = env->GetStringUTFChars(text, NULL);
+    if (!textChars || !*textChars) {
+        if (textChars) env->ReleaseStringUTFChars(text, textChars);
+        return;
+    }
+
+    double sp = speed;
+    if (sp < 0.1) sp = 0.1;
+    if (!(flags & 4))
+        speechPlayer_setTimeStretch(engine->player, 1.0);
+
+    double bp = pitchHz;
+    if (bp < 40.0) bp = 40.0;
+    if (bp > 500.0) bp = 500.0;
+
+    char *clause = strdup(textChars);
+    if (!(flags & 1)) {
+        char *prepped = nvspFrontend_prepareText(engine->frontend, clause);
+        if (prepped) {
+            free(clause);
+            clause = prepped;
+        }
+    }
+    if (!(flags & 2)) {
+        std::string padded = padEmojiWithSpaces(clause);
+        if (padded.size() != strlen(clause)) {
+            free(clause);
+            clause = strdup(padded.c_str());
+        }
+    }
+
+    std::string combinedIpa;
+    if ((flags & 16) && fixedIpa) {
+        const char *fx = env->GetStringUTFChars(fixedIpa, NULL);
+        if (fx) {
+            combinedIpa = fx;
+            env->ReleaseStringUTFChars(fixedIpa, fx);
+        }
+    } else {
+        const void *ePtr = clause;
+        while (ePtr && *(const char *)ePtr && !engine->stopRequested) {
+            const char *ipa = espeak_TextToPhonemes(
+                &ePtr, espeakCHARS_UTF8, 0x02 /* IPA */);
+            if (!ipa || !*ipa) continue;
+            if (!combinedIpa.empty()) combinedIpa += ' ';
+            combinedIpa += ipa;
+        }
+    }
+
+    LOGI("dbgQT flags=%d clause=[%s] ipa=[%s]", (int)flags, clause,
+         combinedIpa.c_str());
+
+    if (!combinedIpa.empty()) {
+        FrameCtx ctx;
+        ctx.engine = engine;
+        ctx.frameCount = 0;
+        nvspFrontend_queueIPA_ExWithText(
+            engine->frontend, clause, combinedIpa.c_str(),
+            sp, bp, engine->inflection, ".", 0, onFrame, &ctx);
+        LOGI("dbgQT queued %d frames", ctx.frameCount);
+    }
+
+    free(clause);
+    env->ReleaseStringUTFChars(text, textChars);
 }
 
 } /* extern "C" */

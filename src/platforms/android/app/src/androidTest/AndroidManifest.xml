@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Test-only manifest. The <queries> block lets instrumentation tests
+     resolve and bind OTHER installed TTS engines (e.g. eSpeak NG) for
+     on-device A/B playback comparisons (issue #100 cold-start duck).
+     Package visibility on API 30+ would otherwise hide them. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+</manifest>
