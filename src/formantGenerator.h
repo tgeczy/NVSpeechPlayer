@@ -263,7 +263,14 @@ public:
         // darkened. Preserves the velar F3 signature while removing the
         // high-frequency tap-click that causes /ɡ/→/ɾ/ misperception at fast
         // rates (issue #95 Bug 1, pegue/lago rate 1.3+).
-        const double tilt = (frameEx) ? frameEx->fricationTiltDb : 0.0;
+        // Guard like cf7/cf8 below: a non-finite or out-of-range tilt would
+        // exponentially rescale the 1.5-7 kHz parallel formants (10^(tilt/20
+        // per 3 kHz)) — garbage here silently deletes fricatives. ±24 dB
+        // covers every legitimate use (rate tilt peaks ~-8, phoneme tilt ±6).
+        double tilt = (frameEx) ? frameEx->fricationTiltDb : 0.0;
+        if (!std::isfinite(tilt)) tilt = 0.0;
+        else if (tilt < -24.0) tilt = -24.0;
+        else if (tilt > 24.0) tilt = 24.0;
         auto tiltScale = [tilt](double fHz) -> double {
             if (tilt == 0.0) return 1.0;
             constexpr double pivotHz = 1500.0, slopeHz = 3000.0;

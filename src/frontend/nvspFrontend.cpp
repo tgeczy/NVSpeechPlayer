@@ -453,8 +453,10 @@ static int queueIPA_ExImpl(
     }
   }
 
-  // Build FrameEx defaults struct to pass to emitFramesEx
-  nvspFrontend_FrameEx frameExDefaults;
+  // Build FrameEx defaults struct to pass to emitFramesEx.
+  // Value-init so unlisted fields (fujisaki*, trans*, fricationTiltDb)
+  // are 0.0 = neutral, never stack garbage.
+  nvspFrontend_FrameEx frameExDefaults = {};
   frameExDefaults.creakiness = h->frameExCreakiness;
   frameExDefaults.breathiness = h->frameExBreathiness;
   frameExDefaults.jitter = h->frameExJitter;

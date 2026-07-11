@@ -344,8 +344,14 @@ static void generateAcousticEvents(
     //   - sharpness: multiplicative (phoneme * user), clamped to reasonable range
     //   - endCf1/2/3, endPf1/2/3: direct values (Hz), NAN if not set
     // Per-phoneme values override only if explicitly set (has* flags).
-    nvspFrontend_FrameEx frameEx;
-    
+    // Value-init: every field starts at 0.0. The assignments below cover
+    // most fields, but any field they miss (fricationTiltDb was missed for
+    // months) otherwise carries stack garbage into EVERY emitted frame —
+    // benign where the stack slot happens to hold ~0, catastrophic where it
+    // doesn't (Android: 10^(garbage) tilt annihilated fricatives, the
+    // issue #100 random-"wiss").
+    nvspFrontend_FrameEx frameEx = {};
+
     // Get per-phoneme values (0 / 1.0 neutral if not set)
     double phonemeCreakiness = (t.def && t.def->hasCreakiness) ? t.def->creakiness : 0.0;
     double phonemeBreathiness = (t.def && t.def->hasBreathiness) ? t.def->breathiness : 0.0;
