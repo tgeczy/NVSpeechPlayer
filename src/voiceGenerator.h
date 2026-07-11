@@ -36,6 +36,18 @@ private:
     double noiseGlottalModDepth;
     double lastNoiseMod;
 
+    // Normalized glottal flow (0..1), for pitch-synchronous modulation of
+    // voiced-fricative frication noise. Turbulence at a supraglottal
+    // constriction tracks transglottal airflow (Rabiner 1968; Stevens 1971),
+    // so /z/,/v/,/ʒ/,/ð/ noise should pulse with the glottal open phase —
+    // the "buzzing hiss" that a voiceless /s/ never has. flowPeakEnv is a
+    // decaying peak tracker used to normalize; flowNormMean is a slow running
+    // mean so callers can modulate around it (energy-preserving AC component)
+    // rather than only attenuating (which would just make the hiss fainter).
+    double flowNorm;
+    double flowPeakEnv;
+    double flowNormMean;
+
     // Tremor: slow amplitude modulation for shaky/elderly voice
     double tremorDepth;
     double tremorDepthSmooth;  // Smoothed to prevent clicks on slider change
@@ -369,6 +381,7 @@ public:
         lastFujisakiReset(0.0), lastFujisakiPhraseAmp(0.0), lastFujisakiAccentAmp(0.0),
         lastFlow(0.0), lastVoicedIn(0.0), lastVoicedOut(0.0), lastVoicedSrc(0.0), lastAspOut(0.0),
         noiseGlottalModDepth(0.0), lastNoiseMod(1.0),
+        flowNorm(0.0), flowPeakEnv(0.0), flowNormMean(0.0),
         tremorDepth(0.0), tremorDepthSmooth(0.0), lastTremorSin(0.0),
         smoothAspAmp(0.0), smoothAspAmpInit(false),
         aspAttackCoeff(0.0), aspReleaseCoeff(0.0),
@@ -537,6 +550,9 @@ public:
         lastVoicedSrc=0.0;
         lastAspOut=0.0;
         lastNoiseMod=1.0;
+        flowNorm=0.0;
+        flowPeakEnv=0.0;
+        flowNormMean=0.0;
         smoothAspAmp = 0.0;
         smoothAspAmpInit = false;
         lastCyclePos = 0.0;
@@ -605,6 +621,15 @@ public:
     double getChorusDetuneHz() const { return chorusDetuneHz; }
 
     double getLastNoiseMod() const { return lastNoiseMod; }
+
+    // Normalized glottal flow (0..1) for pitch-synchronous voiced-fricative
+    // noise modulation. 0 when unvoiced (pitchHz<=0) or during closure.
+    double getFlowNorm() const { return flowNorm; }
+
+    // AC (zero-mean) component of the normalized glottal flow. Positive near
+    // the flow peak, negative during closure. Callers modulate frication as
+    // (1 + gain*AC) to add buzz without net loudness change. ~0 when unvoiced.
+    double getFlowNormAC() const { return flowNorm - flowNormMean; }
 
     double getNext(const speechPlayer_frame_t* frame, const speechPlayer_frameEx_t* frameEx) {
         // Optional per-frame voice quality (DSP v5+). If frameEx is NULL, all effects are disabled.
@@ -970,6 +995,25 @@ public:
 
         const double flowScale = 1.6;
         flow *= flowScale;
+
+        // Normalized glottal flow for voiced-fricative noise modulation.
+        // flow is ~0 during the closed phase and peaks mid-open-phase, so a
+        // peak-normalized copy is a ready-made pitch-synchronous envelope that
+        // is OQ-aware and needs no separate oscillator. Decaying peak tracker
+        // keeps it in [0,1] across pitch/amplitude changes. Unvoiced frames
+        // (pitchHz<=0) leave flow at 0, so callers must gate on voicing.
+        {
+            double af = (flow > 0.0) ? flow : 0.0;
+            if (af > flowPeakEnv) flowPeakEnv = af;
+            else                  flowPeakEnv *= 0.9997;
+            flowNorm = (flowPeakEnv > 1e-6) ? (af / flowPeakEnv) : 0.0;
+            if (flowNorm > 1.0) flowNorm = 1.0;
+            // Slow running mean (~20 ms) so getFlowNormAC() is centered on 0.
+            // Modulating frication by the AC part adds pitch-rate "buzz" while
+            // leaving the average hiss energy (and thus loudness) unchanged.
+            const double meanAlpha = 1.0 - exp(-1.0 / (sampleRate * 0.020));
+            flowNormMean += (flowNorm - flowNormMean) * meanAlpha;
+        }
 
         double dFlow = flow - lastFlow;
         lastFlow = flow;

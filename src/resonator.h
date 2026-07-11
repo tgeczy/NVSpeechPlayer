@@ -45,6 +45,10 @@ public:
             this->frequency=frequency;
             this->bandwidth=bandwidth;
 
+            // Memoization above keys on the raw request; the clamp below only
+            // shapes what we synthesize from it.
+            clampResonatorToNyquist(frequency, bandwidth, sampleRate);
+
             const double nyquist = 0.5 * (double)sampleRate;
             const bool invalid = (!std::isfinite(frequency) || !std::isfinite(bandwidth));
             const bool off = (frequency <= 0.0 || bandwidth <= 0.0 || frequency >= nyquist);
@@ -180,6 +184,7 @@ private:
     double smoothAlpha;
 
     void computeCoeffs(double freq, double bw) {
+        clampResonatorToNyquist(freq, bw, sampleRate);
         const double nyquist = 0.5 * (double)sampleRate;
         if (!std::isfinite(freq) || !std::isfinite(bw) ||
             freq <= 0.0 || bw <= 0.0 || freq >= nyquist) {

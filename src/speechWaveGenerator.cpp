@@ -597,15 +597,39 @@ public:
                 // when disabled/unvoiced.
                 fricNoise *= voiceGenerator.getLastNoiseMod();
 
+                // Pitch-synchronous voiced-fricative modulation (Rabiner 1968;
+                // Stevens 1971). For voiced fricatives (/z/,/v/,/ʒ/,/ð/) the
+                // turbulence noise tracks transglottal airflow, giving the
+                // buzzing hiss that distinguishes them from voiceless /s/ and,
+                // crucially, survives band-limiting on low-end devices (the cue
+                // is a low-rate amplitude modulation, not an out-of-band peak).
+                // Mean-preserving (uses the zero-mean flow AC) so the hiss
+                // buzzes without losing loudness; gated on genuine voiced
+                // frication so vowels and voiceless /s/ are untouched.
+                if (va * fricAmp > kVoicedFricProductThresh) {
+                    double flowAC = voiceGenerator.getFlowNormAC();     // ~[-0.4,+0.6]
+                    double mod = 1.0 + kVoicedFricModDepth * flowAC;
+                    if (mod < 0.0) mod = 0.0;
+                    fricNoise *= mod;
+                }
+
                 // Apply adaptive lowpass filtering:
                 // - Burst path (2-pole cascade at lower cutoff): removes harsh highs from stops
                 // - Sustain path (2-pole cascade at higher cutoff): preserves sibilant crispness
                 double fricBurst = fricBurstLp2.process(fricBurstLp1.process(fricNoise));
                 double fricSustain = fricSustainLp2.process(fricSustainLp1.process(fricNoise));
 
-                // Crossfade based on burstiness: 
+                // Crossfade based on burstiness:
                 // burstiness=1 -> use burst (darker), burstiness=0 -> use sustain (brighter)
                 double fric = fricSustain + burstiness * (fricBurst - fricSustain);
+
+                // Consonant clarity boost (CVR). Raise sustained-fricative level
+                // so the consonant survives band-limiting + device noise-
+                // suppression (Miller & Nicely 1955; Sroka & Braida 1989).
+                // (1 - burstiness) gates the boost OUT of stop bursts (which
+                // benefit from transitions, not level) and applies it fully to
+                // sustained fricatives. Vowels carry fric≈0 so are untouched.
+                fric *= 1.0 + kConsonantClarityBoost * (1.0 - burstiness);
 
                 double parallelOut=parallel.getNext(frame, frameEx, voiceGenerator.glottisOpen, fric*smoothPreGain);
 

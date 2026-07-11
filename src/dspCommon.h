@@ -30,6 +30,32 @@ static inline double clampDouble(double v, double lo, double hi) {
 }
 
 // -----------------------------------------------------------------------------
+// Nyquist safety clamp for resonator center frequencies
+//
+// A resonator asked to sit at or above Nyquist hard-disables into passthrough.
+// For the parallel bank's differential mix (resonate(in)-in)*amp, passthrough
+// is EXACT silence — at 11025 Hz output this muted every phoneme whose energy
+// lived in a single parallel formant above ~5512 Hz (Spanish /s/ pf6 6500,
+// issue #100). Instead, slide the pole to just under Nyquist and widen the
+// bandwidth proportionally so the peak survives as a wideband HF shelf.
+//
+// k = 0.475 (not lower): at 11025 Hz this places the pole at ~5237 Hz, which
+// retains 87-99% of /s/-zone energy on the harness corpus; placements below
+// ~5000 Hz fall into the frication lowpass shadow (kFricSustainFc_11k) and
+// underperform. No-op at 16000+ Hz where all pack formants fit under the cap.
+// -----------------------------------------------------------------------------
+
+const double kResonatorNyquistClampRatio = 0.475;
+
+static inline void clampResonatorToNyquist(double& freqHz, double& bwHz, int sampleRate) {
+    const double fMax = kResonatorNyquistClampRatio * (double)sampleRate;
+    if (freqHz > fMax) {
+        bwHz *= freqHz / fMax;
+        freqHz = fMax;
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Formant sweep bandwidth handling
 //
 // Sweeping a resonator's center frequency while holding bandwidth constant changes
@@ -86,6 +112,45 @@ const double kBypassMinGain = 0.70;
 const double kBypassVoicedDuck = 0.20;
 const double kVoicedFricDuck = 0.18;
 const double kVoicedFricDuckPower = 1.0;
+
+// Pitch-synchronous voiced-fricative noise modulation.
+// Turbulence at a supraglottal constriction tracks transglottal airflow, so
+// /z/,/v/,/ʒ/,/ð/ frication should pulse with the glottal open phase — the
+// buzzing-hiss signature that separates a voiced fricative from /s/, and that
+// survives band-limiting because it lives in the (in-band) modulation rate,
+// not the (out-of-band) HF spectral peak (Rabiner 1968; Stevens 1971).
+//
+// Applied as fricNoise *= (1 + depth * flowAC), where flowAC is the zero-mean
+// glottal-flow envelope. Because flowAC averages to 0, the mean hiss energy
+// (and loudness) is preserved — the noise buzzes without getting fainter.
+// Gated on genuine voiced frication (voiceAmplitude AND fricationAmplitude
+// above thresholds) so vowels and voiceless /s/ are untouched.
+//   kVoicedFricModDepth: buzz strength (ear-tunable; peak flowAC ~0.6).
+//   kVoicedFricProductThresh: gate on va*fricAmp, which is high only when
+//     voicing AND frication are strong SIMULTANEOUSLY (true /z/,/v/ ~0.74).
+//     A voiceless-fricative→vowel transition crosses over at va≈fricAmp≈0.5,
+//     product ~0.23, so it stays below the gate — no leakage onto s+vowel
+//     words. Using the product (not two separate thresholds) is what keeps
+//     the effect localized to sustained voiced frication.
+// Depth 0.5 keeps radiated modulation near m≈0.5, where real voiced-fricative
+// AM saturates (Pincas & Jackson 2005; Klatt's classic 50% square ≈ 6 dB
+// peak-to-trough). Higher reads as artificial "over-buzz".
+const double kVoicedFricModDepth       = 0.5;
+const double kVoicedFricProductThresh  = 0.35;
+
+// Consonant clarity boost (Consonant–Vowel intensity Ratio, CVR).
+// Band-limiting + mobile noise-suppression destroy consonant PLACE cues and
+// duck quiet HF frication as "noise" (Miller & Nicely 1955); voicing/nasality
+// survive, place does not. Raising sustained-fricative level relative to
+// vowels restores audibility: +7–21% consonant recognition at low SNR
+// (Gordon-Salant 1986/87), strongest for fricatives/affricates (Sroka &
+// Braida 1989 — NOT voiceless stops, so stop bursts are gated OUT via
+// burstiness). Vowels carry no frication so are untouched; this raises the
+// consonant-to-vowel ratio exactly where the device is quietest.
+// Value = linear boost at full (low-burstiness) frication:
+//   0.4 ≈ +3 dB, 0.6 ≈ +4 dB, 1.0 ≈ +6 dB. Keep ≤~6 dB — more reads as
+// unnatural loudness and can trip device AGC (which would re-duck us).
+const double kConsonantClarityBoost    = 0.55;
 
 // ------------------------------------------------------------
 // Adaptive frication lowpass (targets stop bursts, preserves sustained fricatives)
