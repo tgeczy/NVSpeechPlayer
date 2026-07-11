@@ -420,6 +420,11 @@ public:
                 if (smoothPreGain < 0.01) {
                     cascade.decay(0.95);
                     parallel.decay(0.95);
+                    // The output DC blocker (0.9995 pole, tau~91ms) holds its
+                    // last state through silence the same way — drain it too,
+                    // or it ring-slides for hundreds of ms after the utterance.
+                    lastInput *= 0.9;
+                    lastOutput *= 0.9;
                 }
 
                 // If preFormantGain was near zero and is now rising, aggressively

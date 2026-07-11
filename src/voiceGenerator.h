@@ -1112,6 +1112,22 @@ public:
         lastVoicedIn = voicedIn;
         lastVoicedOut = voiced;
 
+        // Drain the DC-blocker state once the voiced source goes silent.
+        // The 0.9995 pole is required during voicing (glottal flow carries a
+        // large DC component), but when the input drops to zero the recurrence
+        // degenerates to y[n] = 0.9995*y[n-1]: a tau~91ms tail (~0.1 dB/ms at
+        // 22050) that outlives any frame fade and buries the first ~50ms of a
+        // following voiceless fricative under an F1-shaped hum (word-final
+        // "wish"->"wiss"; the post-vocalic /s/->/z/ percept of #95/#100).
+        // Mirrors cascade.decay(0.95)-on-silence: 0.97 reaches -60dB in ~10ms
+        // without a click. Gated on source amplitude, not the waveform, so
+        // zero-crossings of live voicing never trigger it; breathy voice keeps
+        // voiceAmp >= ~0.02 and is untouched.
+        if (voiceAmp < 0.001 && turbulence < 1e-6) {
+            lastVoicedIn *= 0.97;
+            lastVoicedOut *= 0.97;
+        }
+
         // Anti-alias lowpass on voiced signal: attenuates harmonics near Nyquist
         // that would cause BLT warping artifacts in the resonator bank.
         // Applied after DC block, before combining with aspiration (noise doesn't alias).
