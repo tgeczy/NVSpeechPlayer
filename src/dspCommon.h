@@ -56,6 +56,30 @@ static inline void clampResonatorToNyquist(double& freqHz, double& bwHz, int sam
 }
 
 // -----------------------------------------------------------------------------
+// Issue #104: pf6 spread ratio — relocation target below the clamp ceiling
+//
+// The 0.475 ceiling itself turned out to whistle. At 11025 Hz it parks the
+// pole at ~5237 Hz = 0.95 of Nyquist, where the bilinear warp is extreme
+// (g = tan(pi*f/sr) ≈ 12.7): a single parallel pole there rings as a narrow
+// ~+25 dB peak riding all frication — a steady whistle (issue #104; Android
+// is the only platform whose synth genuinely runs at 11025 Hz).
+//
+// Fix: when pf6 would hit the clamp ceiling, relocate it further down to
+// 0.435*sr (~4800 Hz at 11025) instead. Ear-validated 2026-07-12 against the
+// alternatives: muting pa6 kills the whistle but re-muffles 11025 (the very
+// complaint the 0.475 clamp cured), and widening pb6 leaves the peak intact.
+// 4800 Hz sits slightly inside the frication-lowpass shadow the block above
+// warns about — the small /s/-energy trade was accepted by ear ("still phone
+// quality, but no whistle").
+//
+// Only pf6 needs this: max pack pf5 is 3900 Hz, far below every ceiling, so
+// pf6 is the only parallel formant that ever clamps. No-op at 16000+ Hz
+// (max pack pf6 6500 < 0.475*16000).
+// -----------------------------------------------------------------------------
+
+const double kParallelPf6NyquistSpreadRatio = 0.435;
+
+// -----------------------------------------------------------------------------
 // Formant sweep bandwidth handling
 //
 // Sweeping a resonator's center frequency while holding bandwidth constant changes

@@ -284,7 +284,17 @@ public:
         const double pf3e = frame->pf3 * hs3;
         const double pf4e = frame->pf4 * f4FreqScale;
         const double pf5e = frame->pf5 * f4FreqScale;
-        const double pf6e = frame->pf6 * f4FreqScale;
+        double pf6e = frame->pf6 * f4FreqScale;
+
+        // Issue #104: a pole parked on the Nyquist clamp ceiling (0.475*sr =
+        // 0.95*Nyquist) whistles — see kParallelPf6NyquistSpreadRatio in
+        // dspCommon.h. Relocate pf6 to the lower spread ceiling instead of
+        // letting Resonator::setParams clamp it there. pb6 is deliberately
+        // NOT widened: the relocated pole sits safely below Nyquist and keeps
+        // its pack-specified bandwidth (matches the ear-validated render).
+        // No-op at 16000+ Hz where every pack pf6 fits under the clamp.
+        if (pf6e >= kResonatorNyquistClampRatio * (double)sampleRate)
+            pf6e = kParallelPf6NyquistSpreadRatio * (double)sampleRate;
 
         output+=(r1.resonate(input,pf1e,pb1)-input)*frame->pa1*tiltScale(pf1e);
         output+=(r2.resonate(input,pf2e,pb2)-input)*frame->pa2*tiltScale(pf2e);
