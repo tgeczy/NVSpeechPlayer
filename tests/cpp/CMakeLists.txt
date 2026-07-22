@@ -59,5 +59,12 @@ if(YY_THUNKS_OBJ)
   target_link_libraries(tgsb_unit_tests PRIVATE "${YY_THUNKS_OBJ}")
 endif()
 
+# normalizeNFKC() in utf8.cpp uses CFStringNormalize on Apple platforms. The
+# shipping apps get CoreFoundation from the Xcode target's framework list, so
+# only the standalone test binary has to ask for it.
+if(APPLE)
+  target_link_libraries(tgsb_unit_tests PRIVATE "-framework CoreFoundation")
+endif()
+
 # Register with CTest so `ctest` runs the binary.
 add_test(NAME tgsb_unit_tests COMMAND tgsb_unit_tests)
