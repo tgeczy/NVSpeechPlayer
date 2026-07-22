@@ -141,10 +141,22 @@ static void generateAcousticEvents(
   double speed,
   const nvspFrontend_FrameEx& frameExDefaults,
   TrajectoryState* trajectoryState,
-  Emitter emitFn,
+  Emitter rawEmitFn,
   std::vector<tgsb_data::FrameTraceEntry>* traceSink = nullptr,
   const int* traceFrameCounter = nullptr
 ) {
+  // Transitions are articulatory events, not rate-elastic ones: the Klatt
+  // lineage keeps transition spans in absolute time (~130 ms max) instead
+  // of scaling them with 1/speed. Below-normal speeds otherwise stretch
+  // fades to 150-360 ms, smearing every segment's onset across its
+  // neighbor. Slow speech = longer steady states, not slower articulators.
+  // Speeds >= 1.0 are bit-identical (fast-side fades already shrink).
+  constexpr double kSlowRateFadeCapMs = 130.0;
+  auto emitFn = [&](const nvspFrontend_Frame* f, const nvspFrontend_FrameEx* fEx,
+                    double durationMs, double fadeMs) {
+    if (speed < 1.0 && fadeMs > kSlowRateFadeCapMs) fadeMs = kSlowRateFadeCapMs;
+    rawEmitFn(f, fEx, durationMs, fadeMs);
+  };
 
   // Compile-time layout guarantees
   static_assert(sizeof(nvspFrontend_Frame) == sizeof(double) * kFrameFieldCount,
