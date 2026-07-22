@@ -235,6 +235,12 @@ static void generateAcousticEvents(
         vbFrameEx.fujisakiPhraseAmp = 0.0;
         vbFrameEx.fujisakiAccentAmp = 0.0;
         vbFrameEx.fujisakiReset = 0.0;
+        // Never inherit the previous phoneme's formant ramp targets: stale
+        // endCf/endPf steer the closure's spectrum back toward the phoneme
+        // it just left (overriding the F2/F3 pre-positioning above), which
+        // slow rates stretch into an audible ghost of the prior phoneme.
+        vbFrameEx.endCf1 = vbFrameEx.endCf2 = vbFrameEx.endCf3 = NAN;
+        vbFrameEx.endPf1 = vbFrameEx.endPf2 = vbFrameEx.endPf3 = NAN;
         emitFn(&vbFrame, &vbFrameEx, t.durationMs, vbFadeMs);
       } else {
         emitFn(nullptr, nullptr, t.durationMs, vbFadeMs);
@@ -259,6 +265,10 @@ static void generateAcousticEvents(
             : frameExDefaults;
         taperFrameEx.fujisakiPhraseAmp = 0.0;
         taperFrameEx.fujisakiAccentAmp = 0.0;
+        // Same guard as the voice bar: stale inherited formant ramp targets
+        // would override the taper's own place blending below.
+        taperFrameEx.endCf1 = taperFrameEx.endCf2 = taperFrameEx.endCf3 = NAN;
+        taperFrameEx.endPf1 = taperFrameEx.endPf2 = taperFrameEx.endPf3 = NAN;
 
         // --- Early taper: sibilant tail ---
         double early[kFrameFieldCount];
