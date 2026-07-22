@@ -26,6 +26,22 @@ settings:
   singleWordFinalFadeMs: 25
   clauseFinalFadeMs: 15
 
+  # Coda fricative→stop taper: quiet the LATE phase so the stop closure
+  # reads as a real gap before the release burst.  Default LateAspAmp 0.22
+  # filled the closure with aspiration noise — after a loud /s/ ("first",
+  # "list") forward masking then swallowed the burst entirely (Vsevolod
+  # Popov report, 2026-07-20: word-final /t d/ inaudible vs eSpeak).
+  # True-silence late phase (eSpeak's closure model): any residual noise
+  # here rides -18 dB through the crossfades and forward-masks the burst.
+  codaNoiseTaperLateFricScale: 0.0
+  codaNoiseTaperLateAspAmp: 0.0
+  codaNoiseTaperEarlyFricScale: 0.35
+  # pg 0.40 blocked the DSP's silence drain (speechWaveGenerator.cpp:420),
+  # letting the DC blocker (tau~91ms) ring-slide at ~-22 dB through the
+  # closure — the real reason word-final bursts drowned.  0 lets the
+  # drain fire so the closure actually goes quiet.
+  codaNoiseTaperPreGain: 0.0
+
   # US: smoother overall, less breath noise on stop releases.
   postStopAspirationEnabled: true
   # Lisker & Abramson (1964): English aspirated stops need 40-80ms VOT.
@@ -425,13 +441,19 @@ settings:
         position: word-final
         action: scale
         fieldScales:
-          fricationAmplitude: 0.55
-          aspirationAmplitude: 0.60
+          # Retuned 2026-07 (Vsevolod Popov report: final /t/ inaudible).
+          # Old fricationAmplitude 0.55 stacked with burst_boost 0.82 to a
+          # net x0.45 — measured burst then sat ~-30 dB under the /s/ tail
+          # with no closure gap, i.e. fully masked.  Keep the pa1/pa2 low
+          # cut (post-sibilant cut-through) and the pa5/pa6 rolloff
+          # (affricate guard); restore the mid-burst that carries the cue.
+          fricationAmplitude: 1.0
+          aspirationAmplitude: 0.80
           pa1: 0.40
           pa2: 0.55
-          pa3: 0.60
-          pa4: 0.50
-          pa5: 0.40
+          pa3: 1.0
+          pa4: 1.0
+          pa5: 0.55
           pa6: 0.30
 
     # ── Labial word-final boost ────────────────────────────────────

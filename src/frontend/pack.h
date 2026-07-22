@@ -1027,16 +1027,20 @@ double lengthContrastPreGeminateVowelScale = 0.85;
   double boundarySmoothingAffricateToVowelVoicingHold = 0.0;
   double boundarySmoothingStopToVowelVoicingHold = 0.0;
 
-  // Coda noise taper: maintain frication continuity through fricative→stop closures.
-  // When enabled, the silent closure gap between a fricative and a following coda stop
-  // is replaced with a taper frame that decays the fricative's noise, keeping the DSP's
-  // resonators warm and preventing aggressive burst detection.
+  // Coda noise taper: decay the fricative's noise into a fricative→stop closure
+  // instead of cutting to instant silence (early phase), then let the closure go
+  // fully quiet (late phase) so the stop's release burst lands after a real gap.
+  // preGain must stay 0 during the taper: any value >= 0.01 blocks the silence
+  // drain in speechWaveGenerator (smoothPreGain check), and the output DC blocker
+  // (0.9995 pole, tau ~91ms) then ring-slides LF energy at ~-22 dB through the
+  // whole closure, forward-masking the burst (word-final /t d/ inaudible —
+  // Vsevolod Popov report, 2026-07).
   bool codaNoiseTaperEnabled = true;
-  double codaNoiseTaperPreGain = 0.40;          // preFormantGain during taper (keeps both paths alive)
+  double codaNoiseTaperPreGain = 0.0;           // 0 = closure releases the DSP silence drain
   double codaNoiseTaperEarlyFricScale = 0.45;   // Early taper: fric as fraction of preceding level
   double codaNoiseTaperEarlyAspAmp = 0.04;      // Early taper: cascade barely waking up
-  double codaNoiseTaperLateFricScale = 0.08;    // Late taper: parallel almost gone
-  double codaNoiseTaperLateAspAmp = 0.22;       // Late taper: cascade now dominant
+  double codaNoiseTaperLateFricScale = 0.0;     // Late taper: true silence before the burst
+  double codaNoiseTaperLateAspAmp = 0.0;        // Late taper: true silence before the burst
 
   // Trajectory limiting (optional).
   //
