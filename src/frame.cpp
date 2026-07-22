@@ -120,6 +120,14 @@ static inline bool isVoicingParam(int idx) {
 	return (idx == i);
 }
 
+// Amplitude sources complete their move within this many ms of a fade's
+// start. The Klatt lineage treats amplitude changes as near-step events
+// (voicing onsets abrupt, amplitude spans <= ~45ms) while formants glide
+// across the full transition. Fades shorter than this span are untouched,
+// so normal-rate output (fades <= ~30ms) is bit-identical; only the long
+// fades that survive the frontend's slow-rate 130ms cap engage it.
+static const double kAmpSpanMs = 45.0;
+
 struct frameRequest_t {
 	unsigned int minNumSamples;
 	unsigned int numFadeSamples;
@@ -154,6 +162,7 @@ class FrameManagerImpl: public FrameManager {
 	unsigned int sampleCounter;
 	int lastUserIndex;
 	bool purgeFlag;  // Set on purge, cleared when checked
+	int sampleRate;  // Needed to express kAmpSpanMs in samples
 
 	void updateCurrentFrame() {
 		sampleCounter++;
@@ -168,6 +177,20 @@ class FrameManagerImpl: public FrameManager {
 				curHasFrameEx = oldFrameRequest->hasFrameEx;
 			} else {
 				double linearRatio=(double)sampleCounter/(newFrameRequest->numFadeSamples);
+
+				// Compressed clock for amplitude sources (see kAmpSpanMs):
+				// they finish their old->new move within the span while
+				// spectral params glide across the whole fade. Held params
+				// (source/voicing holds) keep their own deliberate timing
+				// and never use this.
+				double ampRatio = linearRatio;
+				{
+					const double ampSpanSamples = kAmpSpanMs * (double)sampleRate / 1000.0;
+					if ((double)(newFrameRequest->numFadeSamples) > ampSpanSamples) {
+						ampRatio = (double)sampleCounter / ampSpanSamples;
+						if (ampRatio > 1.0) ampRatio = 1.0;
+					}
+				}
 
 				// When the incoming frame has no formant ramp targets (all
 				// endCf = NAN), the frontend has already handled the formant
@@ -215,6 +238,8 @@ class FrameManagerImpl: public FrameManager {
 							double maxVal = (oldVal > newVal) ? oldVal : newVal;
 							if(val > maxVal) val = maxVal;
 							((speechPlayer_frameParam_t*)&curFrame)[i] = val;
+						} else if(isAmplitudeParam(i)) {
+							((speechPlayer_frameParam_t*)&curFrame)[i]=calculateValueAtFadePosition(oldVal, newVal, ampRatio);
 						} else {
 							((speechPlayer_frameParam_t*)&curFrame)[i]=calculateValueAtFadePosition(oldVal, newVal, linearRatio);
 						}
@@ -312,9 +337,12 @@ class FrameManagerImpl: public FrameManager {
 					} else if(isAmplitudeParam(i) && ampMode > 0.5) {
 						// Equal-power crossfade: sin²(θ) + cos²(θ) = 1
 						// Total energy stays constant across source transitions.
-						double theta = paramLinear * 1.5707963267948966;
+						// Runs on the compressed amplitude clock (kAmpSpanMs).
+						double theta = ampRatio * 1.5707963267948966;
 						double val = oldVal * cos(theta) + newVal * sin(theta);
 						((speechPlayer_frameParam_t*)&curFrame)[i] = val;
+					} else if(isAmplitudeParam(i)) {
+						((speechPlayer_frameParam_t*)&curFrame)[i]=calculateValueAtFadePosition(oldVal, newVal, ampRatio);
 					} else {
 						((speechPlayer_frameParam_t*)&curFrame)[i]=calculateValueAtFadePosition(oldVal, newVal, paramLinear);
 					}
@@ -487,7 +515,7 @@ class FrameManagerImpl: public FrameManager {
 
 	public:
 
-	FrameManagerImpl(): curFrame(), curFrameEx(), curFrameIsNULL(true), curHasFrameEx(false), sampleCounter(0), newFrameRequest(NULL), lastUserIndex(-1), purgeFlag(false)  {
+	FrameManagerImpl(int sampleRateHz): curFrame(), curFrameEx(), curFrameIsNULL(true), curHasFrameEx(false), sampleCounter(0), newFrameRequest(NULL), lastUserIndex(-1), purgeFlag(false), sampleRate(sampleRateHz)  {
 		// speechPlayer_frame_t is a plain C struct; ensure it starts from a known state.
 		memset(&curFrame, 0, sizeof(speechPlayer_frame_t));
 		curFrameEx = speechPlayer_frameEx_defaults;
@@ -663,4 +691,4 @@ class FrameManagerImpl: public FrameManager {
 
 };
 
-FrameManager* FrameManager::create() { return new FrameManagerImpl(); }
+FrameManager* FrameManager::create(int sampleRate) { return new FrameManagerImpl(sampleRate); }

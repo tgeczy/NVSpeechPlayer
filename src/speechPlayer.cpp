@@ -20,7 +20,7 @@ typedef struct {
 speechPlayer_handle_t speechPlayer_initialize(int sampleRate) {
 	speechPlayer_handleInfo_t* playerHandleInfo=new speechPlayer_handleInfo_t;
 	playerHandleInfo->sampleRate=sampleRate;
-	playerHandleInfo->frameManager=FrameManager::create();
+	playerHandleInfo->frameManager=FrameManager::create(sampleRate);
 	playerHandleInfo->waveGenerator=SpeechWaveGenerator::create(sampleRate);
 	playerHandleInfo->waveGenerator->setFrameManager(playerHandleInfo->frameManager);
 	return (speechPlayer_handle_t)playerHandleInfo;

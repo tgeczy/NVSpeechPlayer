@@ -256,7 +256,7 @@ const int speechPlayer_frameEx_numParams=sizeof(speechPlayer_frameEx_t)/sizeof(d
 
 class FrameManager {
 	public:
-	static FrameManager* create(); //factory function
+	static FrameManager* create(int sampleRate); //factory function
 
 	// Core frame queue (legacy)
 	virtual void queueFrame(speechPlayer_frame_t* frame, unsigned int minNumSamples, unsigned int numFadeSamples, int userIndex, bool purgeQueue)=0;
