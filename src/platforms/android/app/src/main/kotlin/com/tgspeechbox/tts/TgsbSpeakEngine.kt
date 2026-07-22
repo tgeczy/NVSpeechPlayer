@@ -14,14 +14,11 @@
 package com.tgspeechbox.tts
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.util.Log
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 class TgsbSpeakEngine(private val context: Context) {
 
@@ -118,7 +115,7 @@ class TgsbSpeakEngine(private val context: Context) {
     fun start(): Boolean {
         if (nativeHandle != 0L) return true
 
-        extractAssets()
+        TgsbAssets.ensureExtracted(context)
 
         val filesDir = context.filesDir
         val espeakDataPath = filesDir.absolutePath
@@ -438,54 +435,4 @@ class TgsbSpeakEngine(private val context: Context) {
         onSpeakingChanged?.invoke(value)
     }
 
-    // ── Asset extraction (same logic as TgsbTtsService) ─────────────
-
-    private fun extractAssets() {
-        val assetVersion = 28
-        val marker = File(context.filesDir, ".assets_v$assetVersion")
-        if (marker.exists()) return
-
-        context.filesDir.listFiles()
-            ?.filter { it.name.startsWith(".assets_") }
-            ?.forEach { it.delete() }
-        File(context.filesDir, "espeak-ng-data").deleteRecursively()
-        File(context.filesDir, "tgsb").deleteRecursively()
-
-        Log.i(TAG, "Extracting assets to ${context.filesDir.absolutePath}")
-        copyAssetsDir("espeak-ng-data", File(context.filesDir, "espeak-ng-data"))
-        copyAssetsDir("tgsb", File(context.filesDir, "tgsb"))
-        marker.createNewFile()
-    }
-
-    private fun copyAssetsDir(assetPath: String, targetDir: File) {
-        val entries = context.assets.list(assetPath) ?: return
-        if (entries.isEmpty()) {
-            copyAssetFile(assetPath, targetDir)
-            return
-        }
-        targetDir.mkdirs()
-        for (entry in entries) {
-            val childAsset = "$assetPath/$entry"
-            val childTarget = File(targetDir, entry)
-            val subEntries = context.assets.list(childAsset)
-            if (subEntries != null && subEntries.isNotEmpty()) {
-                copyAssetsDir(childAsset, childTarget)
-            } else {
-                copyAssetFile(childAsset, childTarget)
-            }
-        }
-    }
-
-    private fun copyAssetFile(assetPath: String, target: File) {
-        try {
-            target.parentFile?.mkdirs()
-            context.assets.open(assetPath).use { input ->
-                FileOutputStream(target).use { output ->
-                    input.copyTo(output)
-                }
-            }
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to copy asset $assetPath: ${e.message}")
-        }
-    }
 }

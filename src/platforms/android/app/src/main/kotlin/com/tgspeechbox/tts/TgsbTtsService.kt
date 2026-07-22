@@ -9,7 +9,6 @@
 package com.tgspeechbox.tts
 
 import android.content.SharedPreferences
-import android.content.res.AssetManager
 import android.media.AudioFormat
 import android.speech.tts.SynthesisCallback
 import android.speech.tts.SynthesisRequest
@@ -18,8 +17,6 @@ import android.speech.tts.TextToSpeechService
 import android.speech.tts.Voice
 import android.util.Log
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.util.Locale
 
 class TgsbTtsService : TextToSpeechService() {
@@ -242,7 +239,7 @@ class TgsbTtsService : TextToSpeechService() {
         prefs.registerOnSharedPreferenceChangeListener(prefsListener)
         loadPresetFromPrefs()
 
-        extractAssets()
+        TgsbAssets.ensureExtracted(this)
 
         val espeakDataPath = filesDir.absolutePath
         val packDirPath = File(filesDir, "tgsb").absolutePath
@@ -474,58 +471,6 @@ class TgsbTtsService : TextToSpeechService() {
             nativeSetVoiceProfile(nativeHandle, voiceDef.id)
         } else {
             nativeSetVoice(nativeHandle, currentPreset)
-        }
-    }
-
-    // ---- Asset extraction ----
-
-    private fun extractAssets() {
-        val assetVersion = 29
-        val marker = File(filesDir, ".assets_v$assetVersion")
-        if (marker.exists()) return
-
-        filesDir.listFiles()?.filter { it.name.startsWith(".assets_") }?.forEach { it.delete() }
-        File(filesDir, "espeak-ng-data").deleteRecursively()
-        File(filesDir, "tgsb").deleteRecursively()
-
-        Log.i(TAG, "Extracting assets to ${filesDir.absolutePath}")
-        copyAssetsDir("espeak-ng-data", File(filesDir, "espeak-ng-data"))
-        copyAssetsDir("tgsb", File(filesDir, "tgsb"))
-        marker.createNewFile()
-    }
-
-    private fun copyAssetsDir(assetPath: String, targetDir: File) {
-        val assetMgr = assets
-        val entries = assetMgr.list(assetPath) ?: return
-
-        if (entries.isEmpty()) {
-            copyAssetFile(assetMgr, assetPath, targetDir)
-            return
-        }
-
-        targetDir.mkdirs()
-        for (entry in entries) {
-            val childAsset = "$assetPath/$entry"
-            val childTarget = File(targetDir, entry)
-            val subEntries = assetMgr.list(childAsset)
-            if (subEntries != null && subEntries.isNotEmpty()) {
-                copyAssetsDir(childAsset, childTarget)
-            } else {
-                copyAssetFile(assetMgr, childAsset, childTarget)
-            }
-        }
-    }
-
-    private fun copyAssetFile(assetMgr: AssetManager, assetPath: String, target: File) {
-        try {
-            target.parentFile?.mkdirs()
-            assetMgr.open(assetPath).use { input ->
-                FileOutputStream(target).use { output ->
-                    input.copyTo(output)
-                }
-            }
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to copy asset $assetPath: ${e.message}")
         }
     }
 
