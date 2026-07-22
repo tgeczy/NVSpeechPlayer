@@ -12,7 +12,7 @@ if (sigFile.exists()) sigProps.load(sigFile.inputStream())
 
 android {
     namespace = "com.tgspeechbox.tts"
-    compileSdk = 35
+    compileSdk = 36
 
     ndkVersion = "27.2.12479018"
 
@@ -28,9 +28,9 @@ android {
     defaultConfig {
         applicationId = "com.tgspeechbox.tts"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 351
-        versionName = "3.10-beta6"
+        targetSdk = 36
+        versionCode = 352
+        versionName = "3.10-beta7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
