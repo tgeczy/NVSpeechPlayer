@@ -341,8 +341,17 @@ public:
     }
 
     unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
+        return generateIndexAware(sampleCount, sampleBuf, NULL);
+    }
+
+    unsigned int generateIndexAware(const unsigned int sampleCount, sample* sampleBuf, int* indexReachedOut) {
+        if(indexReachedOut) *indexReachedOut=-1;
         if(!frameManager) return 0;
-        
+        // Snapshot the user index at entry. lastIndex flips the moment a
+        // marker frame (userIndex != -1) starts generating, so comparing
+        // against this snapshot detects every marker crossed in this call.
+        const int entryUserIndex=frameManager->getLastIndex();
+
         // Check if a purge happened — if so, trigger a fade-in to prevent pop
         // Note: We intentionally do NOT reset resonators here because that can cause
         // its own transient. The fade-in should mask any discontinuity.
@@ -362,6 +371,23 @@ public:
         for(unsigned int i=0;i<sampleCount;++i) {
             const speechPlayer_frameEx_t* frameEx = NULL;
             const speechPlayer_frame_t* frame=frameManager->getCurrentFrameWithEx(&frameEx);
+            // Index-aware early stop (speechPlayer_synthesize2): every sample
+            // generated so far lies before the marker frame that just started,
+            // so the caller can bind the index notification to exactly the
+            // audio preceding the marker. The tick that flipped the index has
+            // already been consumed (the marker's first, silent sample), so
+            // audio runs one sample short of the frame clock — inaudible.
+            // If time-stretch crosses several markers within one sample's tick
+            // burst, only the newest index is reported; NVDA treats a reached
+            // index as implying all earlier ones.
+            if(indexReachedOut) {
+                const int curUserIndex=frameManager->getLastIndex();
+                if(curUserIndex!=entryUserIndex) {
+                    *indexReachedOut=curUserIndex;
+                    if(i<sampleCount) memset(&sampleBuf[i], 0, (sampleCount-i)*sizeof(sample));
+                    return i;
+                }
+            }
             if(frame) {
                 if(wasSilence) {
                     voiceGenerator.reset();
@@ -807,6 +833,14 @@ public:
                 }
                 return i;
             }
+        }
+        // A marker may have flipped during the final sample's frame tick(s)
+        // (including time-stretch extra ticks). The buffer boundary then falls
+        // exactly on the marker — report it so the caller's next notification
+        // binds to this chunk, and the next call re-snapshots cleanly.
+        if(indexReachedOut) {
+            const int curUserIndex=frameManager->getLastIndex();
+            if(curUserIndex!=entryUserIndex) *indexReachedOut=curUserIndex;
         }
         return sampleCount;
     }

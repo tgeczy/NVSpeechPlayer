@@ -430,6 +430,22 @@ class SpeechPlayer(object):
         except (AttributeError, OSError):
             pass
 
+        # Index-aware synthesis API (optional). Stops generation at user-index
+        # boundaries so index notifications can be bound to exactly the audio
+        # that precedes each marker (punctual IndexCommand/BeepCommand timing).
+        self._hasSynthesize2Api = False
+        try:
+            _synth2 = getattr(self._dll, "speechPlayer_synthesize2", None)
+            if _synth2 is not None:
+                # int speechPlayer_synthesize2(void* handle, uint numSamples,
+                #                              short* out, int* indexReached);
+                self._dll.speechPlayer_synthesize2.argtypes = (
+                    c_void_p, c_uint, POINTER(c_short), POINTER(c_int))
+                self._dll.speechPlayer_synthesize2.restype = c_int
+                self._hasSynthesize2Api = True
+        except (AttributeError, OSError):
+            pass
+
     def setTimeStretch(self, factor: float) -> bool:
         """Set DSP-level time-stretch factor for rate boost.
 
@@ -547,6 +563,35 @@ class SpeechPlayer(object):
 
     def getLastIndex(self) -> int:
         return int(self._dll.speechPlayer_getLastIndex(self._speechHandle))
+
+    def hasSynthesize2Support(self) -> bool:
+        """Check if the DLL supports index-aware synthesis (synthesize2)."""
+        return getattr(self, "_hasSynthesize2Api", False)
+
+    def synthesizeIndexAware(self, numSamples: int):
+        """Synthesize audio, stopping at user-index boundaries.
+
+        Returns (buf, indexReached):
+        - buf: ctypes short array with .length set, or None if no samples.
+        - indexReached: the user index whose marker was reached, or None.
+          The returned audio is exactly the audio BEFORE the marker, so an
+          index notification bound to buf's playback completion fires at
+          the marker's true position.
+        (None, None) means no audio available (utterance drained), same as
+        synthesize() returning None. Requires hasSynthesize2Support().
+        """
+        n = int(numSamples)
+        if n <= 0:
+            return None, None
+        buf = (c_short * n)()
+        idx = c_int(-1)
+        res = self._dll.speechPlayer_synthesize2(
+            self._speechHandle, c_uint(n), buf, byref(idx))
+        idxOut = idx.value if idx.value >= 0 else None
+        if res > 0:
+            buf.length = min(int(res), n)
+            return buf, idxOut
+        return None, idxOut
 
     def hasVoicingToneSupport(self) -> bool:
         """Check if the DLL supports voicing tone adjustments."""

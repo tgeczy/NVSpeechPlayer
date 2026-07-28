@@ -40,6 +40,10 @@ int speechPlayer_synthesize(speechPlayer_handle_t playerHandle, unsigned int sam
 	return ((speechPlayer_handleInfo_t*)playerHandle)->waveGenerator->generate(sampleCount,sampleBuf);
 }
 
+int speechPlayer_synthesize2(speechPlayer_handle_t playerHandle, unsigned int sampleCount, sample* sampleBuf, int* indexReached) {
+	return ((speechPlayer_handleInfo_t*)playerHandle)->waveGenerator->generateIndexAware(sampleCount,sampleBuf,indexReached);
+}
+
 int speechPlayer_getLastIndex(speechPlayer_handle_t playerHandle) {
 	speechPlayer_handleInfo_t* playerHandleInfo=(speechPlayer_handleInfo_t*)playerHandle;
 	return playerHandleInfo->frameManager->getLastIndex();

@@ -234,6 +234,13 @@ class AudioThread(threading.Thread):
         wake = self._wake
         synthRef = self._synthRef
 
+        # Index-aware synthesis (speechPlayer_synthesize2): the DLL stops
+        # generation at index-marker boundaries, so each index notification
+        # can be bound to exactly the audio chunk that PRECEDES its marker.
+        # Without it (older DLL), fall back to the legacy chunk-granular
+        # path, where notifications fire up to a whole chunk late.
+        useIndexAware = bool(getattr(player, "hasSynthesize2Support", lambda: False)())
+
         while self._keepAlive:
             wake.wait()
             wake.clear()
@@ -271,7 +278,11 @@ class AudioThread(threading.Thread):
             while self._keepAlive and self.isSpeaking:
                 didSpeak = True
                 try:
-                    data = player.synthesize(8192)
+                    if useIndexAware:
+                        data, idxHit = player.synthesizeIndexAware(8192)
+                    else:
+                        data = player.synthesize(8192)
+                        idxHit = None
                 except Exception:
                     if not self._synthErrorLogged:
                         log.error("nvSpeechPlayer: speechPlayer.synthesize failed", exc_info=True)
@@ -301,6 +312,21 @@ class AudioThread(threading.Thread):
                         self._applyFadeIn = False
                     isFirstChunk = False
 
+                    if useIndexAware:
+                        # This chunk ends exactly at the index marker (if any):
+                        # its onDone fires when playback reaches the marker's
+                        # true position. Each index is reported exactly once.
+                        if idxHit is not None:
+                            s = synthRef()
+
+                            def cb(index=idxHit, synth=s):
+                                if synth:
+                                    synthIndexReached.notify(synth=synth, index=index)
+                            self._feed(audioBytes, onDone=cb)
+                        else:
+                            self._feed(audioBytes)
+                        continue
+
                     idx = int(player.getLastIndex())
                     s = synthRef()
 
@@ -316,16 +342,31 @@ class AudioThread(threading.Thread):
                     continue
 
                 # No audio was produced - check for index markers
-                idx = int(player.getLastIndex())
-                if idx >= 0 and idx != lastIndex:
-                    s = synthRef()
-                    if s:
-                        def cb(index=idx, synth=s):
-                            if synth:
-                                synthIndexReached.notify(synth=synth, index=index)
-                        self._feed(b"", onDone=cb)
-                    lastIndex = idx
-                    continue
+                if useIndexAware:
+                    if idxHit is not None:
+                        # Marker with no audio before it in this call (e.g. a
+                        # leading index such as the capital-letter beep, or a
+                        # marker right after a previous marker). The empty
+                        # feed's onDone fires as soon as everything already
+                        # queued has played — i.e. at the marker's position.
+                        s = synthRef()
+                        if s:
+                            def cb(index=idxHit, synth=s):
+                                if synth:
+                                    synthIndexReached.notify(synth=synth, index=index)
+                            self._feed(b"", onDone=cb)
+                        continue
+                else:
+                    idx = int(player.getLastIndex())
+                    if idx >= 0 and idx != lastIndex:
+                        s = synthRef()
+                        if s:
+                            def cb(index=idx, synth=s):
+                                if synth:
+                                    synthIndexReached.notify(synth=synth, index=index)
+                            self._feed(b"", onDone=cb)
+                        lastIndex = idx
+                        continue
 
                 # If BgThread is still generating frames, wait for a
                 # signal and retry instead of breaking.  This lets audio

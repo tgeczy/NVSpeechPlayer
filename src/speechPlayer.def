@@ -11,3 +11,4 @@ EXPORTS
 	speechPlayer_getDspVersion
 	speechPlayer_setOutputGain
 	speechPlayer_setTimeStretch
+	speechPlayer_synthesize2

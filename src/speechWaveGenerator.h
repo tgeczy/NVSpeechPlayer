@@ -49,6 +49,27 @@ class SpeechWaveGenerator: public WaveGenerator {
 	 * cycle skipping with linear crossfade at boundaries.
 	 */
 	virtual void setTimeStretch(double factor)=0;
+
+	/**
+	 * Like generate(), but stops at user-index boundaries.
+	 *
+	 * When the frame manager's last user index changes during generation
+	 * (a marker frame queued with userIndex != -1 has started), generation
+	 * stops and the new index is written to *indexReachedOut. Every sample
+	 * returned lies BEFORE the marker, so a caller can bind an
+	 * index-reached notification to exactly the audio that precedes it
+	 * (NVDA needs this for punctual IndexCommand/BeepCommand callbacks).
+	 *
+	 * @param sampleCount      Maximum samples to generate.
+	 * @param sampleBuf        Output buffer (remainder is zero-filled on
+	 *                         early stop).
+	 * @param indexReachedOut  Receives the reached index, or -1 if
+	 *                         generation stopped for any other reason.
+	 *                         May be NULL, in which case behavior is
+	 *                         identical to generate().
+	 * @return Number of samples generated.
+	 */
+	virtual unsigned int generateIndexAware(const unsigned int sampleCount, sample* sampleBuf, int* indexReachedOut)=0;
 };
 
 #endif
