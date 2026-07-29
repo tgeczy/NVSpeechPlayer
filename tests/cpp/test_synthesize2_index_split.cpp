@@ -154,6 +154,9 @@ TEST_CASE("synthesize2: concatenated output is bit-identical to legacy synthesiz
 	auto queueUtterance = [&](speechPlayer_handle_t h) {
 		speechPlayer_queueFrame(h, &v1, 1102, 22, -1, false);
 		speechPlayer_queueFrame(h, NULL, 0, 1, 5, false);
+		speechPlayer_queueFrame(h, NULL, 0, 1, 6, false);  // back-to-back: second
+		    // flip lands on the tick right after the first chunk's teardown --
+		    // the shape most likely to get swallowed by a split-fix like this
 		speechPlayer_queueFrame(h, &v2, 1102, 22, -1, false);
 		speechPlayer_queueFrame(h, NULL, 0, 1, 7, false);
 		speechPlayer_queueFrame(h, &v1, 551, 11, -1, false);
@@ -182,7 +185,8 @@ TEST_CASE("synthesize2: concatenated output is bit-identical to legacy synthesiz
 		if (n > 0) viaLegacy.insert(viaLegacy.end(), buf, buf + n);
 	}
 
-	CHECK(markersSeen == 2);  // splitting genuinely happened
+	CHECK(markersSeen == 3);  // splitting genuinely happened, incl. both
+	                          // halves of the adjacent pair
 	REQUIRE(viaSplit.size() == viaLegacy.size());
 	CHECK(memcmp(viaSplit.data(), viaLegacy.data(),
 	             viaSplit.size() * sizeof(sample)) == 0);
