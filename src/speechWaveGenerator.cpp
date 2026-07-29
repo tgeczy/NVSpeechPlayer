@@ -368,26 +368,21 @@ public:
             wasSilence = true;
         }
         
+        // Index-aware early stop (speechPlayer_synthesize2): when a marker
+        // frame (userIndex != -1) starts generating, finish emitting the
+        // current sample and then stop, so the returned chunk ends at the
+        // marker (its first, silent sample included). The check runs AFTER
+        // each sample is produced — never between the frame-clock tick and
+        // its sample — so concatenated synthesize2 output stays bit-identical
+        // to an unsplit synthesize run: no tick is ever consumed without its
+        // sample, and all DSP state evolves identically. The notification
+        // lands one sample (0.045 ms) past the marker start — inaudible.
+        // If time-stretch crosses several markers within one sample's tick
+        // burst, only the newest index is reported; NVDA treats a reached
+        // index as implying all earlier ones.
         for(unsigned int i=0;i<sampleCount;++i) {
             const speechPlayer_frameEx_t* frameEx = NULL;
             const speechPlayer_frame_t* frame=frameManager->getCurrentFrameWithEx(&frameEx);
-            // Index-aware early stop (speechPlayer_synthesize2): every sample
-            // generated so far lies before the marker frame that just started,
-            // so the caller can bind the index notification to exactly the
-            // audio preceding the marker. The tick that flipped the index has
-            // already been consumed (the marker's first, silent sample), so
-            // audio runs one sample short of the frame clock — inaudible.
-            // If time-stretch crosses several markers within one sample's tick
-            // burst, only the newest index is reported; NVDA treats a reached
-            // index as implying all earlier ones.
-            if(indexReachedOut) {
-                const int curUserIndex=frameManager->getLastIndex();
-                if(curUserIndex!=entryUserIndex) {
-                    *indexReachedOut=curUserIndex;
-                    if(i<sampleCount) memset(&sampleBuf[i], 0, (sampleCount-i)*sizeof(sample));
-                    return i;
-                }
-            }
             if(frame) {
                 if(wasSilence) {
                     voiceGenerator.reset();
@@ -796,6 +791,14 @@ public:
                 }
 
                 sampleBuf[i].value = (int)scaled;
+                if(indexReachedOut) {
+                    const int curUserIndex=frameManager->getLastIndex();
+                    if(curUserIndex!=entryUserIndex) {
+                        *indexReachedOut=curUserIndex;
+                        if(i+1<sampleCount) memset(&sampleBuf[i+1], 0, (sampleCount-(i+1))*sizeof(sample));
+                        return i+1;
+                    }
+                }
             } else {
                 // No frame available - handle stop/interrupt with fade-out to avoid click
                 
@@ -816,6 +819,14 @@ public:
                         if (scaled < -limit) scaled = -limit;
                         sampleBuf[i].value = (int)scaled;
                         stopFadeRemaining--;
+                        if(indexReachedOut) {
+                            const int curUserIndex=frameManager->getLastIndex();
+                            if(curUserIndex!=entryUserIndex) {
+                                *indexReachedOut=curUserIndex;
+                                if(i+1<sampleCount) memset(&sampleBuf[i+1], 0, (sampleCount-(i+1))*sizeof(sample));
+                                return i+1;
+                            }
+                        }
                         // Keep going; we might fill the rest of the buffer with the tail
                         continue;
                     }
@@ -831,16 +842,16 @@ public:
                 if (i < sampleCount) {
                     memset(&sampleBuf[i], 0, (sampleCount - i) * sizeof(sample));
                 }
+                // Legacy synthesize also returns mid-buffer here without a
+                // sample for this tick, so parity holds. Report a marker that
+                // flipped on the way into this silence (e.g. a trailing index
+                // right before the queue drained).
+                if(indexReachedOut) {
+                    const int curUserIndex=frameManager->getLastIndex();
+                    if(curUserIndex!=entryUserIndex) *indexReachedOut=curUserIndex;
+                }
                 return i;
             }
-        }
-        // A marker may have flipped during the final sample's frame tick(s)
-        // (including time-stretch extra ticks). The buffer boundary then falls
-        // exactly on the marker — report it so the caller's next notification
-        // binds to this chunk, and the next call re-snapshots cleanly.
-        if(indexReachedOut) {
-            const int curUserIndex=frameManager->getLastIndex();
-            if(curUserIndex!=entryUserIndex) *indexReachedOut=curUserIndex;
         }
         return sampleCount;
     }

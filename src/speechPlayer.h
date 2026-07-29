@@ -83,9 +83,12 @@ unsigned int speechPlayer_getDspVersion(void);
  * Like speechPlayer_synthesize, but stops at user-index boundaries.
  *
  * When a frame queued with userIndex != -1 starts generating, synthesis
- * stops early: the samples returned are exactly the audio that precedes
- * the marker, and *indexReached receives the marker's index. If no marker
- * was crossed, *indexReached is set to -1. A return of 0 with
+ * stops early: the returned chunk ends at the marker (the marker frame's
+ * first, silent sample included), and *indexReached receives the marker's
+ * index. Concatenated synthesize2 output is bit-identical to an unsplit
+ * speechPlayer_synthesize run — no tick is consumed without its sample,
+ * so DSP state evolves identically across split points. If no marker was
+ * crossed, *indexReached is set to -1. A return of 0 with
  * *indexReached >= 0 means a marker sits at the head of the queue (no
  * audio precedes it); a return of 0 with *indexReached == -1 means no
  * audio is available (same as speechPlayer_synthesize returning 0).

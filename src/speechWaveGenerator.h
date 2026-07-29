@@ -55,10 +55,13 @@ class SpeechWaveGenerator: public WaveGenerator {
 	 *
 	 * When the frame manager's last user index changes during generation
 	 * (a marker frame queued with userIndex != -1 has started), generation
-	 * stops and the new index is written to *indexReachedOut. Every sample
-	 * returned lies BEFORE the marker, so a caller can bind an
-	 * index-reached notification to exactly the audio that precedes it
-	 * (NVDA needs this for punctual IndexCommand/BeepCommand callbacks).
+	 * stops and the new index is written to *indexReachedOut. The returned
+	 * chunk ends at the marker (its first, silent sample included), so a
+	 * caller can bind an index-reached notification to exactly the audio
+	 * that precedes it (NVDA needs this for punctual IndexCommand/
+	 * BeepCommand callbacks). Concatenated output across calls is
+	 * bit-identical to generate() — no tick is consumed without emitting
+	 * its sample, so DSP state is unperturbed by split points.
 	 *
 	 * @param sampleCount      Maximum samples to generate.
 	 * @param sampleBuf        Output buffer (remainder is zero-filled on

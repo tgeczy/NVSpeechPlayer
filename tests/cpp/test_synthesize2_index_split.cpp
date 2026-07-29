@@ -141,6 +141,57 @@ TEST_CASE("synthesize2: no markers behaves like synthesize") {
 	speechPlayer_terminate(h);
 }
 
+TEST_CASE("synthesize2: concatenated output is bit-identical to legacy synthesize") {
+	// The strong parity property: splitting at markers must not perturb the
+	// DSP by even one sample, or every say-all word boundary becomes a tick.
+	// Uses two different vowel frames around the markers so resonator state
+	// genuinely carries across each split point. Pure voiced (no noise
+	// sources) keeps both handles deterministic.
+	speechPlayer_frame_t v1 = makeVoicedFrame();
+	speechPlayer_frame_t v2 = makeVoicedFrame();
+	v2.cf1 = 700.0; v2.cf2 = 1100.0;  // different vowel -> real state motion
+
+	auto queueUtterance = [&](speechPlayer_handle_t h) {
+		speechPlayer_queueFrame(h, &v1, 1102, 22, -1, false);
+		speechPlayer_queueFrame(h, NULL, 0, 1, 5, false);
+		speechPlayer_queueFrame(h, &v2, 1102, 22, -1, false);
+		speechPlayer_queueFrame(h, NULL, 0, 1, 7, false);
+		speechPlayer_queueFrame(h, &v1, 551, 11, -1, false);
+	};
+
+	speechPlayer_handle_t hA = speechPlayer_initialize(22050);
+	speechPlayer_handle_t hB = speechPlayer_initialize(22050);
+	REQUIRE(hA);
+	REQUIRE(hB);
+	queueUtterance(hA);
+	queueUtterance(hB);
+
+	// Fixed call budget on BOTH sides (mid-stream zero returns are legal for
+	// both APIs while silence frames drain).
+	std::vector<sample> viaSplit, viaLegacy;
+	sample buf[8192];
+	int markersSeen = 0;
+	for (int call = 0; call < 24; ++call) {
+		int idx = -1;
+		int n = speechPlayer_synthesize2(hA, 8192, buf, &idx);
+		if (idx >= 0) ++markersSeen;
+		if (n > 0) viaSplit.insert(viaSplit.end(), buf, buf + n);
+	}
+	for (int call = 0; call < 24; ++call) {
+		int n = speechPlayer_synthesize(hB, 8192, buf);
+		if (n > 0) viaLegacy.insert(viaLegacy.end(), buf, buf + n);
+	}
+
+	CHECK(markersSeen == 2);  // splitting genuinely happened
+	REQUIRE(viaSplit.size() == viaLegacy.size());
+	CHECK(memcmp(viaSplit.data(), viaLegacy.data(),
+	             viaSplit.size() * sizeof(sample)) == 0);
+	CHECK(absEnergy(viaSplit.data(), (int)viaSplit.size()) > 1000);
+
+	speechPlayer_terminate(hA);
+	speechPlayer_terminate(hB);
+}
+
 TEST_CASE("synthesize2: consecutive markers each reported, in order") {
 	speechPlayer_handle_t h = speechPlayer_initialize(22050);
 	REQUIRE(h);
