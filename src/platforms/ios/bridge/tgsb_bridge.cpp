@@ -11,15 +11,84 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
+#include <mutex>
 #include <string>
 
 #include <espeak-ng/speak_lib.h>
 #include "speechPlayer.h"
 #include "nvspFrontend.h"
+
+/* ------------------------------------------------------------------ */
+/* eSpeak lifecycle — refcounted process-global                        */
+/*                                                                     */
+/* eSpeak state is process-global while TgsbEngine is per-instance.    */
+/* iOS 27 instantiates extra audio units in the same extension         */
+/* process; an unconditional espeak_Initialize/espeak_Terminate per    */
+/* engine reset the global voice to en-us (or tore eSpeak down) under  */
+/* whichever engine was still speaking — en-us phonemization through a */
+/* non-English pack.  First engine in initializes, last one out        */
+/* terminates.  g_espeakCurrentLang mirrors the global voice so each   */
+/* engine can re-assert its own language per utterance with a string   */
+/* compare instead of a voice reload.                                  */
+/* ------------------------------------------------------------------ */
+
+static int g_espeakRefCount = 0;
+static std::mutex g_espeakLock;
+static std::string g_espeakCurrentLang;
+
+static bool espeakAcquire(const char *dataPath) {
+    std::lock_guard<std::mutex> lock(g_espeakLock);
+    if (g_espeakRefCount == 0) {
+        /* espeakINITIALIZE_DONT_EXIT (0x8000): return an error instead
+         * of calling exit(1) if data files are not found. */
+        int sr = espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, 0,
+                                   dataPath, 0x8000);
+        if (sr <= 0) return false;
+
+        /* With DONT_EXIT, espeak_Initialize can return a positive sample
+         * rate even if data loading failed — verify with a voice set. */
+        espeak_VOICE spec;
+        memset(&spec, 0, sizeof(spec));
+        spec.languages = "en-us";
+        if (espeak_SetVoiceByProperties(&spec) != EE_OK) {
+            espeak_Terminate();
+            return false;
+        }
+        g_espeakCurrentLang = "en-us";
+    }
+    g_espeakRefCount++;
+    return true;
+}
+
+static void espeakRelease() {
+    std::lock_guard<std::mutex> lock(g_espeakLock);
+    if (g_espeakRefCount > 0 && --g_espeakRefCount == 0) {
+        espeak_Terminate();
+        g_espeakCurrentLang.clear();
+    }
+}
+
+/* Set the global eSpeak voice if it isn't already lang.
+ * Caller must hold g_espeakLock. */
+static int espeakSetLanguageLocked(const char *lang) {
+    if (g_espeakCurrentLang == lang) return 1;
+    espeak_VOICE spec;
+    memset(&spec, 0, sizeof(spec));
+    spec.languages = lang;
+    if (espeak_SetVoiceByProperties(&spec) != EE_OK) return 0;
+    g_espeakCurrentLang = lang;
+    return 1;
+}
+
+static int espeakSetLanguage(const char *lang) {
+    std::lock_guard<std::mutex> lock(g_espeakLock);
+    return espeakSetLanguageLocked(lang);
+}
 
 /* ------------------------------------------------------------------ */
 /* Emoji spacing — pad emoji codepoints with spaces so eSpeak treats  */
@@ -186,6 +255,11 @@ struct TgsbEngine {
 
     /* Pause mode: 0=off, 1=short, 2=long */
     int pauseMode;
+
+    /* Desired eSpeak language for THIS engine.  eSpeak voice state is
+     * process-global and a sibling engine may move it, so every
+     * phonemization re-asserts this first (see espeakSetLanguageLocked). */
+    char espeakLang[32];
 };
 
 /* Frame callback context */
@@ -245,32 +319,15 @@ TgsbEngine *tgsb_create(const char *espeakDataPath,
                          const char *packDir,
                          int sampleRate)
 {
-    /* Initialize eSpeak.
-     * Pass espeakINITIALIZE_DONT_EXIT (0x8000) so eSpeak returns an error
-     * instead of calling exit(1) if data files are not found. */
-    int espeakSr = espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, 0,
-                                      espeakDataPath, 0x8000);
-    if (espeakSr <= 0) return NULL;
-
-    /* Verify eSpeak actually loaded data — with DONT_EXIT, espeak_Initialize
-     * can return a positive sample rate even if data loading failed.
-     * SetVoiceByProperties will fail if internal state is NULL. */
-    {
-        espeak_VOICE voice_spec;
-        memset(&voice_spec, 0, sizeof(voice_spec));
-        voice_spec.languages = "en-us";
-        if (espeak_SetVoiceByProperties(&voice_spec) != EE_OK) {
-            espeak_Terminate();
-            return NULL;
-        }
-    }
+    /* Initialize eSpeak (refcounted — see espeakAcquire). */
+    if (!espeakAcquire(espeakDataPath)) return NULL;
 
     /* Create TGSpeechBox components */
     speechPlayer_handle_t player = speechPlayer_initialize(sampleRate);
     nvspFrontend_handle_t fe = nvspFrontend_create(packDir);
     if (!fe) {
         speechPlayer_terminate(player);
-        espeak_Terminate();
+        espeakRelease();
         return NULL;
     }
     nvspFrontend_setLanguage(fe, "en-us");
@@ -289,6 +346,7 @@ TgsbEngine *tgsb_create(const char *espeakDataPath,
     engine->stopRequested = 0;
     engine->voiceIndex = 0; /* Adam */
     engine->inflection = 0.5;
+    snprintf(engine->espeakLang, sizeof(engine->espeakLang), "en-us");
 
     return engine;
 }
@@ -298,7 +356,7 @@ void tgsb_destroy(TgsbEngine *engine)
     if (!engine) return;
     if (engine->frontend) nvspFrontend_destroy(engine->frontend);
     if (engine->player) speechPlayer_terminate(engine->player);
-    espeak_Terminate();
+    espeakRelease();
     free(engine);
 }
 
@@ -320,14 +378,17 @@ int tgsb_set_language(TgsbEngine *engine,
                       const char *espeakLang,
                       const char *tgsbLang)
 {
-    if (!engine) return 0;
+    if (!engine || !espeakLang || !tgsbLang) return 0;
 
-    espeak_VOICE voice_spec;
-    memset(&voice_spec, 0, sizeof(voice_spec));
-    voice_spec.languages = espeakLang;
-    espeak_SetVoiceByProperties(&voice_spec);
+    /* Record the desired language even if the set fails — queue_text
+     * re-asserts it before every phonemization, so a transient failure
+     * (or a sibling engine moving the global voice) self-heals. */
+    snprintf(engine->espeakLang, sizeof(engine->espeakLang),
+             "%s", espeakLang);
+    int espeakOk = espeakSetLanguage(espeakLang);
 
-    return nvspFrontend_setLanguage(engine->frontend, tgsbLang);
+    int packOk = nvspFrontend_setLanguage(engine->frontend, tgsbLang);
+    return espeakOk && packOk;
 }
 
 int tgsb_set_voice(TgsbEngine *engine, const char *voiceName)
@@ -500,15 +561,22 @@ void tgsb_queue_text(TgsbEngine *engine,
         /* eSpeak → IPA for this clause.
          * Accumulate all IPA chunks into one string so the text parser
          * can align the full clause text against the full IPA output
-         * (matches NVDA's one-call-per-clause pattern). */
+         * (matches NVDA's one-call-per-clause pattern).
+         * Re-assert this engine's language and hold the lock across the
+         * whole clause so a sibling engine instance can't move the
+         * global eSpeak voice mid-phonemization. */
         const void *ePtr = clause;
         std::string combinedIpa;
-        while (ePtr && *(const char *)ePtr && !engine->stopRequested) {
-            const char *ipa = espeak_TextToPhonemes(
-                &ePtr, espeakCHARS_UTF8, 0x02 /* IPA */);
-            if (!ipa || !*ipa) continue;
-            if (!combinedIpa.empty()) combinedIpa += ' ';
-            combinedIpa += ipa;
+        {
+            std::lock_guard<std::mutex> lock(g_espeakLock);
+            espeakSetLanguageLocked(engine->espeakLang);
+            while (ePtr && *(const char *)ePtr && !engine->stopRequested) {
+                const char *ipa = espeak_TextToPhonemes(
+                    &ePtr, espeakCHARS_UTF8, 0x02 /* IPA */);
+                if (!ipa || !*ipa) continue;
+                if (!combinedIpa.empty()) combinedIpa += ' ';
+                combinedIpa += ipa;
+            }
         }
         if (!combinedIpa.empty() && !engine->stopRequested) {
             char clauseStr[2] = { clauseType, 0 };
@@ -796,12 +864,16 @@ char *tgsb_text_to_ipa(TgsbEngine *engine, const char *text)
 
     const void *ePtr = text;
     std::string ipa;
-    while (ePtr && *(const char *)ePtr) {
-        const char *chunk = espeak_TextToPhonemes(
-            &ePtr, espeakCHARS_UTF8, 0x02 /* IPA */);
-        if (!chunk || !*chunk) continue;
-        if (!ipa.empty()) ipa += ' ';
-        ipa += chunk;
+    {
+        std::lock_guard<std::mutex> lock(g_espeakLock);
+        espeakSetLanguageLocked(engine->espeakLang);
+        while (ePtr && *(const char *)ePtr) {
+            const char *chunk = espeak_TextToPhonemes(
+                &ePtr, espeakCHARS_UTF8, 0x02 /* IPA */);
+            if (!chunk || !*chunk) continue;
+            if (!ipa.empty()) ipa += ' ';
+            ipa += chunk;
+        }
     }
     return strdup(ipa.c_str());
 }
