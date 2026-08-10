@@ -1030,6 +1030,21 @@ static void generateAcousticEvents(
         double attackMs = t.def->hasFricAttackMs ? t.def->fricAttackMs : 3.0;
         double decayMs = t.def->hasFricDecayMs ? t.def->fricDecayMs : 4.0;
 
+        // An adjacent token with the SAME phoneme def is one continuous
+        // frication event, not two: re-triggering the attack/decay envelope
+        // at the junction reads as a restarted sample (issue #110,
+        // "las semillas" s#s).  Suppress the decay when the next token
+        // continues this fricative, and the attack when it continues the
+        // previous one.
+        const size_t fricIdx = &t - tokens.data();
+        auto continuesFric = [&](const Token& o) {
+          return o.def == t.def && !o.silence && !o.preStopGap &&
+                 !o.postStopAspiration && !o.voicedClosure;
+        };
+        const bool contPrev = fricIdx > 0 && continuesFric(tokens[fricIdx - 1]);
+        const bool contNext = fricIdx + 1 < tokens.size() &&
+                              continuesFric(tokens[fricIdx + 1]);
+
         // Skip attack ramp in post-stop clusters (/ks/, /ts/, etc.)
         if (!prevTokenWasStop && attackMs + decayMs + 2.0 < t.durationMs) {
           const int faIdx = static_cast<int>(FieldId::fricationAmplitude);
@@ -1038,21 +1053,24 @@ static void generateAcousticEvents(
           const double startPitch = base[vp];
           const double pitchDelta = base[evp] - startPitch;
           const double totalDur = t.durationMs;
-          const double sustainDur = totalDur - attackMs - decayMs;
-          const double attackFrac = attackMs / totalDur;
-          const double sustainEndFrac = (attackMs + sustainDur) / totalDur;
+          const double effAttackMs = contPrev ? 0.0 : attackMs;
+          const double effDecayMs = contNext ? 0.0 : decayMs;
+          const double sustainDur = totalDur - effAttackMs - effDecayMs;
+          const double attackFrac = effAttackMs / totalDur;
+          const double sustainEndFrac = (effAttackMs + sustainDur) / totalDur;
 
-          // --- Attack micro-frame: ramp from 10% to full ---
-          double seg1[kFrameFieldCount];
-          std::memcpy(seg1, base, sizeof(seg1));
-          seg1[faIdx] = fricAmp * 0.1;
-          seg1[vp] = startPitch;
-          seg1[evp] = startPitch + pitchDelta * attackFrac;
+          if (!contPrev) {
+            // --- Attack micro-frame: ramp from 10% to full ---
+            double seg1[kFrameFieldCount];
+            std::memcpy(seg1, base, sizeof(seg1));
+            seg1[faIdx] = fricAmp * 0.1;
+            seg1[vp] = startPitch;
+            seg1[evp] = startPitch + pitchDelta * attackFrac;
 
-          nvspFrontend_Frame attackFrame;
-          std::memcpy(&attackFrame, seg1, sizeof(attackFrame));
-          emitFn(&attackFrame, &frameEx, attackMs, t.fadeMs);
-          hadPrevFrame = true;
+            nvspFrontend_Frame attackFrame;
+            std::memcpy(&attackFrame, seg1, sizeof(attackFrame));
+            emitFn(&attackFrame, &frameEx, attackMs, t.fadeMs);
+          }
 
           // --- Sustain micro-frame: full amplitude ---
           double seg2s[kFrameFieldCount];
@@ -1062,18 +1080,22 @@ static void generateAcousticEvents(
 
           nvspFrontend_Frame sustainFrame;
           std::memcpy(&sustainFrame, seg2s, sizeof(sustainFrame));
-          emitFn(&sustainFrame, &frameEx, sustainDur, attackMs);
+          emitFn(&sustainFrame, &frameEx, sustainDur,
+                 contPrev ? t.fadeMs : attackMs);
+          hadPrevFrame = true;
 
-          // --- Decay micro-frame: ramp from full to 30% ---
-          double seg3[kFrameFieldCount];
-          std::memcpy(seg3, base, sizeof(seg3));
-          seg3[faIdx] = fricAmp * 0.3;
-          seg3[vp] = startPitch + pitchDelta * sustainEndFrac;
-          seg3[evp] = startPitch + pitchDelta;
+          if (!contNext) {
+            // --- Decay micro-frame: ramp from full to 30% ---
+            double seg3[kFrameFieldCount];
+            std::memcpy(seg3, base, sizeof(seg3));
+            seg3[faIdx] = fricAmp * 0.3;
+            seg3[vp] = startPitch + pitchDelta * sustainEndFrac;
+            seg3[evp] = startPitch + pitchDelta;
 
-          nvspFrontend_Frame decayFrame;
-          std::memcpy(&decayFrame, seg3, sizeof(decayFrame));
-          emitFn(&decayFrame, &frameEx, decayMs, decayMs * 0.5);
+            nvspFrontend_Frame decayFrame;
+            std::memcpy(&decayFrame, seg3, sizeof(decayFrame));
+            emitFn(&decayFrame, &frameEx, decayMs, decayMs * 0.5);
+          }
 
           trajectoryState->prevCf2 = sustainFrame.cf2;
           trajectoryState->prevCf3 = sustainFrame.cf3;
