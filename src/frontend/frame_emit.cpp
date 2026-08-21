@@ -650,17 +650,40 @@ static void generateAcousticEvents(
         nvspFrontend_Frame frame;
         std::memcpy(&frame, mf, sizeof(frame));
 
-        // Staircase approach: ALL micro-frames hold at their waypoint
-        // (endCf=NAN disables per-sample exponential smoothing).
-        // Formants snap during the brief crossfade then stay put,
-        // minimizing time spent near harmonic-formant crossings.
+        // Staircase approach: at normal and fast rates ALL micro-frames
+        // hold at their waypoint (endCf=NAN disables per-sample
+        // exponential smoothing).  Formants snap during the brief
+        // crossfade then stay put, minimizing time spent near
+        // harmonic-formant crossings (the shimmer this design killed).
+        //
+        // Rate-adaptive staircase (#98 half 2): below 1.0x the steps grow
+        // long enough to hear individually ("dry", letter "I"), while
+        // shimmer loses its bite — more time between pitch cycles.  So at
+        // slow rates each interior micro-frame's endCf points partway (or
+        // fully, at <=0.5x) toward the NEXT waypoint and the DSP's
+        // per-sample glide sweeps formants continuously — smoothing the
+        // steps WITHOUT lengthening the audio crossfades (long crossfades
+        // overlap two formant spectra and read as an eerie double voice;
+        // ear-tested and rejected 2026-08-21).  At >=1.0x this branch is
+        // never taken and output stays bit-identical.
         nvspFrontend_FrameEx mfEx = frameEx;
-        mfEx.endCf1 = NAN;
-        mfEx.endCf2 = NAN;
-        mfEx.endCf3 = NAN;
-        mfEx.endPf1 = NAN;
-        mfEx.endPf2 = NAN;
-        mfEx.endPf3 = NAN;
+        const double glideBlend = (speed < 1.0)
+            ? std::clamp((1.0 - speed) / 0.5, 0.0, 1.0) : 0.0;
+        if (glideBlend > 0.0 && seg + 1 < N) {
+          mfEx.endCf1 = wpCf1[seg] + (wpCf1[seg + 1] - wpCf1[seg]) * glideBlend;
+          mfEx.endCf2 = wpCf2[seg] + (wpCf2[seg + 1] - wpCf2[seg]) * glideBlend;
+          mfEx.endCf3 = wpCf3[seg] + (wpCf3[seg + 1] - wpCf3[seg]) * glideBlend;
+          mfEx.endPf1 = wpPf1[seg] + (wpPf1[seg + 1] - wpPf1[seg]) * glideBlend;
+          mfEx.endPf2 = wpPf2[seg] + (wpPf2[seg + 1] - wpPf2[seg]) * glideBlend;
+          mfEx.endPf3 = wpPf3[seg] + (wpPf3[seg + 1] - wpPf3[seg]) * glideBlend;
+        } else {
+          mfEx.endCf1 = NAN;
+          mfEx.endCf2 = NAN;
+          mfEx.endCf3 = NAN;
+          mfEx.endPf1 = NAN;
+          mfEx.endPf2 = NAN;
+          mfEx.endPf3 = NAN;
+        }
 
         // Fade: first micro-frame uses token's entry fade.
         // Internal micro-frames use a short snap fade (3ms) so formants
@@ -668,6 +691,7 @@ static void generateAcousticEvents(
         //
         // After obstruents, onset shimmer is addressed by bandwidth widening
         // below (not by fade capping, which caused clicks).
+        //
         const double thisDur = (seg == 0) ? seg0Dur : otherSegDur;
         double fadeIn = (seg == 0) ? t.fadeMs : 3.0;
         if (fadeIn > thisDur) fadeIn = thisDur;
