@@ -83,6 +83,17 @@ class AudioThread(threading.Thread):
         self._keepAlive = True
         self.isSpeaking = False
         self.allFramesQueued = True  # True = no more frames coming
+        # Monotonic utterance counter, incremented by BgThread each time a
+        # new utterance flips isSpeaking True (see beginUtterance).  The
+        # synthesis pass captures it at start; end-of-pass cleanup and the
+        # done-notification only apply if no NEWER utterance has begun.
+        # Without this, a pass finishing utterance A (blocked in
+        # wavePlayer.idle() draining A's tail) could clobber isSpeaking
+        # AFTER cancel()+speak(B) already set it for utterance B -- B's
+        # frames then sat unplayed until the next cancel purged them
+        # (b8 live incident: first utterance spoke, everything after was
+        # silent; the #107 50 ms drain widened the idle() window ~50x and
+        # turned this latent race into a certainty).
 
         self._wake = threading.Event()
         self._init = threading.Event()
@@ -188,6 +199,13 @@ class AudioThread(threading.Thread):
         """Wake up the audio thread to start processing."""
         self._wake.set()
 
+    def beginUtterance(self):
+        """Called by BgThread when a new utterance starts streaming.
+        Bumps the sequence BEFORE isSpeaking so a concurrently-finishing
+        pass can never mistake the new utterance for its own."""
+        self.utteranceSeq = getattr(self, "utteranceSeq", 0) + 1
+        self.isSpeaking = True
+
     def stopPlayback(self):
         """Stop the WavePlayer immediately. Thread-safe (called from main thread)."""
         wp = self._wavePlayer  # single read — atomic for CPython
@@ -274,6 +292,7 @@ class AudioThread(threading.Thread):
             lastIndex = None
             isFirstChunk = True
             didSpeak = False
+            seqAtPassStart = getattr(self, "utteranceSeq", 0)
 
             while self._keepAlive and self.isSpeaking:
                 didSpeak = True
@@ -386,7 +405,7 @@ class AudioThread(threading.Thread):
             # makes it skip ahead before the next utterance plays).
             # If the inner loop was never entered (spurious kick from
             # cancel), didSpeak is False and we also skip.
-            if didSpeak and self.isSpeaking:
+            if didSpeak and self.isSpeaking                     and getattr(self, "utteranceSeq", 0) == seqAtPassStart:
                 try:
                     if wavePlayer:
                         wavePlayer.idle()
@@ -400,4 +419,10 @@ class AudioThread(threading.Thread):
                 if s:
                     synthDoneSpeaking.notify(synth=s)
 
-            self.isSpeaking = False
+            # Only clear the flag if it is still OURS.  If a newer
+            # utterance began while this pass was finishing (cancel +
+            # speak landing inside the idle() window), its isSpeaking
+            # must survive; the wake event is already set and the next
+            # outer-loop pass services it immediately.
+            if getattr(self, "utteranceSeq", 0) == seqAtPassStart:
+                self.isSpeaking = False

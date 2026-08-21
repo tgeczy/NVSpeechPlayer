@@ -479,7 +479,7 @@ class SpeechPipelineMixin:
                         if generation != self._speakGen:
                             return
                         self._audio.allFramesQueued = False
-                        self._audio.isSpeaking = True
+                        self._audio.beginUtterance()
                         if generation != self._speakGen:
                             self._audio.isSpeaking = False
                             return
@@ -523,10 +523,13 @@ class SpeechPipelineMixin:
         # gets to ring out after the last real frame: the AudioThread exits
         # as soon as synthesize() returns empty, so whatever decay hasn't
         # been rendered by then is simply cut.  1 ms silently truncated
-        # word-final release bursts (final /t d p/, ~30-50 ms of decay) —
-        # the platforms that drain a real tail (SAPI, Android, iOS) never
-        # had the bug.  50 ms covers the longest burst decay; cancel()
-        # still interrupts instantly, so responsiveness is unaffected.
+        # word-final release bursts (final /t d p/, ~30-50 ms of decay).
+        # NOTE: this longer tail widens the AudioThread's end-of-pass
+        # wavePlayer.idle() window ~50x, which exposed a latent
+        # isSpeaking-clobber race on b8 ship night (first utterance spoke,
+        # everything after was silent).  The race is fixed by the
+        # utteranceSeq guard in audio.py -- if you touch either side,
+        # re-test live with two consecutive utterances and arrow-key spam.
         if hadRealSpeech:
             self._player.queueFrame(None, 50.0, 50.0)
 
@@ -543,7 +546,7 @@ class SpeechPipelineMixin:
         if not hadKickedAudio:
             # No streaming kick happened (e.g. very short utterance).
             # Start the AudioThread now.
-            self._audio.isSpeaking = True
+            self._audio.beginUtterance()
             if generation != self._speakGen:
                 self._audio.isSpeaking = False
                 return
