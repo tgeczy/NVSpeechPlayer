@@ -169,6 +169,42 @@ private:
     double timeStretchFactor;  // 1.0 = off, 2.0 = 2x speedup
     double timeStretchAccum;   // fractional accumulator for sub-sample stepping
 
+    // Fixed "presence" stage (b8 voice update, 2026-08-21): +6 dB peaking
+    // band centered 4.1 kHz, wide Q.  Long-term spectra measured against a
+    // reference formant engine (ETI-Eloquence via openevv, rendered audio
+    // only) showed our voice carries 4-9 dB LESS relative energy in the
+    // 3-5.5 kHz region -- the "chesty / sore throat" character testers
+    // report.  This is an engine characteristic, not a user setting, and is
+    // independent of the VoicingTone user shelf above it.  Center clamped
+    // for low sample rates (single warped pole lesson, #104).
+    double prB0, prB1, prB2, prA1, prA2;
+    double prIn1, prIn2, prOut1, prOut2;
+
+    void initPresence() {
+        const double gainDb = 6.0, Q = 0.75;
+        double nyq = 0.5 * (double)sampleRate;
+        double fc = 4100.0;
+        if (fc > nyq * 0.90) fc = nyq * 0.90;
+        double A = pow(10.0, gainDb / 40.0);
+        double w0 = PITWO * fc / sampleRate;
+        double cosw0 = cos(w0), sinw0 = sin(w0);
+        double alpha = sinw0 / (2.0 * Q);
+        double a0 = 1 + alpha / A;
+        prB0 = (1 + alpha * A) / a0;
+        prB1 = (-2 * cosw0) / a0;
+        prB2 = (1 - alpha * A) / a0;
+        prA1 = (-2 * cosw0) / a0;
+        prA2 = (1 - alpha / A) / a0;
+        prIn1 = prIn2 = prOut1 = prOut2 = 0.0;
+    }
+
+    double applyPresence(double in) {
+        double out = prB0*in + prB1*prIn1 + prB2*prIn2 - prA1*prOut1 - prA2*prOut2;
+        prIn2 = prIn1; prIn1 = in;
+        prOut2 = prOut1; prOut1 = out;
+        return out;
+    }
+
     void initHighShelf(double fc, double gainDb, double Q) {
         // Clamp inputs to prevent NaNs and weird filter behavior from bad UI values
         double nyq = 0.5 * (double)sampleRate;
@@ -276,6 +312,7 @@ public:
 
         // High shelf: use defaults from voicing tone
         initHighShelf(currentTone.highShelfFcHz, currentTone.highShelfGainDb, currentTone.highShelfQ);
+        initPresence();
 
         // Pitch-sync F1 modulation: include glottal-cycle BW delta
         cascade.setPitchSyncParams(currentTone.pitchSyncF1DeltaHz,
@@ -703,6 +740,9 @@ public:
                 // Crossfade between unshelved and shelved
                 double bright = filteredOut + shelfMix * (shelved - filteredOut);
 
+                // Engine presence characteristic (see initPresence above).
+                bright = applyPresence(bright) * 0.94;
+
                 // Apply start fade-in if active (prevents pop on speech start)
                 if (startFadeRemaining > 0) {
                     double fadeIn = 1.0 - ((double)startFadeRemaining / (double)startFadeTotal);
@@ -929,6 +969,7 @@ public:
 
         // Update high-shelf coefficients (do not reset state)
         initHighShelf(currentTone.highShelfFcHz, currentTone.highShelfGainDb, currentTone.highShelfQ);
+        initPresence();
         
         // Update pitch-sync F1 modulation params (include glottal-cycle BW delta)
         cascade.setPitchSyncParams(currentTone.pitchSyncF1DeltaHz,
