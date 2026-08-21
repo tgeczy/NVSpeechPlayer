@@ -519,9 +519,16 @@ class SpeechPipelineMixin:
         if endPause and endPause > 0:
             self._player.queueFrame(None, float(endPause), min(float(endPause), 5.0))
 
-        # Tiny tail fade to smooth utterance end
+        # Utterance-end drain (#107).  This frame is the only time the DSP
+        # gets to ring out after the last real frame: the AudioThread exits
+        # as soon as synthesize() returns empty, so whatever decay hasn't
+        # been rendered by then is simply cut.  1 ms silently truncated
+        # word-final release bursts (final /t d p/, ~30-50 ms of decay) —
+        # the platforms that drain a real tail (SAPI, Android, iOS) never
+        # had the bug.  50 ms covers the longest burst decay; cancel()
+        # still interrupts instantly, so responsiveness is unaffected.
         if hadRealSpeech:
-            self._player.queueFrame(None, 1.0, 1.0)
+            self._player.queueFrame(None, 50.0, 50.0)
 
         # Signal that all frames have been queued so the AudioThread
         # knows it can exit when synthesize() returns empty.
