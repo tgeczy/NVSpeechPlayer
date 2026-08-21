@@ -327,13 +327,19 @@ settings:
         action: scale
         durationScale: 0.80
         fieldScales:
-          fricationAmplitude: 0.55
-          aspirationAmplitude: 0.60
+          # Retuned 2026-08-21 (port of the en-us b7 retune; Vsevolod
+          # round-2 report: en-gb final /t/ inaudible after the closure
+          # went true-silent in 42d4a54 — the drain fix was pack.h-global
+          # but the burst compensation only landed in en-us).  Same shape
+          # as en-us: keep the pa1/pa2 low cut and pa6 affricate guard;
+          # restore the mid-burst core that carries the cue.
+          fricationAmplitude: 1.0
+          aspirationAmplitude: 0.80
           pa1: 0.40
           pa2: 0.55
-          pa3: 0.60
-          pa4: 0.50
-          pa5: 0.40
+          pa3: 1.0
+          pa4: 1.0
+          pa5: 0.55
           pa6: 0.30
 
     # ── Velar word-final boost ─────────────────────────────────────
@@ -348,9 +354,30 @@ settings:
         position: word-final
         action: scale
         fieldScales:
-          aspirationAmplitude: 1.40
+          # Dialed back 2026-08-21: the raised unreleased_word_final base
+          # stacks with this rule; proportional cut keeps rock/back at the
+          # same absolute level as before the base retune.
+          aspirationAmplitude: 1.05
           pa2: 1.35
-          pa3: 1.30
+          pa3: 0.78
+
+    # ── Voiced word-final release (2026-08-21, Vsevolod round 2) ───
+    # b7's endCf ghost-guards (the slow-rate echo fix) removed the stale
+    # formant ramp that had been lending word-final voiced stops their
+    # release bite ("zed" /d/ transient halved).  That ramp was an
+    # artifact; this rule restores the cue honestly — a modest burst
+    # lift on word-final voiced stops.  Voiceless finals are handled by
+    # unreleased_word_final above and are untouched here.
+      - name: voiced_word_final_release
+        flags: [stop, voiced]
+        notAfterFlags: [stop]
+        position: word-final
+        action: scale
+        fieldScales:
+          fricationAmplitude: 1.15
+          pa3: 1.05
+          pa4: 1.15
+          pa5: 1.15
 
     # ── Labial word-final boost ────────────────────────────────────
     # Labial stops (/p/) have weaker bursts than alveolars or velars
@@ -364,11 +391,12 @@ settings:
         position: word-final
         action: scale
         fieldScales:
-          aspirationAmplitude: 2.50
-          fricationAmplitude: 2.00
+          # Dialed back 2026-08-21 (same stacking logic as velar above).
+          aspirationAmplitude: 1.88
+          fricationAmplitude: 1.10
           pa1: 2.80
           pa2: 2.20
-          pa3: 1.80
+          pa3: 1.08
 
     # ── Voiced alveolar word-final softening ─────────────────────────
     # Word-final /d/ pops too bright with the diffuse-rising burst.

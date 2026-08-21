@@ -456,6 +456,21 @@ settings:
           pa5: 0.55
           pa6: 0.30
 
+    # ── Voiced word-final release (2026-08-21, b7 "zed" promise) ───
+    # Same rule as en-gb: b7's endCf ghost-guards removed the stale-ramp
+    # artifact that gave word-final voiced stops their release bite;
+    # restore the cue honestly with a modest burst lift.
+      - name: voiced_word_final_release
+        flags: [stop, voiced]
+        notAfterFlags: [stop]
+        position: word-final
+        action: scale
+        fieldScales:
+          fricationAmplitude: 1.15
+          pa3: 1.05
+          pa4: 1.15
+          pa5: 1.15
+
     # ── Labial word-final boost ────────────────────────────────────
     # Labial stops (/p/, /b/) have weaker bursts than alveolars or
     # velars because the lip seal radiates less high-frequency energy.
