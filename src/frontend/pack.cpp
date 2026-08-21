@@ -659,6 +659,7 @@ getNum("primaryStressDiv", lp.primaryStressDiv);
   getNum("coarticulationVelarScale", lp.coarticulationVelarScale);
   getNum("coarticulationAspirationBlendStart", lp.coarticulationAspirationBlendStart);
   getNum("coarticulationAspirationBlendEnd", lp.coarticulationAspirationBlendEnd);
+  getBool("coarticulationFadeIntoConsonants", lp.coarticulationFadeIntoConsonants);
   getBool("coarticulationVelarPinchEnabled", lp.coarticulationVelarPinchEnabled);
   getNum("coarticulationVelarPinchThreshold", lp.coarticulationVelarPinchThreshold);
   getNum("coarticulationVelarPinchF2Scale", lp.coarticulationVelarPinchF2Scale);

@@ -471,6 +471,106 @@ bool runCoarticulation(PassContext& ctx, std::vector<Token>& tokens, std::string
     }
   }
 
+  // ----- VC half: vowel END formants toward the FOLLOWING consonant -----
+  // (#108, 2026-08-21.)  The loop above covers only the consonant→vowel
+  // (CV) cue: a vowel never announces the consonant that follows it, so
+  // cluster-internal and intervocalic consonants (Spanish "regla" /eɣl/,
+  // "amigo" /iɣo/) lose their strongest place cue — the VC formant ramp.
+  // Runs as a second pass so it composes with (and takes precedence over)
+  // the canonical end targets the CV block set.  Gated per-language;
+  // packs that don't opt in are bit-identical.  Root-caused jointly with
+  // a second-model review pass; same locus/scale conventions as CV above.
+  if (lang.coarticulationFadeIntoConsonants) {
+    const double k = std::clamp(lang.coarticulationMitalkK, 0.0, 1.0);
+    const double f1Scale = std::clamp(lang.coarticulationF1Scale, 0.0, 2.0);
+    const double f2Scale = std::clamp(lang.coarticulationF2Scale, 0.0, 2.0);
+    const double f3Scale = std::clamp(lang.coarticulationF3Scale, 0.0, 2.0);
+
+    double rateScale = 1.0;
+    const double hrThreshold = lang.highRateThreshold;
+    if (hrThreshold > 0.0 && ctx.speed > hrThreshold) {
+      const double ceiling = hrThreshold * 2.5;
+      const double tt = std::clamp(
+          (ctx.speed - hrThreshold) / (ceiling - hrThreshold), 0.0, 1.0);
+      rateScale = 1.0 - tt * (1.0 - std::clamp(lang.highRateCoarticulationFloor, 0.0, 1.0));
+    }
+    const double rateAdjustedStrength =
+        std::clamp(lang.coarticulationStrength, 0.0, 1.0) * rateScale;
+
+    for (size_t i = 0; i + 1 < tokens.size(); ++i) {
+      Token& t = tokens[i];
+      if (t.silence || !isVowelLike(t)) continue;
+
+      // Immediately-adjacent following consonant only — conservative on
+      // purpose; distant anticipation can wait for listening evidence.
+      const Token* rightCons = nullptr;
+      Place rightPlace = Place::Unknown;
+      for (size_t j = i + 1; j < tokens.size(); ++j) {
+        const Token& next = tokens[j];
+        if (next.silence || isVowelLike(next)) break;
+        if (!isConsonant(next) || !next.def) continue;
+        if (triggersCoarticulation(next)) {
+          rightCons = &next;
+          rightPlace = getPlace(next.def->key);
+        }
+        break;
+      }
+      if (!rightCons || rightPlace == Place::Unknown) continue;
+
+      double rightStrength = rateAdjustedStrength * getPlaceScale(rightPlace, lang);
+      if (lang.coarticulationCrossSyllableScale < 1.0 &&
+          rightCons->syllableIndex >= 0 && t.syllableIndex >= 0 &&
+          rightCons->syllableIndex != t.syllableIndex) {
+        rightStrength *= lang.coarticulationCrossSyllableScale;
+      }
+      rightStrength = std::clamp(rightStrength, 0.0, 1.0);
+      if (rightStrength <= 0.0) continue;
+
+      // The vowel's intended END values: whatever the CV block set as the
+      // canonical end (if it ran for this vowel), else the current fields.
+      const double vF1 = t.hasEndCf1 ? t.endCf1
+                                     : getCanonicalFormant(t, FieldId::cf1, FieldId::pf1);
+      const double vF2 = t.hasEndCf2 ? t.endCf2
+                                     : getCanonicalFormant(t, FieldId::cf2, FieldId::pf2);
+      const double vF3 = t.hasEndCf3 ? t.endCf3
+                                     : getCanonicalFormant(t, FieldId::cf3, FieldId::pf3);
+      if (vF2 <= 0.0) continue;
+
+      const double rSrcF1 = getConsonantSrcFormant(*rightCons, FieldId::cf1, FieldId::pf1, getLocusF1(rightPlace));
+      double rSrcF2 = getConsonantSrcFormant(*rightCons, FieldId::cf2, FieldId::pf2, getLocusF2(rightPlace, lang));
+      const double rSrcF3 = getConsonantSrcFormant(*rightCons, FieldId::cf3, FieldId::pf3, getLocusF3(rightPlace, lang));
+
+      // Velar locus is context-dependent, same convention as the CV block.
+      if (rightPlace == Place::Velar) {
+        if (vF2 > 1600.0 && lang.coarticulationVelarF2LocusFront > 0.0) {
+          rSrcF2 = lang.coarticulationVelarF2LocusFront;
+        } else if (vF2 <= 1600.0 && lang.coarticulationVelarF2LocusBack > 0.0) {
+          rSrcF2 = lang.coarticulationVelarF2LocusBack;
+        }
+      }
+
+      const double locusF2 = mitalkLocus(rSrcF2, vF2, k);
+      if (locusF2 <= 0.0) continue;
+
+      const double endF2 = vF2 + (locusF2 - vF2) * (rightStrength * f2Scale);
+      if (std::abs(endF2 - vF2) > 10.0) { t.hasEndCf2 = true; t.endCf2 = endF2; }
+      if (vF1 > 0.0) {
+        const double locusF1 = mitalkLocus(rSrcF1, vF1, k);
+        if (locusF1 > 0.0) {
+          const double endF1 = vF1 + (locusF1 - vF1) * (rightStrength * f1Scale);
+          if (std::abs(endF1 - vF1) > 8.0) { t.hasEndCf1 = true; t.endCf1 = endF1; }
+        }
+      }
+      if (vF3 > 0.0) {
+        const double locusF3 = mitalkLocus(rSrcF3, vF3, k);
+        if (locusF3 > 0.0) {
+          const double endF3 = vF3 + (locusF3 - vF3) * (rightStrength * f3Scale);
+          if (std::abs(endF3 - vF3) > 12.0) { t.hasEndCf3 = true; t.endCf3 = endF3; }
+        }
+      }
+    }
+  }
+
   return true;
 }
 

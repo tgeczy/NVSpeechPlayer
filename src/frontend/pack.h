@@ -854,6 +854,13 @@ double lengthContrastPreGeminateVowelScale = 0.85;
   // BlendStart controls the aspiration's initial formants (0 = stop locus,
   // 1 = vowel target).  BlendEnd controls the aspiration's end formants.
   // The DSP ramps from start to end, creating a smooth transition.
+  // VC half of coarticulation (#108, 2026-08-21): when true, a vowel's
+  // END formants are pulled toward the FOLLOWING consonant's locus, giving
+  // the vowel-into-consonant transition cue (e.g. the e->velar ramp in
+  // Spanish "regla").  Off by default: English packs shipped for months
+  // with CV-only coarticulation and stay bit-identical.
+  bool coarticulationFadeIntoConsonants = false;
+
   double coarticulationAspirationBlendStart = 0.3;
   double coarticulationAspirationBlendEnd = 0.7;
 
