@@ -55,7 +55,10 @@ settings:
   coarticulationEnabled: true
   coarticulationStrength: 0.20
   coarticulationTransitionExtent: 0.30
-  coarticulationFadeIntoConsonants: true
+  # false (2026-08-21): this key was inert until b8 implemented it; it was
+  # set true here aspirationally.  Freezing pre-b8 behavior — flip back on
+  # after a listening pass.
+  coarticulationFadeIntoConsonants: false
   coarticulationWordInitialFadeScale: 0.8
 
   coarticulationGraduated: true

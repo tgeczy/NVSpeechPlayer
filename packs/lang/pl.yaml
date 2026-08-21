@@ -23,7 +23,10 @@ settings:
 
   # Coarticulation (helps clusters stay intelligible)
   coarticulationEnabled: true
-  coarticulationFadeIntoConsonants: true
+  # false (2026-08-21): this key was inert until b8 implemented it; it was
+  # set true here aspirationally.  Freezing pre-b8 behavior — flip back on
+  # after a listening pass.
+  coarticulationFadeIntoConsonants: false
   coarticulationVelarPinchEnabled: true
 
   # Safe additions for screen reader use

@@ -945,13 +945,27 @@ phonemes:
     pf6: 4900
     voiceAmplitude: 0.9
   d_es:
-    # Less exaggerated /d/.
+    # Spanish dental /d̪/ — softer than English alveolar /d/ but must keep
+    # the coronal place signature.  2026-08-21 (#109 "duro"→"buro"):
+    # previous shape had no pa4/pa5 (all burst energy at pf6 4.9 kHz),
+    # leaving a 2.2-4.5 kHz hole; on small speakers / low SR the remnant
+    # dies and the spectrum reads diffuse-FALLING = labial percept.
+    # Restored diffuse-rising burst body (Blumstein & Stevens 1979) at
+    # ~85% of the English /d/ amplitudes, plus burst timing and the
+    # Spanish prevoicing bar (Feijóo 1998: voice bar is integral to the
+    # /b d g/ percept in Spanish).  F2 locus stays 1450 — Spanish dental
+    # locus is lower than English alveolar (Celdrán locus equations:
+    # slope 0.58, intercept 746).
     _isLiquid: false
     _isNasal: false
     _isStop: true
     _isVoiced: true
     _isVowel: false
     aspirationAmplitude: 0
+    burstDurationMs: 8
+    burstDecayRate: 0.5
+    voiceBarAmplitude: 0.5
+    voiceBarF1: 150
     caNP: 0
     cb1: 66
     cb2: 75
@@ -969,13 +983,13 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.25
-    pa1: 0
-    pa2: 0.25
-    pa3: 0.25
-    pa4: 0
-    pa5: 0
-    pa6: 0.75
+    fricationAmplitude: 0.40
+    pa1: 0.06
+    pa2: 0.15
+    pa3: 0.30
+    pa4: 0.45
+    pa5: 0.45
+    pa6: 0.35
     parallelBypass: 0
     pb1: 60
     pb2: 100
@@ -1566,6 +1580,11 @@ phonemes:
     pf6: 4900
     voiceAmplitude: 0.9
   k:
+    # 2026-08-21: burst pulled away from /g/ — the two had near-identical
+    # compact shapes, so in unaspirated contexts (Spanish; Croatian kruh
+    # report in #99) /k/ read voiced.  Voiceless bursts carry more HF
+    # energy than voiced (Chodroff & Wilson 2014); frication 0.62->0.72,
+    # pa4 0.25->0.38, pa5 0.10->0.20 keeps the velar compact peak.
     # Velar stop - tuned for proper "velar pinch" where F2 and F3 converge.
     # Research: F2 and F3 should approach each other (both ~2000-2500 Hz range).
     # F2=1800, F3=2400 gives ~600 Hz gap (pinch), vs alveolar's ~950 Hz gap.
@@ -1597,12 +1616,12 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.62
+    fricationAmplitude: 0.72
     pa1: 0.03
     pa2: 0.70
     pa3: 0.75
-    pa4: 0.25
-    pa5: 0.10
+    pa4: 0.38
+    pa5: 0.20
     pa6: 0.05
     parallelBypass: 0
     pb1: 250
@@ -5950,7 +5969,18 @@ phonemes:
     # 1450 Hz cf2 zone proven safe by cieguito context (see es.yaml line
     # ~350). Voice amp slightly down (0.78→0.75) so frication character
     # cuts through. UNCOMMITTED prototype pending Tomi ear-test.
+    #
+    # b8 contour retune (2026-08-21, ETI-Eloquence-informed): category
+    # stays fricative (the 2026-05-01 native-lenition lesson holds), but
+    # the ENERGY CONTOUR gains a real constriction event.  Reference
+    # engine renders intervocalic /ɣ ð/ as -15±2 dB RMS dips, 20-30 ms
+    # (measured, "entregado"); ours was acoustically flat — whisper-
+    # differential showed /ɣ/ vanishing in connected speech ("yo digo" →
+    # "y hoy").  voiceAmplitude 0.75→0.22, frication 0.45→0.30,
+    # durationScale 0.65.  Whisper A/B: entregado 0.89→1.00, arreglado
+    # 0.00→1.00.  Own values, measured against rendered audio only.
     _isAfricate: false
+    durationScale: 0.65
     _isLiquid: false
     _isNasal: false
     _isStop: false
@@ -5974,7 +6004,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.45
+    fricationAmplitude: 0.30
     pa1: 0.08
     pa2: 0.10
     pa3: 0.25
@@ -5994,7 +6024,60 @@ phonemes:
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    voiceAmplitude: 0.75
+    voiceAmplitude: 0.22
+  "ɣ_cls":
+    # Cluster allophone of ɣ_es (b8, 2026-08-21): /ɣ/ in contact
+    # with /l/ (regla, iglesia, algo).  Reference engine gives the
+    # cluster velar a near-closure: -21 dB / 15 ms measured event
+    # vs the -15 dB / 25 ms plain intervocalic dip.  Same place and
+    # spectral shape as ɣ_es; only constriction depth and length
+    # differ.  Values ours, measured against rendered audio only.
+    _isAfricate: false
+    durationScale: 0.5
+    _isLiquid: false
+    _isNasal: false
+    _isStop: false
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0
+    caNP: 0
+    cb1: 100
+    cb2: 110
+    cb3: 180
+    cb4: 500
+    cb5: 1000
+    cb6: 1800
+    cbN0: 100
+    cbNP: 100
+    cf1: 450
+    cf2: 1500
+    cf3: 2300
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.25
+    pa1: 0.08
+    pa2: 0.10
+    pa3: 0.25
+    pa4: 0.15
+    pa5: 0.05
+    pa6: 0
+    parallelBypass: 0
+    pb1: 90
+    pb2: 120
+    pb3: 190
+    pb4: 500
+    pb5: 1000
+    pb6: 1800
+    pf1: 450
+    pf2: 1450
+    pf3: 2200
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.12
   "ɣ_cas":
     # Castilian velar approximant — more exaggerated than Latin American.
     # Tongue moves further back, more audible frication/noise component.
@@ -6144,6 +6227,7 @@ phonemes:
     voiceAmplitude: 0.85
   "ð_es":
     # Spanish dental approximant [ð̞]. Voiced continuant, NOT the English fricative.
+    durationScale: 0.7
     # Very low frication (0.10 vs English 1.0), high voicing (0.88).
     # Formants match English ð but frication is dramatically reduced.
     _isLiquid: false
@@ -6169,7 +6253,7 @@ phonemes:
     cf6: 4900
     cfN0: 250
     cfNP: 200
-    fricationAmplitude: 0.10
+    fricationAmplitude: 0.30
     pa1: 0
     pa2: 0
     pa3: 0
@@ -6189,7 +6273,7 @@ phonemes:
     pf4: 3300
     pf5: 3750
     pf6: 4900
-    voiceAmplitude: 0.88
+    voiceAmplitude: 0.30
   "ɤ":
     _isLiquid: false
     _isNasal: false

@@ -48,8 +48,22 @@ settings:
   stopClosureAfterNasalsEnabled: false
   segmentBoundarySkipVowelToLiquid: false
   postStopAspirationEnabled: false
-  coarticulationEnabled: false
-  coarticulationFadeIntoConsonants: false
+  # 2026-08-21 (#108/#109): re-enabled.  This was switched off in the
+  # January pack sweep, when getPlace() couldn't classify the _es
+  # allophones and the pass fired inconsistently (bare keys only).
+  # With the suffix-stripping fix in pass_common.h the locus machinery
+  # works for d_es/ɣ_es/l_es etc.  Whisper-differential vs the ETI
+  # reference engine confirmed the missing C→V F2 transitions were the
+  # "duro"→"buro" and "regla"→"reula" percepts.
+  coarticulationEnabled: true
+  # Spanish needs deeper locus onsets than the 0.25 default: the ETI
+  # reference opens "duro" with F2≈1530 gliding to the /u/ over ~60 ms,
+  # while 0.25 strength only reaches ~850.  0.70 puts the dental onset
+  # near 1200 (Celdrán locus-equation territory for d̪ before /u/).
+  coarticulationStrength: 0.70
+  # true (2026-08-21, #108): VC half — vowels ramp their END formants
+  # toward the following consonant's locus (regla /eɣl/, amigo /iɣo/).
+  coarticulationFadeIntoConsonants: true
   coarticulationVelarPinchEnabled: false
   coarticulationGraduated: false
   coarticulationAdjacencyMaxConsonants: 2
@@ -329,7 +343,7 @@ normalization:
     # fricative (fric=0.45), schwa+fricative noise should provide its own
     # perceptual boundary. Mirrors the precedent set by /sɣ/ on 2026-04-26.
     - from: "lɣ"
-      to: "lᵊɣ_es"
+      to: "lᵊɣ_cls"   # b8: tight cluster event; schwa KEPT — without it the F2 jump reads as a tap ("algro")
     - from: "ɾɡ"
       to: "ɾᵊɡ"
     # Note: ɾɣ handled above (line ~228, also collapses to /ɡ/).
@@ -348,7 +362,7 @@ normalization:
     # /ɣ_es/ now salient-fricative, the schwa+fricative path matches
     # eSpeak's natural realization.
     - from: "ɣl"
-      to: "ɣ_esᵊl"
+      to: "ɣ_clsl"    # b8: tight cluster event, schwa dropped (whisper A/B: iglesia 0.29→1.00, arreglado →1.00)
     - from: "ɡl"
       to: "ɡᵊl"
     # Velar approximant + palatal glide coalescence.  In natural Spanish,
