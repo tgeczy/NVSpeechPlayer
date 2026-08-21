@@ -72,7 +72,17 @@ enum class Place {
   Velar,
 };
 
-inline Place getPlace(const std::u32string& key) {
+inline Place getPlace(const std::u32string& rawKey) {
+  // Language-variant allophones carry a suffix after '_' (d_es, s_mx,
+  // ɣ_es, l_es, …).  Match on the base symbol: before this, every
+  // variant returned Place::Unknown and all place-driven passes
+  // (coarticulation locus, cluster blend, boundary smoothing, burst
+  // placement) silently skipped them — #108/#109, the Spanish onset
+  // place-cue loss.  Suffixed VOWEL keys (a_open, u_fi) are unaffected:
+  // their bases aren't in these consonant lists either way.
+  const size_t us = rawKey.find(U'_');
+  const std::u32string key =
+      (us == std::u32string::npos) ? rawKey : rawKey.substr(0, us);
   // Labials
   if (key == U"p" || key == U"b" || key == U"m" ||
       key == U"f" || key == U"v" || key == U"w" ||

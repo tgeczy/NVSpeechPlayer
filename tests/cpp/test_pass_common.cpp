@@ -70,10 +70,19 @@ TEST_CASE("getPlace: unknown / vowel / non-place phonemes") {
     CHECK(getPlace(U"u") == Place::Unknown);
     CHECK(getPlace(U"") == Place::Unknown);
 
-    // Dialect-suffixed keys are NOT recognized as their base — they're either
-    // handled upstream (replaced before getPlace is called) or considered
-    // unknown here. This test pins the current behavior; if we later add
-    // dialect-aware place classification, this test will need updating.
-    CHECK(getPlace(U"ɣ_es") == Place::Unknown);
-    CHECK(getPlace(U"l_mx") == Place::Unknown);
+    // Dialect-suffixed keys ARE recognized as their base (2026-08-21).
+    // The old assumption ("replaced before getPlace is called") was wrong:
+    // the allophone pass rewrites tokens to d_es/ɣ_es/l_es BEFORE the
+    // place-driven passes run, so every language variant silently returned
+    // Unknown — which disabled coarticulation locus, cluster blending, and
+    // burst placement for Spanish and friends (#108/#109).  getPlace now
+    // strips the suffix and classifies the base symbol.
+    CHECK(getPlace(U"ɣ_es") == Place::Velar);
+    CHECK(getPlace(U"l_mx") == Place::Alveolar);
+    CHECK(getPlace(U"d_es") == Place::Alveolar);
+    CHECK(getPlace(U"s_fi") == Place::Alveolar);
+    CHECK(getPlace(U"β_cas") == Place::Labial);
+    // Suffixed vowels stay Unknown — their bases aren't consonants.
+    CHECK(getPlace(U"a_open") == Place::Unknown);
+    CHECK(getPlace(U"u_fi") == Place::Unknown);
 }
