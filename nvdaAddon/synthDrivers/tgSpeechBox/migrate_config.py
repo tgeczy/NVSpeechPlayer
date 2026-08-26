@@ -95,6 +95,55 @@ def run() -> bool:
         return False
 
 
+VOLUME_MARKER = "volumeScale100"
+
+
+def rescale_volume() -> bool:
+    """One-time rescale of a saved volume percent (#114).
+
+    The driver historically mapped NVDA's volume percent to engine gain as
+    percent/75 (internal gain 1.0 reported as ~75%), so fresh installs
+    showed less than 100% while Android/Linux/SAPI default to 100. The
+    mapping is now percent/100; an existing saved percent is rescaled by
+    100/75 (capped at 100) so the audible gain is preserved across the
+    update. A marker key in the base profile makes this run at most once —
+    it is also written on fresh installs so a later upgrade can never
+    mistake new-scale data for old.
+    """
+    try:
+        import config
+
+        base = config.conf.profiles[0]
+        sect = base.setdefault("speech", {}).setdefault(NEW_SECTION, {})
+        if sect.get(VOLUME_MARKER):
+            return False
+        changed = False
+        if "volume" in sect:
+            try:
+                old = float(sect["volume"])
+                sect["volume"] = min(100, int(round(old * 100.0 / 75.0)))
+                changed = True
+            except Exception:
+                pass
+        sect[VOLUME_MARKER] = 1
+        try:
+            config.conf["speech"]._cache.clear()
+        except Exception:
+            pass
+        try:
+            config.conf.save()
+        except Exception:
+            log.debug("TGSpeechBox: config.conf.save() after volume rescale failed",
+                      exc_info=True)
+        if changed:
+            log.info("TGSpeechBox: rescaled saved volume to the 100%-scale (#114)")
+        return changed
+    except Exception:
+        # Never prevent the synth from loading.
+        log.debug("TGSpeechBox: volume rescale skipped", exc_info=True)
+        return False
+
+
 def _show_notice_deferred() -> None:
     """Schedule a message box on the wx main loop.
 

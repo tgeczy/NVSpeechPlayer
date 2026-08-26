@@ -35,6 +35,7 @@ from .constants import (
 from .profile_utils import discoverVoiceProfiles
 from .audio import BgThread, AudioThread
 from .migrate_config import run as _migrate_config
+from .migrate_config import rescale_volume as _rescale_volume
 
 # Mixin modules
 from .espeak_bridge import espeakSetVoiceDirect as _espeakSetVoiceDirect
@@ -113,6 +114,10 @@ class SynthDriver(
     def __init__(self):
         # Step 0: One-time config migration (nvSpeechPlayer -> tgSpeechBox)
         _migrate_config()
+        # Step 0b: one-time volume rescale to the 100%-scale (#114) — must
+        # run after the rename migration (so migrated data is rescaled too)
+        # and before super().__init__() restores saved settings.
+        _rescale_volume()
 
         # =======================================================================
         # CRITICAL: Initialize ALL internal state BEFORE calling super().__init__()
@@ -875,11 +880,15 @@ class SynthDriver(
             pass
 
     def _get_volume(self):
-        return int(getattr(self, "_curVolume", 1.0) * 75)
+        # 100% <-> engine gain 1.0, matching every other platform (#114).
+        # The historical /75 mapping made fresh installs report ~75% while
+        # Android/Linux/SAPI default to 100; saved configs from that era
+        # are rescaled once by migrate_config.rescale_volume().
+        return int(getattr(self, "_curVolume", 1.0) * 100)
 
     def _set_volume(self, val):
         try:
-            self._curVolume = float(val) / 75.0
+            self._curVolume = float(val) / 100.0
         except Exception:
             pass
 
