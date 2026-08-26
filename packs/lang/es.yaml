@@ -64,6 +64,13 @@ settings:
   # true (2026-08-21, #108): VC half — vowels ramp their END formants
   # toward the following consonant's locus (regla /eɣl/, amigo /iɣo/).
   coarticulationFadeIntoConsonants: true
+  # Steady-state vowel rendering (#113): transition -> canonical vowel ->
+  # transition, instead of one whole-vowel ramp that never lands (dos as
+  # "dös").  Transition lengths anchored to Eloquence-lineage reference
+  # measurements (~35 ms in, ~40 ms out on "dos" at default rate).
+  coarticulationSteadyState: true
+  coarticulationTransInMs: 35
+  coarticulationTransOutMs: 40
   coarticulationVelarPinchEnabled: false
   coarticulationGraduated: false
   coarticulationAdjacencyMaxConsonants: 2

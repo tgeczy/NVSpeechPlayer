@@ -861,6 +861,18 @@ double lengthContrastPreGeminateVowelScale = 0.85;
   // with CV-only coarticulation and stay bit-identical.
   bool coarticulationFadeIntoConsonants = false;
 
+  // Steady-state vowel rendering (#113, 2026-08-22): when true, a vowel
+  // shaped by coarticulation renders as onset-transition → canonical steady
+  // state → exit-transition instead of one whole-vowel ramp.  Without this,
+  // a coarticulated vowel spends its entire duration in transit and never
+  // reaches its canonical formants (Spanish "dos" /o/ rendered as [ø]).
+  // The Eloquence-lineage reference holds a real steady state mid-vowel;
+  // diphone engines get one for free.  Off by default: single-frame
+  // emission is bit-identical to prior releases.
+  bool coarticulationSteadyState = false;
+  double coarticulationTransInMs = 35.0;   // CV transition length (ms)
+  double coarticulationTransOutMs = 40.0;  // VC transition length (ms)
+
   double coarticulationAspirationBlendStart = 0.3;
   double coarticulationAspirationBlendEnd = 0.7;
 

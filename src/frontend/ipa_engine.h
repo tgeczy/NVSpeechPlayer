@@ -129,6 +129,16 @@ struct Token {
   bool hasEndPb1 = false, hasEndPb2 = false, hasEndPb3 = false;
   double endPb1 = 0.0, endPb2 = 0.0, endPb3 = 0.0;
 
+  // Canonical steady-state formant targets (set by coarticulation pass when
+  // lang.coarticulationSteadyState is on).  With coartic shaping, field[cf*]
+  // holds the locus-shifted ONSET and endCf* holds the EXIT target — the
+  // canonical vowel would otherwise never be rendered (#113: /o/ in "dos"
+  // ramped 1129→1105 Hz, never touching 910).  When hasCoarticSteady is set,
+  // frame_emit renders transition → steady(these values) → exit instead of
+  // one whole-token ramp.  Zero = formant not applicable (keep base value).
+  bool hasCoarticSteady = false;
+  double steadyF1 = 0.0, steadyF2 = 0.0, steadyF3 = 0.0;
+
   // Per-parameter transition speed scales (carried to FrameEx).
   // 0.0 = no override.  See speechPlayer_frameEx_t for semantics.
   double transF1Scale = 0.0;

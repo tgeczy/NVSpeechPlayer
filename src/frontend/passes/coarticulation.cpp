@@ -381,6 +381,17 @@ bool runCoarticulation(PassContext& ctx, std::vector<Token>& tokens, std::string
       setField(t, FieldId::pf3, startF3);
     }
     
+    // Canonical steady targets for steady-state emission: field[cf*] now
+    // holds the locus-shifted onset, so the canonical values must be saved
+    // before the VC block (or nothing) overwrites endCf* — otherwise the
+    // vowel never renders its own formants (#113).
+    if (lang.coarticulationSteadyState) {
+      t.hasCoarticSteady = true;
+      t.steadyF1 = (vF1 > 0.0) ? vF1 : 0.0;
+      t.steadyF2 = vF2;
+      t.steadyF3 = (vF3 > 0.0) ? vF3 : 0.0;
+    }
+
     // Set END formants (DSP will ramp from start to end)
     // Only set if there's meaningful movement (avoid overhead for tiny changes)
     if (std::abs(vF2 - startF2) > 10.0) {
@@ -551,6 +562,16 @@ bool runCoarticulation(PassContext& ctx, std::vector<Token>& tokens, std::string
 
       const double locusF2 = mitalkLocus(rSrcF2, vF2, k);
       if (locusF2 <= 0.0) continue;
+
+      // VC-only case (CV block didn't run for this vowel): vF* are still
+      // the canonical targets — save them as the steady state before the
+      // fade overwrites endCf* below.
+      if (lang.coarticulationSteadyState && !t.hasCoarticSteady) {
+        t.hasCoarticSteady = true;
+        t.steadyF1 = (vF1 > 0.0) ? vF1 : 0.0;
+        t.steadyF2 = vF2;
+        t.steadyF3 = (vF3 > 0.0) ? vF3 : 0.0;
+      }
 
       const double endF2 = vF2 + (locusF2 - vF2) * (rightStrength * f2Scale);
       if (std::abs(endF2 - vF2) > 10.0) { t.hasEndCf2 = true; t.endCf2 = endF2; }

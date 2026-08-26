@@ -753,6 +753,139 @@ static void generateAcousticEvents(
       continue;
     }
 
+    // ============================================
+    // COARTICULATED VOWEL STEADY-STATE EMISSION (#113)
+    // ============================================
+    // A coartic-shaped vowel's single frame ramps onset→exit for its WHOLE
+    // duration, so the canonical vowel is never rendered (es "dos": /o/
+    // swept 1129→1105 Hz, never touching 910 — heard as [ø]).  When the
+    // coarticulation pass saved canonical steady targets, emit up to three
+    // frames instead: onset transition → steady state → exit transition.
+    // Boundary values match at every seam, so the short internal fades
+    // cannot phase.  Phoneme-level endCf (deliberate sweeps) and diphthong
+    // glides keep their own trajectories and skip this path.
+    if (t.hasCoarticSteady && !t.isDiphthongGlide && t.durationMs >= 45.0 &&
+        !(trillEnabled && tokenIsTrill(t)) &&
+        !(t.def && (t.def->hasEndCf1 || t.def->hasEndCf2 || t.def->hasEndCf3))) {
+      const int icf1 = static_cast<int>(FieldId::cf1);
+      const int icf2 = static_cast<int>(FieldId::cf2);
+      const int icf3 = static_cast<int>(FieldId::cf3);
+      const int ipf1 = static_cast<int>(FieldId::pf1);
+      const int ipf2 = static_cast<int>(FieldId::pf2);
+      const int ipf3 = static_cast<int>(FieldId::pf3);
+
+      const double dur = t.durationMs;
+      const double onF1 = base[icf1], onF2 = base[icf2], onF3 = base[icf3];
+      const double stF1 = (t.steadyF1 > 0.0) ? t.steadyF1 : onF1;
+      const double stF2 = (t.steadyF2 > 0.0) ? t.steadyF2 : onF2;
+      const double stF3 = (t.steadyF3 > 0.0) ? t.steadyF3 : onF3;
+      const double exF1 = nvsp_isnan(frameEx.endCf1) ? stF1 : frameEx.endCf1;
+      const double exF2 = nvsp_isnan(frameEx.endCf2) ? stF2 : frameEx.endCf2;
+      const double exF3 = nvsp_isnan(frameEx.endCf3) ? stF3 : frameEx.endCf3;
+
+      // Parallel path follows the cascade deltas: if the coartic pass
+      // shifted starts it mirrored cf onto pf, so base pf sits at the
+      // onset; carry the same offsets so unset/diverging pf stay coherent.
+      const double stPf1 = (base[ipf1] > 0.0) ? base[ipf1] + (stF1 - onF1) : base[ipf1];
+      const double stPf2 = (base[ipf2] > 0.0) ? base[ipf2] + (stF2 - onF2) : base[ipf2];
+      const double stPf3 = (base[ipf3] > 0.0) ? base[ipf3] + (stF3 - onF3) : base[ipf3];
+      const double exPf1 = !nvsp_isnan(frameEx.endPf1) ? frameEx.endPf1
+                           : (stPf1 > 0.0 ? stPf1 + (exF1 - stF1) : stPf1);
+      const double exPf2 = !nvsp_isnan(frameEx.endPf2) ? frameEx.endPf2
+                           : (stPf2 > 0.0 ? stPf2 + (exF2 - stF2) : stPf2);
+      const double exPf3 = !nvsp_isnan(frameEx.endPf3) ? frameEx.endPf3
+                           : (stPf3 > 0.0 ? stPf3 + (exF3 - stF3) : stPf3);
+
+      const bool needIn = fabs(onF2 - stF2) > 10.0 || fabs(onF1 - stF1) > 8.0 ||
+                          fabs(onF3 - stF3) > 12.0;
+      const bool needOut = fabs(exF2 - stF2) > 10.0 || fabs(exF1 - stF1) > 8.0 ||
+                           fabs(exF3 - stF3) > 12.0;
+      if (needIn || needOut) {
+        const double tIn = needIn
+            ? std::min(lang.coarticulationTransInMs, dur * 0.35) : 0.0;
+        const double tOut = needOut
+            ? std::min(lang.coarticulationTransOutMs, dur * 0.35) : 0.0;
+        const double steadyDur = dur - tIn - tOut;  // >= 0.30*dur by clamps
+
+        const double p0 = base[vp];
+        const double pd = base[evp] - p0;
+
+        FELOG("STEADY dur=%.1f tIn=%.1f tOut=%.1f "
+              "on=%.0f/%.0f/%.0f st=%.0f/%.0f/%.0f ex=%.0f/%.0f/%.0f\n",
+              dur, tIn, tOut, onF1, onF2, onF3, stF1, stF2, stF3,
+              exF1, exF2, exF3);
+
+        double pos = 0.0;
+        bool firstSeg = true;
+        auto emitSeg = [&](double segDur,
+                           double a1, double a2, double a3,
+                           double ap1, double ap2, double ap3,
+                           double e1, double e2, double e3,
+                           double ep1, double ep2, double ep3, bool ramp) {
+          if (segDur <= 0.5) return;
+          double mf[kFrameFieldCount];
+          std::memcpy(mf, base, sizeof(mf));
+          mf[icf1] = a1; mf[icf2] = a2; mf[icf3] = a3;
+          mf[ipf1] = ap1; mf[ipf2] = ap2; mf[ipf3] = ap3;
+          mf[vp] = p0 + pd * (pos / dur);
+          mf[evp] = p0 + pd * ((pos + segDur) / dur);
+
+          nvspFrontend_Frame frame;
+          std::memcpy(&frame, mf, sizeof(frame));
+
+          nvspFrontend_FrameEx segEx = frameEx;
+          if (ramp) {
+            segEx.endCf1 = e1; segEx.endCf2 = e2; segEx.endCf3 = e3;
+            segEx.endPf1 = ep1; segEx.endPf2 = ep2; segEx.endPf3 = ep3;
+          } else {
+            segEx.endCf1 = NAN; segEx.endCf2 = NAN; segEx.endCf3 = NAN;
+            segEx.endPf1 = NAN; segEx.endPf2 = NAN; segEx.endPf3 = NAN;
+          }
+          if (!firstSeg) {
+            segEx.fujisakiPhraseAmp = 0.0;
+            segEx.fujisakiAccentAmp = 0.0;
+            segEx.fujisakiReset = 0.0;
+          }
+          double fadeIn = firstSeg ? t.fadeMs : 3.0;
+          if (fadeIn > segDur) fadeIn = segDur;
+
+          FELOG("  seg dur=%.1f fade=%.1f cf=%.0f/%.0f end=%.0f/%.0f\n",
+                segDur, fadeIn, mf[icf1], mf[icf2],
+                nvsp_isnan(segEx.endCf1) ? -1.0 : segEx.endCf1,
+                nvsp_isnan(segEx.endCf2) ? -1.0 : segEx.endCf2);
+
+          emitFn(&frame, &segEx, segDur, fadeIn);
+          hadPrevFrame = true;
+          firstSeg = false;
+          pos += segDur;
+        };
+
+        if (tIn > 0.0) {
+          emitSeg(tIn, onF1, onF2, onF3, base[ipf1], base[ipf2], base[ipf3],
+                  stF1, stF2, stF3, stPf1, stPf2, stPf3, true);
+        }
+        emitSeg(steadyDur, stF1, stF2, stF3, stPf1, stPf2, stPf3,
+                0, 0, 0, 0, 0, 0, false);
+        if (tOut > 0.0) {
+          emitSeg(tOut, stF1, stF2, stF3, stPf1, stPf2, stPf3,
+                  exF1, exF2, exF3, exPf1, exPf2, exPf3, true);
+        }
+
+        trajectoryState->prevCf2 = needOut ? exF2 : stF2;
+        trajectoryState->prevCf3 = needOut ? exF3 : stF3;
+        trajectoryState->prevPf2 = needOut ? exPf2 : stPf2;
+        trajectoryState->prevPf3 = needOut ? exPf3 : stPf3;
+        trajectoryState->prevVoiceAmp = base[va];
+        trajectoryState->prevFricAmp = base[fa];
+        trajectoryState->hasPrevFrame = true;
+        trajectoryState->prevWasNasal = false;
+
+        prevTokenWasTap = false;
+        prevTokenWasStop = false;
+        continue;
+      }
+    }
+
     // Handle trill modulation (simplified version - emits micro-frames)
     if (trillEnabled && tokenIsTrill(t) && t.durationMs > 0.0) {
       double totalDur = t.durationMs;
