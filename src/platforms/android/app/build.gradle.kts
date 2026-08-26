@@ -29,8 +29,8 @@ android {
         applicationId = "com.tgspeechbox.tts"
         minSdk = 26
         targetSdk = 36
-        versionCode = 353
-        versionName = "3.10-beta8"
+        versionCode = 354
+        versionName = "3.10-beta801"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
