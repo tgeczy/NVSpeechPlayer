@@ -441,18 +441,49 @@ char *tgsb_get_voice_profile_names(TgsbEngine *engine)
  * split at the colon, and the trailing number leaked into the next
  * VoiceOver utterance (GitHub issue #40).
  */
+void tgsb_begin_utterance(TgsbEngine *engine)
+{
+    if (!engine || !engine->player) return;
+    engine->stopRequested = 0;
+    /* Purge stale frames from previous utterance */
+    speechPlayer_queueFrame(engine->player, NULL, 0, 0, -1, true);
+}
+
+void tgsb_queue_silence(TgsbEngine *engine, double ms)
+{
+    if (!engine || !engine->player || engine->stopRequested) return;
+    if (ms <= 0.0) return;
+    if (ms > 2000.0) ms = 2000.0;  /* matches the SSML break cap in the AU */
+    unsigned int samples = (unsigned int)(
+        ms * engine->sampleRate / 1000.0 + 0.5);
+    unsigned int fadeSamp = (unsigned int)(
+        3.0 * engine->sampleRate / 1000.0 + 0.5);
+    speechPlayer_queueFrame(engine->player, NULL, samples, fadeSamp, -1, 0);
+}
+
 void tgsb_queue_text(TgsbEngine *engine,
                      const char *text,
                      double speed,
                      double pitch)
 {
+    tgsb_queue_text_ex(engine, text, speed, pitch, 1);
+}
+
+void tgsb_queue_text_ex(TgsbEngine *engine,
+                        const char *text,
+                        double speed,
+                        double pitch,
+                        int beginUtterance)
+{
     if (!engine || !engine->player || !engine->frontend) return;
     if (!text || !*text) return;
 
-    engine->stopRequested = 0;
-
-    /* Purge stale frames from previous utterance */
-    speechPlayer_queueFrame(engine->player, NULL, 0, 0, -1, true);
+    if (beginUtterance) {
+        tgsb_begin_utterance(engine);
+    } else if (engine->stopRequested) {
+        /* A stop that lands between segments of one request must stick. */
+        return;
+    }
 
     /* Clamp parameters */
     if (speed < 0.1) speed = 0.1;

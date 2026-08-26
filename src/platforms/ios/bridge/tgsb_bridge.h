@@ -47,6 +47,25 @@ void tgsb_queue_text(TgsbEngine *engine,
                      double pitch);
 
 /*
+ * Segmented synthesis for SSML <break> support (#pause-mode):
+ *   tgsb_begin_utterance  resets the stop flag and purges stale frames —
+ *                         call ONCE per speech request;
+ *   tgsb_queue_text_ex    queues one text segment (beginUtterance=0 keeps
+ *                         previously queued segments; a stop between
+ *                         segments sticks);
+ *   tgsb_queue_silence    queues real silence (ms, capped at 2000) so a
+ *                         VoiceOver break renders at its requested length.
+ * tgsb_queue_text() remains equivalent to begin+queue in one call.
+ */
+void tgsb_begin_utterance(TgsbEngine *engine);
+void tgsb_queue_text_ex(TgsbEngine *engine,
+                        const char *text,
+                        double speed,
+                        double pitch,
+                        int beginUtterance);
+void tgsb_queue_silence(TgsbEngine *engine, double ms);
+
+/*
  * Pull synthesized PCM (s16le, mono) into outBuffer.
  * Returns number of samples written (0 = done).
  * Call in a loop until it returns 0.

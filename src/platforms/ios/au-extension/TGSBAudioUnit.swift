@@ -267,14 +267,52 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
         let bcp47 = parts.count >= 4 ? String(parts[3]) : "en-us"
 
         requestCount += 1
-        var plainText = extractPlainText(from: speechRequest.ssmlRepresentation)
-        if plainText.isEmpty {
+
+        // Force cross-process sync FIRST so both the pause scaling below
+        // and the engine settings later see the host app's latest writes.
+        // Without this, VoiceOver restart can leave the extension with
+        // stale/empty UserDefaults, causing all settings to revert to
+        // factory defaults.
+        UserDefaults(suiteName: "group.com.tgspeechbox.app")?.synchronize()
+
+        // Pause mode scales VoiceOver's requested <break> durations
+        // (DoubleTalk-style): off drops them, short halves them, long
+        // honors them as sent. The engine-side punctuation pauses
+        // (adv_pauseMode in applyEngineSettings) are a separate feature.
+        let udEarly = UserDefaults(suiteName: "group.com.tgspeechbox.app")
+        let pauseModeSetting = udEarly?.object(forKey: "adv_pauseMode") != nil
+            ? udEarly!.integer(forKey: "adv_pauseMode") : 1  // default: short
+        let pauseScalePercent = [0, 50, 100][max(0, min(pauseModeSetting, 2))]
+
+        var segments = extractSegments(
+            from: speechRequest.ssmlRepresentation,
+            pauseScalePercent: pauseScalePercent)
+        let joinedText = segments.map { $0.text }.joined()
+        let totalPauseMs = segments.reduce(0) { $0 + $1.pauseAfterMs }
+        if joinedText.isEmpty {
             if requestCount == 1 {
                 // First request with empty text — likely a voice preview
                 // from VoiceOver Settings. Speak a demo so the user can
-                // hear the voice. Subsequent empty requests (hints, spacers)
-                // get a silent frame instead.
-                plainText = "Hello, this is \(voiceName.capitalized)."
+                // hear the voice.
+                segments = [SpeechSegment(
+                    text: "Hello, this is \(voiceName.capitalized).",
+                    pauseAfterMs: 0)]
+            } else if totalPauseMs > 0 {
+                // Break-only spacer (VoiceOver's semantic gap, e.g. between
+                // an item's name and its hint): render the requested silence
+                // at its real, scaled length — this IS the gap the user's
+                // pause-mode setting controls. Unlike the one-sample branch
+                // below, this can be seconds long, so it needs the same
+                // generation guard as the main path: a cancelled spacer must
+                // not install dead air in front of the next utterance.
+                let n = max(1, totalPauseMs * Int(sampleRate) / 1000)
+                outputMutex.wait()
+                if myGen != cancelledGen && myGen == requestGen {
+                    output = [Float32](repeating: 0, count: n)
+                    outputOffset = 0
+                }
+                outputMutex.signal()
+                return
             } else {
                 // Empty text during normal use — provide a single silent
                 // frame so the render block can signal completion and
@@ -286,11 +324,6 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
                 return
             }
         }
-
-        // Force cross-process sync so AU extension sees host app's latest writes.
-        // Without this, VoiceOver restart can leave the extension with stale/empty
-        // UserDefaults, causing all settings to revert to factory defaults.
-        UserDefaults(suiteName: "group.com.tgspeechbox.app")?.synchronize()
 
         let curVersion = UserDefaults(suiteName: "group.com.tgspeechbox.app")?
             .integer(forKey: "adv_settingsVersion") ?? 0
@@ -412,7 +445,18 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
             cachedOverridesVersion = curOverridesVersion
         }
 
-        tgsb_queue_text(eng, plainText, speed, pitch)
+        // Queue text segments interleaved with real silence for each
+        // (scaled) SSML break. begin_utterance purges stale frames once;
+        // a stop that lands mid-loop sticks (queue_text_ex honors it).
+        tgsb_begin_utterance(eng)
+        for seg in segments {
+            if !seg.text.isEmpty {
+                tgsb_queue_text_ex(eng, seg.text, speed, pitch, 0)
+            }
+            if seg.pauseAfterMs > 0 {
+                tgsb_queue_silence(eng, Double(seg.pauseAfterMs))
+            }
+        }
 
         // Pull PCM and convert Int16 → Float32 using vDSP
         let curDspRate = dspRate
@@ -702,15 +746,93 @@ public class TGSBAudioUnit: AVSpeechSynthesisProviderAudioUnit {
 
     // MARK: - Helpers
 
+    private struct SpeechSegment {
+        var text: String
+        var pauseAfterMs: Int
+    }
+
+    // SSML break strength → milliseconds (SSML spec default is "medium").
+    private static let breakStrengths: [String: Int] = [
+        "none": 0, "x-weak": 100, "weak": 200,
+        "medium": 350, "strong": 500, "x-strong": 800,
+    ]
+    private static let maxBreakMs = 2000
+
+    private func firstCapture(_ pattern: String, in s: String) -> String? {
+        guard let re = try? NSRegularExpression(pattern: pattern,
+                                                options: [.caseInsensitive]),
+              let m = re.firstMatch(in: s,
+                                    range: NSRange(s.startIndex..., in: s)),
+              m.numberOfRanges > 1,
+              let r = Range(m.range(at: 1), in: s) else { return nil }
+        return String(s[r])
+    }
+
+    // DoubleTalk-style pause scaling: 0% drops a break entirely; any
+    // nonzero result is floored at 30 ms so an aggressive setting
+    // compresses semantic boundaries instead of erasing them.
+    private func scaledBreakMs(fromTag tag: String, scalePercent: Int) -> Int {
+        var ms = Self.breakStrengths["medium"]!
+        if let v = firstCapture(#"time\s*=\s*"([^"]+)""#, in: tag)?
+            .lowercased().trimmingCharacters(in: .whitespaces) {
+            if v.hasSuffix("ms"),
+               let d = Double(v.dropLast(2)
+                   .trimmingCharacters(in: .whitespaces)) {
+                ms = Int(d.rounded())
+            } else if v.hasSuffix("s"),
+                      let d = Double(v.dropLast(1)
+                          .trimmingCharacters(in: .whitespaces)) {
+                ms = Int((d * 1000).rounded())
+            }
+        } else if let v = firstCapture(#"strength\s*=\s*"([^"]+)""#, in: tag)?
+            .lowercased(), let s = Self.breakStrengths[v] {
+            ms = s
+        }
+        ms = max(0, min(ms, Self.maxBreakMs))
+        let pct = max(0, min(scalePercent, 200))
+        guard pct > 0, ms > 0 else { return 0 }
+        return min(max(ms * pct / 100, min(ms, 30)), Self.maxBreakMs)
+    }
+
+    // Split the SSML on <break> tags so each break renders as real
+    // silence at its (scaled) requested length. The old behavior
+    // replaced breaks with ". ", which both collapsed every VoiceOver
+    // pause into a 35-60 ms clause gap — making the pause-mode setting
+    // inaudible — and forced a spurious sentence-final intonation
+    // contour mid-utterance.
+    private func extractSegments(from ssml: String,
+                                 pauseScalePercent: Int) -> [SpeechSegment] {
+        guard let re = try? NSRegularExpression(
+            pattern: #"<break\b[^>]*/?\s*>"#, options: [.caseInsensitive])
+        else {
+            return [SpeechSegment(text: extractPlainText(from: ssml),
+                                  pauseAfterMs: 0)]
+        }
+        let ns = ssml as NSString
+        var out: [SpeechSegment] = []
+        var cursor = 0
+        for m in re.matches(in: ssml,
+                            range: NSRange(location: 0, length: ns.length)) {
+            let text = ns.substring(
+                with: NSRange(location: cursor,
+                              length: m.range.location - cursor))
+            out.append(SpeechSegment(
+                text: extractPlainText(from: text),
+                pauseAfterMs: scaledBreakMs(
+                    fromTag: ns.substring(with: m.range),
+                    scalePercent: pauseScalePercent)))
+            cursor = m.range.location + m.range.length
+        }
+        out.append(SpeechSegment(
+            text: extractPlainText(from: ns.substring(from: cursor)),
+            pauseAfterMs: 0))
+        return out
+    }
+
     private func extractPlainText(from ssml: String) -> String {
-        // Convert SSML <break> tags to commas so the clause splitter
-        // generates pauses. VoiceOver inserts these between semantic
-        // groups (e.g. "Utility Categories table, Row 1 of 12, selected").
-        var text = ssml.replacingOccurrences(
-            of: #"<break\b[^>]*/?\s*>"#, with: ". ",
-            options: .regularExpression)
-        // Strip remaining SSML tags.
-        text = text.replacingOccurrences(of: "<[^>]+>", with: " ",
+        // Strip SSML tags. (<break> tags are consumed by extractSegments
+        // before this runs; a stray one here just becomes a space.)
+        var text = ssml.replacingOccurrences(of: "<[^>]+>", with: " ",
                                           options: .regularExpression)
         text = text.replacingOccurrences(of: "&apos;", with: "'")
         text = text.replacingOccurrences(of: "&quot;", with: "\"")
