@@ -342,6 +342,31 @@ static void generateAcousticEvents(
       base[f] = t.field[f];
     }
 
+    // Tap intensity dip (#113 svarabhakti work): the intensity difference
+    // between a tap and its flanking vowels is the tap's PRIMARY acoustic
+    // correlate (Perry et al. 2023 DOI 10.1121/10.0018892, 2024
+    // DOI 10.1121/10.0024345). With tap formants vowel-colored by the
+    // svarabhakti pass, the dip carries the rhotic percept. Applied here
+    // because the prominence pass assigns voiceAmplitude after any
+    // token-level value could be set. Gated by the pack knob (1.0 = off).
+    if (t.def && (t.def->flags & kIsTap) != 0 &&
+        pack.lang.svarabhaktiTapDip < 1.0) {
+      base[va] *= std::clamp(pack.lang.svarabhaktiTapDip, 0.1, 1.0);
+    }
+
+    // The PREVIOUS token's base, for the tap micro-event blends below.
+    // prevBase itself is overwritten with the CURRENT token next — the
+    // 313c9ff emission unification moved that save above the tap branch,
+    // which silently turned every "blend from previous vowel" into
+    // 0.5*tap + 0.5*tap (static tap formants, the exact percept the
+    // eaa083a tap-coarticulation work was built to remove).
+    double prevTokenBase[kFrameFieldCount];
+    const bool hasPrevTokenBase = trajectoryState->hasPrevBase;
+    if (hasPrevTokenBase) {
+      std::memcpy(prevTokenBase, trajectoryState->prevBase,
+                  sizeof(prevTokenBase));
+    }
+
     // Save full base for voice bar emission on the next voiced closure.
     std::memcpy(trajectoryState->prevBase, base, sizeof(base));
     trajectoryState->hasPrevBase = true;
@@ -1399,12 +1424,12 @@ static void generateAcousticEvents(
       {
         double seg[kFrameFieldCount];
         std::memcpy(seg, base, sizeof(seg));
-        if (trajectoryState->hasPrevBase) {
+        if (hasPrevTokenBase) {
           const double prevW = 0.50;
           const double tapW  = 0.50;
-          seg[cf1] = trajectoryState->prevBase[cf1] * prevW + base[cf1] * tapW;
-          seg[cf2] = trajectoryState->prevBase[cf2] * prevW + base[cf2] * tapW;
-          seg[cf3] = trajectoryState->prevBase[cf3] * prevW + base[cf3] * tapW;
+          seg[cf1] = prevTokenBase[cf1] * prevW + base[cf1] * tapW;
+          seg[cf2] = prevTokenBase[cf2] * prevW + base[cf2] * tapW;
+          seg[cf3] = prevTokenBase[cf3] * prevW + base[cf3] * tapW;
         }
         seg[vp] = startPitch;
         seg[evp] = startPitch + pitchDelta * onsetFrac;
@@ -1445,13 +1470,13 @@ static void generateAcousticEvents(
         if (isLastToken) {
           // Utterance-final: decay voicing, keep tap formants + frication.
           seg[vaIdx] = notchAmp * 0.3;
-        } else if (trajectoryState->hasPrevBase) {
+        } else if (hasPrevTokenBase) {
           // Blend back toward vowel space — abrupt exit from tap.
           const double prevW = 0.65;
           const double tapW  = 0.35;
-          seg[cf1] = trajectoryState->prevBase[cf1] * prevW + base[cf1] * tapW;
-          seg[cf2] = trajectoryState->prevBase[cf2] * prevW + base[cf2] * tapW;
-          seg[cf3] = trajectoryState->prevBase[cf3] * prevW + base[cf3] * tapW;
+          seg[cf1] = prevTokenBase[cf1] * prevW + base[cf1] * tapW;
+          seg[cf2] = prevTokenBase[cf2] * prevW + base[cf2] * tapW;
+          seg[cf3] = prevTokenBase[cf3] * prevW + base[cf3] * tapW;
         }
         seg[vp] = startPitch + pitchDelta * notchEndFrac;
         seg[evp] = startPitch + pitchDelta;

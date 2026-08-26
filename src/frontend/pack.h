@@ -873,6 +873,27 @@ double lengthContrastPreGeminateVowelScale = 0.85;
   double coarticulationTransInMs = 35.0;   // CV transition length (ms)
   double coarticulationTransOutMs = 40.0;  // VC transition length (ms)
 
+  // Svarabhakti vocoid inheritance (#113 second gem, 2026-08-26): the
+  // inserted ᵊ around taps/trills echoes the neighboring vowel's quality
+  // (da Silva 2024: same gesture as the nuclear vowel, ~1/4 its duration;
+  // Recasens 1991/1999: carryover-dominant for taps) instead of rendering
+  // as a fixed neutral schwa ("far" = "farə"). Off by default.
+  bool svarabhaktiInheritEnabled = false;
+  double svarabhaktiVowelWeight = 0.8;     // donor share in the blend
+  double svarabhaktiDurationScale = 0.5;   // toward 1/4-nuclear-vowel length
+  double svarabhaktiAmpScale = 0.85;       // brief echo, not a syllable
+  // Vowel-to-tap carryover: blend the tap token's own formants toward the
+  // neighboring vowel (Recasens 1991: taps show large V-to-C effects; the
+  // alveolar locus belongs in the transitions, not held across the whole
+  // contact). 0 = off.
+  double svarabhaktiTapBlend = 0.0;
+  // Amplitude dip on vowel-colored taps: the intensity difference between
+  // the tap and its surrounding vowels is THE primary acoustic correlate
+  // of the Spanish tap (Perry et al. 2023 DOI 10.1121/10.0018892, 2024
+  // DOI 10.1121/10.0024345). With formants blended toward the vowel, the
+  // dip must carry the rhotic percept. 1.0 = no dip.
+  double svarabhaktiTapDip = 1.0;
+
   double coarticulationAspirationBlendStart = 0.3;
   double coarticulationAspirationBlendEnd = 0.7;
 

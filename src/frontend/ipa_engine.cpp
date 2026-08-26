@@ -645,7 +645,21 @@ bool convertIpaToTokens(
           if (isLiquid && pack.lang.singleWordFinalLiquidHoldScale != 1.0) {
             holdMs *= pack.lang.singleWordFinalLiquidHoldScale;
           }
-          outTokens[static_cast<size_t>(lastReal)].durationMs += (holdMs / sp);
+          // A tap is a ~15 ms ballistic flick — holding it sustains its
+          // static constriction, which reads as an appended schwa syllable
+          // (#113: "amor" ending in ~50 ms of neutral vocoid). Citation-form
+          // lengthening lands on the nucleus, so redirect the hold to the
+          // nearest preceding vowel; if none is close, fall back to the
+          // old behavior rather than dropping the hold.
+          int holdTarget = lastReal;
+          if (tokenIsTap(lt)) {
+            for (int j = lastReal - 1; j >= 0 && j >= lastReal - 4; --j) {
+              const Token& c = outTokens[static_cast<size_t>(j)];
+              if (c.silence || !c.def) break;
+              if (tokenIsVowel(c)) { holdTarget = j; break; }
+            }
+          }
+          outTokens[static_cast<size_t>(holdTarget)].durationMs += (holdMs / sp);
         }
       }
 

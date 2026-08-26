@@ -71,6 +71,14 @@ settings:
   coarticulationSteadyState: true
   coarticulationTransInMs: 35
   coarticulationTransOutMs: 40
+  # Svarabhakti vocoids echo the neighboring vowel (quality-copied, ~1/4
+  # nuclear-vowel length) instead of a fixed neutral schwa — fixes the
+  # "far/fer/fir/for/fur all sound identical" collapse (#113 dig).
+  svarabhaktiInheritEnabled: true
+  svarabhaktiTapBlend: 0.4
+  # The intensity dip is the tap's primary cue (Perry et al. 2023/2024);
+  # with tap formants vowel-colored, the dip does the rhotic work.
+  svarabhaktiTapDip: 0.55
   coarticulationVelarPinchEnabled: false
   coarticulationGraduated: false
   coarticulationAdjacencyMaxConsonants: 2

@@ -335,6 +335,16 @@ _LANG_PACK_SPECS = (
     # --- Coarticulation settings ---
     ("coarticulationEnabled", "coarticulationEnabled", "bool", False, None),
     ("coarticulationFadeIntoConsonants", "coarticulationFadeIntoConsonants", "bool", False, None),
+    ("coarticulationSteadyState", "coarticulationSteadyState", "bool", False, None),
+    ("coarticulationTransInMs", "coarticulationTransInMs", "float", 35.0, None),
+    ("coarticulationTransOutMs", "coarticulationTransOutMs", "float", 40.0, None),
+    # --- Svarabhakti settings (#113: the inserted vocoid echoes its vowel) ---
+    ("svarabhaktiInheritEnabled", "svarabhaktiInheritEnabled", "bool", False, None),
+    ("svarabhaktiVowelWeight", "svarabhaktiVowelWeight", "float", 0.8, None),
+    ("svarabhaktiDurationScale", "svarabhaktiDurationScale", "float", 0.5, None),
+    ("svarabhaktiAmpScale", "svarabhaktiAmpScale", "float", 0.85, None),
+    ("svarabhaktiTapBlend", "svarabhaktiTapBlend", "float", 0.0, None),
+    ("svarabhaktiTapDip", "svarabhaktiTapDip", "float", 1.0, None),
     ("coarticulationVelarPinchEnabled", "coarticulationVelarPinchEnabled", "bool", False, None),
     ("coarticulationGraduated", "coarticulationGraduated", "bool", False, None),
     ("coarticulationAdjacencyMaxConsonants", "coarticulationAdjacencyMaxConsonants", "enum", "2", LangPackSettingsMixin._COARTICULATION_ADJACENCY_MODES),

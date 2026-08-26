@@ -968,6 +968,70 @@ Recent versions of the frontend can optionally run **modular "passes"** over the
 
 All settings below live under `settings:` in a language YAML (for example `packs/lang/en.yaml`). Passes are **disabled by default** unless `enabled: true` is set for that pass.
 
+### Svarabhakti (vowel echo around taps and trills)
+
+Some language packs insert a svarabhakti vocoid — the `ᵊ` pseudo-phoneme —
+around taps and trills (Spanish: intervocalic `ɾ` → `ᵊɾ`, word-final `ɾ` →
+`ɾ_wf ᵊ ɾ_wf`). Phonetically this element is not an independent schwa: it is
+the neighboring vowel's own gesture continuing through the rhotic, at roughly
+a quarter of the nuclear vowel's length (da Silva 2024, J. Speech Sciences;
+Recasens 1991/1999 for the carryover direction). Without this pass, `ᵊ`
+renders at one fixed neutral quality and every /Vɾ/ word ends in the same
+schwa ("far/fer/fir/for/fur" collapse to a single vowel — the #113 dig).
+
+This pass runs **before** coarticulation, so every downstream pass sees the
+inherited values. The shaped `ᵊ` is exempted from coarticulation (it *is*
+transition material already).
+
+```yaml
+settings:
+  # Master switch. Packs without it are bit-identical to previous releases.
+  svarabhaktiInheritEnabled: true
+
+  # Share of the donor vowel in the ᵊ blend (rest keeps ᵊ's own neutral
+  # color). 0.8 ≈ "replicates the nuclear vowel" per the literature.
+  svarabhaktiVowelWeight: 0.8
+
+  # Duration multiplier on the inserted ᵊ. 0.5 moves a ~37 ms insert
+  # toward the observed ~1/4-of-nuclear-vowel proportion.
+  svarabhaktiDurationScale: 0.5
+
+  # Amplitude multiplier on the ᵊ — a brief echo, not a syllable.
+  svarabhaktiAmpScale: 0.85
+
+  # Vowel-to-tap carryover: blends the TAP token's own formants toward the
+  # neighboring vowel (the alveolar locus belongs in the transitions, not
+  # held across the whole contact). 0 = off.
+  svarabhaktiTapBlend: 0.4
+
+  # Amplitude dip applied to tap tokens at emission time. The intensity
+  # difference between the tap and its flanking vowels is the tap's
+  # PRIMARY acoustic cue (Perry et al. 2023/2024) — with tap formants
+  # vowel-colored, the dip carries the rhotic percept. 1.0 = no dip.
+  svarabhaktiTapDip: 0.55
+```
+
+Related engine behavior (not a setting): the single-word final hold
+(`singleWordFinalHoldMs`) is redirected from a word-final tap to the nearest
+preceding vowel — a ~15 ms ballistic flick cannot be held, and holding it
+renders a long static constriction that reads as an appended schwa syllable.
+
+### Steady-state vowels (coarticulated vowels land on their targets)
+
+Companion to coarticulation (see below): without it, a coartic-shaped vowel
+spends its entire duration ramping onset → exit and never renders its
+canonical formants (Spanish "dos" read as [ø] — issue #113). With the flag
+on, vowels ≥45 ms render as onset-transition → held canonical steady state →
+exit-transition, the shape reference formant synthesis and natural speech
+both show.
+
+```yaml
+settings:
+  coarticulationSteadyState: true
+  coarticulationTransInMs: 35    # CV transition length
+  coarticulationTransOutMs: 40   # VC transition length
+```
+
 ### Coarticulation
 
 The coarticulation pass makes consonants "aim" toward a vowel-dependent locus instead of snapping to a single fixed consonant target. In practice this reduces edgy segment boundaries (especially in stop clusters) while keeping consonants intelligible at high speech rates.

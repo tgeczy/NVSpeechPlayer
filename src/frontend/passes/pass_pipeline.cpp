@@ -9,6 +9,7 @@ Licensed under the MIT License. See LICENSE for details.
 #include "allophones.h"
 #include "syllable_marking.h"
 #include "coarticulation.h"
+#include "svarabhakti.h"
 #include "microprosody.h"
 #include "nasalization.h"
 #include "prosody.h"
@@ -72,6 +73,7 @@ const PassDesc kPasses[] = {
     {"nasalization", PassStage::PreTiming, &passes::runNasalization},
     {"allophones", PassStage::PreTiming, &passes::runAllophones},
 
+    {"svarabhakti", PassStage::PostTiming, &passes::runSvarabhakti},
     {"coarticulation", PassStage::PostTiming, &passes::runCoarticulation},
     {"special_coartic", PassStage::PostTiming, &passes::runSpecialCoarticulation},
     {"cluster_timing", PassStage::PostTiming, &passes::runClusterTiming},

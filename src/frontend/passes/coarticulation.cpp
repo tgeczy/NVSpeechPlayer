@@ -271,6 +271,8 @@ bool runCoarticulation(PassContext& ctx, std::vector<Token>& tokens, std::string
 
     // ----- Vowel coarticulation (locus-based start/end) -----
     if (!isVowelLike(t)) continue;
+    // Svarabhakti vocoids already carry their inherited transition quality.
+    if (t.svarabhaktiShaped) continue;
     
     // Find the nearest *triggering* consonant to the left (for standard locus).
     const Token* triggerCons = nullptr;
@@ -511,6 +513,7 @@ bool runCoarticulation(PassContext& ctx, std::vector<Token>& tokens, std::string
     for (size_t i = 0; i + 1 < tokens.size(); ++i) {
       Token& t = tokens[i];
       if (t.silence || !isVowelLike(t)) continue;
+      if (t.svarabhaktiShaped) continue;
 
       // Immediately-adjacent following consonant only — conservative on
       // purpose; distant anticipation can wait for listening evidence.

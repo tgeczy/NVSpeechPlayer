@@ -139,6 +139,10 @@ struct Token {
   bool hasCoarticSteady = false;
   double steadyF1 = 0.0, steadyF2 = 0.0, steadyF3 = 0.0;
 
+  // Set by the svarabhakti pass: this vocoid already carries its inherited
+  // transition quality — the coarticulation pass must not reshape it.
+  bool svarabhaktiShaped = false;
+
   // Per-parameter transition speed scales (carried to FrameEx).
   // 0.0 = no override.  See speechPlayer_frameEx_t for semantics.
   double transF1Scale = 0.0;
