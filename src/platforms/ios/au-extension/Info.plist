@@ -34,7 +34,7 @@
                     <key>description</key>
                     <string>TGSpeechBox Speech Synthesizer</string>
                     <key>version</key>
-                    <integer>64</integer>
+                    <integer>65</integer>
                     <key>sandboxSafe</key>
                     <true/>
                     <key>tags</key>
