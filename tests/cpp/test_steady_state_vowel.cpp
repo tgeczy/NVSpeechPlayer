@@ -102,10 +102,20 @@ TEST_CASE_FIXTURE(tgsb_test::HandleFixture,
 }
 
 TEST_CASE_FIXTURE(tgsb_test::HandleFixture,
-                  "es 'dos' at 2x rate: under the floor, single-frame path") {
+                  "es 'dos' at 2x rate: fast vowels keep their steady state") {
+    // The floor is rate-relative (#113 follow-up: an absolute 45 ms floor
+    // silently restored the [ø] above ~1.7x — caught by a native tester at
+    // "61% speed" on every platform within hours of release).
     auto vf = vowelFrames(emitFrames(handle, "dˈos", 2.0));
-    // Below the 45 ms floor the vowel renders exactly as before the fix:
-    // one frame, onset values, exit ramp target.
+    REQUIRE(vf.size() >= 3);
+    CHECK_FALSE(std::isfinite(vf[vf.size() - 2].fx.endCf2));  // held steady
+}
+
+TEST_CASE_FIXTURE(tgsb_test::HandleFixture,
+                  "es 'dos' at 4x rate: below the absolute minimum, single frame") {
+    // Under ~22 ms (about three pitch periods) a three-segment split stops
+    // making acoustic sense; the single-frame path remains the fallback.
+    auto vf = vowelFrames(emitFrames(handle, "dˈos", 4.0));
     REQUIRE(vf.size() == 1);
     CHECK(std::isfinite(vf[0].fx.endCf2));
 }

@@ -789,7 +789,17 @@ static void generateAcousticEvents(
     // Boundary values match at every seam, so the short internal fades
     // cannot phase.  Phoneme-level endCf (deliberate sweeps) and diphthong
     // glides keep their own trajectories and skip this path.
-    if (t.hasCoarticSteady && !t.isDiphthongGlide && t.durationMs >= 45.0 &&
+    // Rate-relative floor (#113 follow-up, Greg's 61%-speed report): token
+    // durations arrive already divided by speed, so an absolute 45 ms floor
+    // silently disabled steady-state rendering above ~1.7x — the [ø]
+    // coloring returned exactly where fast screen-reader users live. The
+    // floor now scales with rate (a fast vowel deserves its steady state
+    // too), with a 22 ms absolute minimum below which a three-segment
+    // split stops making acoustic sense (~3 pitch periods).
+    const double steadyFloorMs =
+        (speed > 1.0) ? std::max(22.0, 45.0 / speed) : 45.0;
+    if (t.hasCoarticSteady && !t.isDiphthongGlide &&
+        t.durationMs >= steadyFloorMs &&
         !(trillEnabled && tokenIsTrill(t)) &&
         !(t.def && (t.def->hasEndCf1 || t.def->hasEndCf2 || t.def->hasEndCf3))) {
       const int icf1 = static_cast<int>(FieldId::cf1);
