@@ -31,7 +31,10 @@ Licensed under the MIT License. See LICENSE for details.
 //
 // 0.0 = off (current behavior, no coupling)
 // 1.0 = full effect
-const double kSourceTractCoupling = 0.55;
+// 0.55 -> 0.30 (2026-08-27, b801 voice update): less source darkening on
+// low-F1 vowels -- companion to the kGlottalCycleBwDelta trim above;
+// together they read as proximity, not brightness.
+const double kSourceTractCoupling = 0.30;
 
 // ============================================================================
 // Glottal-cycle F1 bandwidth modulation (Hz)
@@ -43,7 +46,11 @@ const double kSourceTractCoupling = 0.55;
 //
 // 0.0  = off
 // 30-50 = audible but natural range
-const double kGlottalCycleBwDelta = 40.0;
+// 40 -> 15 (2026-08-27, b801 voice update): the wide open-phase F1
+// damping was part of the 'distant / behind a blanket' character.  15
+// keeps the glottal-cycle liveliness while moving the speaker closer
+// to the microphone.  Ear-gated with the rest of the voice update.
+const double kGlottalCycleBwDelta = 15.0;
 
 // ============================================================================
 // Subglottal coupling (Sg1 pole-zero pair)
@@ -179,6 +186,13 @@ private:
     // for low sample rates (single warped pole lesson, #104).
     double prB0, prB1, prB2, prA1, prA2;
     double prIn1, prIn2, prOut1, prOut2;
+    // Second presence peak (b801 voice update): the b8 stage closed most
+    // of the measured 3-5.5 kHz gap against the reference-lineage LTAS
+    // but stayed ~4 dB shy at the top.  This peak finishes the job;
+    // ear-gated ("boosts clarity in the treble without the softening
+    // risk").  Same sr-clamp lesson as the first stage (#104).
+    double pr2B0, pr2B1, pr2B2, pr2A1, pr2A2;
+    double pr2In1, pr2In2, pr2Out1, pr2Out2;
 
     void initPresence() {
         const double gainDb = 6.0, Q = 0.75;
@@ -196,13 +210,31 @@ private:
         prA1 = (-2 * cosw0) / a0;
         prA2 = (1 - alpha / A) / a0;
         prIn1 = prIn2 = prOut1 = prOut2 = 0.0;
+        const double gain2Db = 4.0, Q2 = 0.8;
+        double fc2 = 4900.0;
+        if (fc2 > nyq * 0.90) fc2 = nyq * 0.90;
+        double A2 = pow(10.0, gain2Db / 40.0);
+        double w02 = PITWO * fc2 / sampleRate;
+        double cosw02 = cos(w02), sinw02 = sin(w02);
+        double alpha2 = sinw02 / (2.0 * Q2);
+        double a02 = 1 + alpha2 / A2;
+        pr2B0 = (1 + alpha2 * A2) / a02;
+        pr2B1 = (-2 * cosw02) / a02;
+        pr2B2 = (1 - alpha2 * A2) / a02;
+        pr2A1 = (-2 * cosw02) / a02;
+        pr2A2 = (1 - alpha2 / A2) / a02;
+        pr2In1 = pr2In2 = pr2Out1 = pr2Out2 = 0.0;
     }
 
     double applyPresence(double in) {
         double out = prB0*in + prB1*prIn1 + prB2*prIn2 - prA1*prOut1 - prA2*prOut2;
         prIn2 = prIn1; prIn1 = in;
         prOut2 = prOut1; prOut1 = out;
-        return out;
+        double out2 = pr2B0*out + pr2B1*pr2In1 + pr2B2*pr2In2
+                      - pr2A1*pr2Out1 - pr2A2*pr2Out2;
+        pr2In2 = pr2In1; pr2In1 = out;
+        pr2Out2 = pr2Out1; pr2Out1 = out2;
+        return out2;
     }
 
     void initHighShelf(double fc, double gainDb, double Q) {
