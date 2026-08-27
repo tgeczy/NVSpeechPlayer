@@ -54,6 +54,7 @@ FRONTEND_SRCS = \
 	$(PASSESDIR)/cluster_blend.cpp \
 	$(PASSESDIR)/cluster_timing.cpp \
 	$(PASSESDIR)/coarticulation.cpp \
+	$(PASSESDIR)/svarabhakti.cpp \
 	$(PASSESDIR)/diphthong_collapse.cpp \
 	$(PASSESDIR)/length_contrast.cpp \
 	$(PASSESDIR)/liquid_dynamics.cpp \
@@ -222,6 +223,9 @@ $(BUILDDIR)/cluster_timing.o: $(PASSESDIR)/cluster_timing.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -DNVSP_FRONTEND_EXPORTS=1 -c $< -o $@
 
 $(BUILDDIR)/coarticulation.o: $(PASSESDIR)/coarticulation.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -DNVSP_FRONTEND_EXPORTS=1 -c $< -o $@
+
+$(BUILDDIR)/svarabhakti.o: $(PASSESDIR)/svarabhakti.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -DNVSP_FRONTEND_EXPORTS=1 -c $< -o $@
 
 $(BUILDDIR)/diphthong_collapse.o: $(PASSESDIR)/diphthong_collapse.cpp
