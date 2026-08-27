@@ -841,6 +841,59 @@ phonemes:
     pf6: 4900
     voiceAmplitude: 0.9
   c:
+    # Boosted burst for initial/intervocalic position (#113-adjacent hu
+    # work, 2026-08-27): Hungarian gy/ty are affricated palatals; the old
+    # 6 ms fricated puff read as "soft paper" (fagyi, gyerek, kutya).
+    # Word-final keeps the softer c_wf clone below (nagy was right).
+    # Ear-gated by a native Hungarian.
+    # Hungarian "ty" - voiceless PALATAL STOP
+    # Needs VERY strong burst to survive intervocalic position (kutya).
+    # Palatal quality from high F2 (2200) and strong mid-freq burst.
+    _isLiquid: false
+    _isNasal: false
+    _isStop: true
+    _isVoiced: false
+    _isVowel: false
+    aspirationAmplitude: 0.15
+    caNP: 0
+    cb1: 275
+    cb2: 120
+    cb3: 220
+    cb4: 450
+    cb5: 800
+    cb6: 1500
+    cbN0: 100
+    cbNP: 100
+    cf1: 300
+    cf2: 2200
+    cf3: 2850
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.75
+    pa1: 0.10
+    pa2: 0.75
+    pa3: 0.85
+    pa4: 0.32
+    pa5: 0.18
+    pa6: 0.12
+    parallelBypass: 0
+    pb1: 250
+    pb2: 130
+    pb3: 200
+    pb4: 450
+    pb5: 800
+    pb6: 1500
+    pf1: 300
+    pf2: 2200
+    pf3: 2850
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0
+  c_wf:
     # Hungarian "ty" - voiceless PALATAL STOP
     # Needs VERY strong burst to survive intervocalic position (kutya).
     # Palatal quality from high F2 (2200) and strong mid-freq burst.
@@ -5744,6 +5797,59 @@ phonemes:
     pf6: 4900
     voiceAmplitude: 0.9
   "ɟ":
+    # Boosted burst for initial/intervocalic position (#113-adjacent hu
+    # work, 2026-08-27): Hungarian gy/ty are affricated palatals; the old
+    # 6 ms fricated puff read as "soft paper" (fagyi, gyerek, kutya).
+    # Word-final keeps the softer ɟ_wf clone below (nagy was right).
+    # Ear-gated by a native Hungarian.
+    # Hungarian "gy" - voiced PALATAL STOP (not affricate!)
+    # Needs enough burst to sound palatal, but not prolonged frication.
+    # Think "d" in "dew" with tongue at hard palate - quick but clear.
+    _isLiquid: false
+    _isNasal: false
+    _isStop: true
+    _isVoiced: true
+    _isVowel: false
+    aspirationAmplitude: 0.15
+    caNP: 0
+    cb1: 70
+    cb2: 110
+    cb3: 190
+    cb4: 450
+    cb5: 800
+    cb6: 1500
+    cbN0: 100
+    cbNP: 100
+    cf1: 250
+    cf2: 2200
+    cf3: 2850
+    cf4: 3300
+    cf5: 3750
+    cf6: 4900
+    cfN0: 250
+    cfNP: 200
+    fricationAmplitude: 0.75
+    pa1: 0.08
+    pa2: 0.75
+    pa3: 0.85
+    pa4: 0.18
+    pa5: 0.10
+    pa6: 0.06
+    parallelBypass: 0
+    pb1: 65
+    pb2: 120
+    pb3: 190
+    pb4: 450
+    pb5: 800
+    pb6: 1500
+    pf1: 250
+    pf2: 2200
+    pf3: 2850
+    pf4: 3300
+    pf5: 3750
+    pf6: 4900
+    voiceAmplitude: 0.92
+  "ɟ_wf":
     # Hungarian "gy" - voiced PALATAL STOP (not affricate!)
     # Needs enough burst to sound palatal, but not prolonged frication.
     # Think "d" in "dew" with tongue at hard palate - quick but clear.

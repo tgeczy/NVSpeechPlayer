@@ -358,6 +358,17 @@ settings:
 
 normalization:
   preReplacements:
+    # Word-final palatals keep the softer release: the boosted burst on
+    # base ɟ/c is for initial/intervocalic clarity; "nagy"/"vagy" were
+    # already right and bump with the boost.
+    - from: "ɟ"
+      to: "ɟ_wf"
+      when:
+        atWordEnd: true
+    - from: "c"
+      to: "c_wf"
+      when:
+        atWordEnd: true
     # === LONG VOWEL MAPPINGS ===
     # eSpeak outputs generic IPA long vowels (aː, eː, etc.).
     # We remap to Hungarian-specific phoneme keys that have correct
