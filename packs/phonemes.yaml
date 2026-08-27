@@ -21,8 +21,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -43,8 +43,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   3:
@@ -66,8 +66,8 @@ phonemes:
     cf1: 330
     cf2: 1480
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -88,8 +88,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.85
   "?":
@@ -111,8 +111,8 @@ phonemes:
     cf1: 100
     cf2: 150
     cf3: 200
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -133,8 +133,8 @@ phonemes:
     pf1: 100
     pf2: 150
     pf3: 200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   @:
@@ -156,8 +156,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -178,8 +178,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   E:
@@ -201,8 +201,8 @@ phonemes:
     cf1: 530
     cf2: 1680
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -223,8 +223,8 @@ phonemes:
     pf1: 530
     pf2: 1680
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   I:
@@ -246,8 +246,8 @@ phonemes:
     cf1: 400
     cf2: 1900
     cf3: 2570
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -268,8 +268,8 @@ phonemes:
     pf1: 400
     pf2: 1900
     pf3: 2570
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   O:
@@ -291,8 +291,8 @@ phonemes:
     cf1: 450
     cf2: 870
     cf3: 2570
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -313,8 +313,8 @@ phonemes:
     pf1: 600
     pf2: 990
     pf3: 2570
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   U:
@@ -336,8 +336,8 @@ phonemes:
     cf1: 405
     cf2: 900
     cf3: 2420
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -358,8 +358,8 @@ phonemes:
     pf1: 450
     pf2: 1100
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   u_es:
@@ -382,8 +382,8 @@ phonemes:
     cf1: 300
     cf2: 780
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -404,8 +404,8 @@ phonemes:
     pf1: 350
     pf2: 900
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   V:
@@ -427,8 +427,8 @@ phonemes:
     cf1: 620
     cf2: 1220
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -449,8 +449,8 @@ phonemes:
     pf1: 620
     pf2: 1220
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   X:
@@ -473,8 +473,8 @@ phonemes:
     cf1: 500
     cf2: 1500
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -495,8 +495,8 @@ phonemes:
     pf1: 500
     pf2: 1500
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.3
   x_es:
@@ -520,8 +520,8 @@ phonemes:
     cf1: 250
     cf2: 1400
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -542,8 +542,8 @@ phonemes:
     pf1: 400
     pf2: 1050
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   a:
@@ -565,8 +565,8 @@ phonemes:
     cf1: 600
     cf2: 1430
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -587,8 +587,8 @@ phonemes:
     pf1: 650
     pf2: 1220
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ä":
@@ -616,8 +616,8 @@ phonemes:
     cf1: 730
     cf2: 1450
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -638,8 +638,8 @@ phonemes:
     pf1: 730
     pf2: 1450
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.62
   "å":
@@ -669,8 +669,8 @@ phonemes:
     cf1: 780
     cf2: 1650
     cf3: 2100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -691,8 +691,8 @@ phonemes:
     pf1: 780
     pf2: 1650
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.68
   a_gb:
@@ -718,8 +718,8 @@ phonemes:
     cf1: 590
     cf2: 1320
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -740,8 +740,8 @@ phonemes:
     pf1: 650
     pf2: 1220
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.88
   a_es:
@@ -764,8 +764,8 @@ phonemes:
     cf1: 750
     cf2: 1400
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -786,8 +786,8 @@ phonemes:
     pf1: 750
     pf2: 1400
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   b:
@@ -814,8 +814,8 @@ phonemes:
     cf1: 200
     cf2: 1100
     cf3: 2150
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -836,8 +836,8 @@ phonemes:
     pf1: 200
     pf2: 1100
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   c:
@@ -867,8 +867,8 @@ phonemes:
     cf1: 300
     cf2: 2200
     cf3: 2850
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -889,8 +889,8 @@ phonemes:
     pf1: 300
     pf2: 2200
     pf3: 2850
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   c_wf:
@@ -915,8 +915,8 @@ phonemes:
     cf1: 300
     cf2: 2200
     cf3: 2850
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -937,8 +937,8 @@ phonemes:
     pf1: 300
     pf2: 2200
     pf3: 2850
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   d:
@@ -971,8 +971,8 @@ phonemes:
     cf1: 200
     cf2: 1700
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -993,8 +993,8 @@ phonemes:
     pf1: 200
     pf2: 1600
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   d_es:
@@ -1031,8 +1031,8 @@ phonemes:
     cf1: 170
     cf2: 1450
     cf3: 2250
-    cf4: 3600
-    cf5: 3750
+    cf4: 3816
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1053,8 +1053,8 @@ phonemes:
     pf1: 170
     pf2: 1450
     pf3: 2250
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "d͡z":
@@ -1077,8 +1077,8 @@ phonemes:
     cf1: 240
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1099,8 +1099,8 @@ phonemes:
     pf1: 240
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "d͡ʐ":
@@ -1123,8 +1123,8 @@ phonemes:
     cf1: 300
     cf2: 1650
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1145,8 +1145,8 @@ phonemes:
     pf1: 300
     pf2: 1650
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "d͡ʑ":
@@ -1169,8 +1169,8 @@ phonemes:
     cf1: 300
     cf2: 2100
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1191,8 +1191,8 @@ phonemes:
     pf1: 300
     pf2: 2100
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "d͡ʒ":
@@ -1223,8 +1223,8 @@ phonemes:
     cf1: 300
     cf2: 1840
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1245,8 +1245,8 @@ phonemes:
     pf1: 300
     pf2: 1840
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.65
   e:
@@ -1268,8 +1268,8 @@ phonemes:
     cf1: 430
     cf2: 2000
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1290,8 +1290,8 @@ phonemes:
     pf1: 430
     pf2: 1900
     pf3: 2700
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   e_hu:
@@ -1313,8 +1313,8 @@ phonemes:
     cf1: 350
     cf2: 2200
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1335,8 +1335,8 @@ phonemes:
     pf1: 350
     pf2: 2000
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   e_es:
@@ -1349,8 +1349,8 @@ phonemes:
     cf1: 450
     cf2: 1850
     cf3: 2650
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cb1: 80
     cb2: 90
@@ -1366,8 +1366,8 @@ phonemes:
     pf1: 450
     pf2: 1850
     pf3: 2650
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     pb1: 75
     pb2: 110
@@ -1404,8 +1404,8 @@ phonemes:
     cf1: 340
     cf2: 1100
     cf3: 2080
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1426,8 +1426,8 @@ phonemes:
     pf1: 340
     pf2: 1100
     pf3: 2080
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   g:
@@ -1458,8 +1458,8 @@ phonemes:
     cf1: 200
     cf2: 1800
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1480,8 +1480,8 @@ phonemes:
     pf1: 200
     pf2: 1500
     pf3: 2100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   h:
@@ -1513,8 +1513,8 @@ phonemes:
     cf1: 310
     cf2: 2020
     cf3: 2960
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1535,8 +1535,8 @@ phonemes:
     pf1: 310
     pf2: 2020
     pf3: 2960
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   j:
@@ -1559,8 +1559,8 @@ phonemes:
     cf1: 290
     cf2: 2000
     cf3: 2920
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1581,8 +1581,8 @@ phonemes:
     pf1: 290
     pf2: 2000
     pf3: 2920
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   j_es:
@@ -1606,8 +1606,8 @@ phonemes:
     cf1: 300
     cf2: 2200
     cf3: 3000
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1628,8 +1628,8 @@ phonemes:
     pf1: 290
     pf2: 2000
     pf3: 2920
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   k:
@@ -1664,8 +1664,8 @@ phonemes:
     cf1: 300
     cf2: 1800
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1686,8 +1686,8 @@ phonemes:
     pf1: 300
     pf2: 1500
     pf3: 2100
-    pf4: 3300
-    pf5: 3200
+    pf4: 3498
+    pf5: 3392
     pf6: 4200
     voiceAmplitude: 0
   l:
@@ -1709,8 +1709,8 @@ phonemes:
     cf1: 310
     cf2: 1050
     cf3: 2880
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1731,8 +1731,8 @@ phonemes:
     pf1: 310
     pf2: 1050
     pf3: 2880
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   l_es:
@@ -1755,8 +1755,8 @@ phonemes:
     cf1: 350
     cf2: 1400
     cf3: 2600
-    cf4: 3400
-    cf5: 3600
+    cf4: 3604
+    cf5: 3816
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -1777,8 +1777,8 @@ phonemes:
     pf1: 310
     pf2: 1050
     pf3: 2880
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   m:
@@ -1801,8 +1801,8 @@ phonemes:
     cf1: 280
     cf2: 1100
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 950
     cfNP: 250
@@ -1823,8 +1823,8 @@ phonemes:
     pf1: 430
     pf2: 850
     pf3: 2050
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
   m_es:
     # A tuned nasal /m/. Adapted for Spanish but it can be adjusted for other languages which require it.
@@ -1846,8 +1846,8 @@ phonemes:
     cf1: 230
     cf2: 1000
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 700
     cfNP: 400
@@ -1868,8 +1868,8 @@ phonemes:
     pf1: 430
     pf2: 850
     pf3: 2050
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 1.0
   n:
@@ -1892,8 +1892,8 @@ phonemes:
     cf1: 280
     cf2: 1550
     cf3: 2740
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 1450
     cfNP: 240
@@ -1914,8 +1914,8 @@ phonemes:
     pf1: 480
     pf2: 1550
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   n_es:
@@ -1938,8 +1938,8 @@ phonemes:
     cf1: 280
     cf2: 1550
     cf3: 2740
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 400
     cfNP: 375
@@ -1960,8 +1960,8 @@ phonemes:
     pf1: 480
     pf2: 1550
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 1.0
   "n̩":
@@ -1986,8 +1986,8 @@ phonemes:
     cf1: 280
     cf2: 1550
     cf3: 2740
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 1450
     cfNP: 240
@@ -2008,8 +2008,8 @@ phonemes:
     pf1: 480
     pf2: 1550
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   o:
@@ -2031,8 +2031,8 @@ phonemes:
     cf1: 440
     cf2: 860
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2053,8 +2053,8 @@ phonemes:
     pf1: 540
     pf2: 1000
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "oː":
@@ -2076,8 +2076,8 @@ phonemes:
     cf1: 440
     cf2: 860
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2098,8 +2098,8 @@ phonemes:
     pf1: 540
     pf2: 1000
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   o_es:
@@ -2112,8 +2112,8 @@ phonemes:
     cf1: 490
     cf2: 910
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cb1: 85
     cb2: 80
@@ -2129,8 +2129,8 @@ phonemes:
     pf1: 480
     pf2: 950
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     pb1: 80
     pb2: 100
@@ -2172,8 +2172,8 @@ phonemes:
     cf1: 400
     cf2: 850
     cf3: 2100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2194,8 +2194,8 @@ phonemes:
     pf1: 400
     pf2: 1150
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   r:
@@ -2220,8 +2220,8 @@ phonemes:
     cf1: 200
     cf2: 1600
     cf3: 2200
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2242,8 +2242,8 @@ phonemes:
     pf1: 200
     pf2: 1600
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   r_es:
@@ -2273,8 +2273,8 @@ phonemes:
     cf1: 420
     cf2: 1500
     cf3: 2200
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2295,8 +2295,8 @@ phonemes:
     pf1: 420
     pf2: 1500
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.85
   s:
@@ -2318,8 +2318,8 @@ phonemes:
     cf1: 320
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2340,8 +2340,8 @@ phonemes:
     pf1: 320
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 5250
     voiceAmplitude: 0
   s_es:
@@ -2371,8 +2371,8 @@ phonemes:
     cf1: 320
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2393,8 +2393,8 @@ phonemes:
     pf1: 320
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 6500
     voiceAmplitude: 0
   s_mx:
@@ -2430,8 +2430,8 @@ phonemes:
     cf1: 320
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2452,8 +2452,8 @@ phonemes:
     pf1: 320
     pf2: 1700
     pf3: 2530
-    pf4: 3300
-    pf5: 3850
+    pf4: 3498
+    pf5: 4081
     pf6: 6500
     voiceAmplitude: 0
   t:
@@ -2481,8 +2481,8 @@ phonemes:
     cf1: 380
     cf2: 1700
     cf3: 2650
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2503,8 +2503,8 @@ phonemes:
     pf1: 380
     pf2: 1700
     pf3: 2650
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   t(3:
@@ -2526,8 +2526,8 @@ phonemes:
     cf1: 350
     cf2: 1800
     cf3: 2820
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2548,8 +2548,8 @@ phonemes:
     pf1: 350
     pf2: 1800
     pf3: 2820
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "t͡s":
@@ -2572,8 +2572,8 @@ phonemes:
     cf1: 320
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2594,8 +2594,8 @@ phonemes:
     pf1: 320
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 5250
     voiceAmplitude: 0
   "t͡ɕ":
@@ -2618,8 +2618,8 @@ phonemes:
     cf1: 300
     cf2: 2100
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2640,8 +2640,8 @@ phonemes:
     pf1: 300
     pf2: 2100
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "t͡ʂ":
@@ -2664,8 +2664,8 @@ phonemes:
     cf1: 300
     cf2: 1650
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2686,8 +2686,8 @@ phonemes:
     pf1: 300
     pf2: 1650
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "t͡ʃ":
@@ -2715,8 +2715,8 @@ phonemes:
     cf1: 300
     cf2: 1840
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2737,8 +2737,8 @@ phonemes:
     pf1: 300
     pf2: 1840
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "t͡ʃ_es":
@@ -2762,8 +2762,8 @@ phonemes:
     cf1: 500
     cf2: 2180
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2784,8 +2784,8 @@ phonemes:
     pf1: 300
     pf2: 1840
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   u:
@@ -2807,8 +2807,8 @@ phonemes:
     cf1: 290
     cf2: 950
     cf3: 2280
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2829,8 +2829,8 @@ phonemes:
     pf1: 350
     pf2: 900
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   v:
@@ -2852,8 +2852,8 @@ phonemes:
     cf1: 220
     cf2: 1100
     cf3: 2080
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2874,8 +2874,8 @@ phonemes:
     pf1: 220
     pf2: 1100
     pf3: 2080
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   w:
@@ -2898,8 +2898,8 @@ phonemes:
     cf1: 290
     cf2: 610
     cf3: 2150
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2920,8 +2920,8 @@ phonemes:
     pf1: 290
     pf2: 610
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   x:
@@ -2944,8 +2944,8 @@ phonemes:
     cf1: 400
     cf2: 1050
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -2966,8 +2966,8 @@ phonemes:
     pf1: 400
     pf2: 1050
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   y:
@@ -2990,8 +2990,8 @@ phonemes:
     cf1: 270
     cf2: 1750
     cf3: 2150
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3012,8 +3012,8 @@ phonemes:
     pf1: 270
     pf2: 1750
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.7
   "yː":
@@ -3035,8 +3035,8 @@ phonemes:
     cf1: 300
     cf2: 1800
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3057,8 +3057,8 @@ phonemes:
     pf1: 300
     pf2: 1800
     pf3: 2700
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   z:
@@ -3080,8 +3080,8 @@ phonemes:
     cf1: 240
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3102,8 +3102,8 @@ phonemes:
     pf1: 240
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "Ã":
@@ -3126,8 +3126,8 @@ phonemes:
     cf1: 550
     cf2: 1150
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -3148,8 +3148,8 @@ phonemes:
     pf1: 550
     pf2: 1150
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.75
   "á":
@@ -3175,8 +3175,8 @@ phonemes:
     cf1: 795
     cf2: 1450
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3197,8 +3197,8 @@ phonemes:
     pf1: 795
     pf2: 1450
     pf3: 2800
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.78
   "ã":
@@ -3221,8 +3221,8 @@ phonemes:
     cf1: 650
     cf2: 1150
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -3243,8 +3243,8 @@ phonemes:
     pf1: 650
     pf2: 1150
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.75
   "æ":
@@ -3266,8 +3266,8 @@ phonemes:
     cf1: 620
     cf2: 1780
     cf3: 2430
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3288,8 +3288,8 @@ phonemes:
     pf1: 620
     pf2: 1780
     pf3: 2430
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ç":
@@ -3311,8 +3311,8 @@ phonemes:
     cf1: 350
     cf2: 2100
     cf3: 3200
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3333,8 +3333,8 @@ phonemes:
     pf1: 300
     pf2: 2100
     pf3: 3200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "é":
@@ -3358,8 +3358,8 @@ phonemes:
     cf1: 350
     cf2: 2200
     cf3: 2950
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3380,8 +3380,8 @@ phonemes:
     pf1: 370
     pf2: 2300
     pf3: 2950
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "í":
@@ -3403,8 +3403,8 @@ phonemes:
     cf1: 270
     cf2: 2300
     cf3: 2960
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3425,8 +3425,8 @@ phonemes:
     pf1: 290
     pf2: 2170
     pf3: 2960
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   i_hu:
@@ -3451,8 +3451,8 @@ phonemes:
     cf1: 275
     cf2: 2320
     cf3: 2960
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3473,8 +3473,8 @@ phonemes:
     pf1: 275
     pf2: 2320
     pf3: 2960
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ð":
@@ -3496,8 +3496,8 @@ phonemes:
     cf1: 270
     cf2: 1290
     cf3: 2540
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3518,8 +3518,8 @@ phonemes:
     pf1: 270
     pf2: 1290
     pf3: 2540
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ó":
@@ -3541,8 +3541,8 @@ phonemes:
     cf1: 420
     cf2: 840
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3563,8 +3563,8 @@ phonemes:
     pf1: 470
     pf2: 890
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "õ":
@@ -3586,8 +3586,8 @@ phonemes:
     cf1: 440
     cf2: 1000
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -3608,8 +3608,8 @@ phonemes:
     pf1: 440
     pf2: 1000
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.8
   "ø":
@@ -3635,8 +3635,8 @@ phonemes:
     cf1: 450
     cf2: 1550
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3657,8 +3657,8 @@ phonemes:
     pf1: 450
     pf2: 1550
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "øː":
@@ -3681,8 +3681,8 @@ phonemes:
     cf1: 450
     cf2: 1550
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3703,8 +3703,8 @@ phonemes:
     pf1: 450
     pf2: 1550
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ú":
@@ -3726,8 +3726,8 @@ phonemes:
     cf1: 265
     cf2: 760
     cf3: 2280
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3748,8 +3748,8 @@ phonemes:
     pf1: 345
     pf2: 810
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   u_hu:
@@ -3774,8 +3774,8 @@ phonemes:
     cf1: 280
     cf2: 750
     cf3: 2280
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3796,8 +3796,8 @@ phonemes:
     pf1: 340
     pf2: 700
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ĩ":
@@ -3819,8 +3819,8 @@ phonemes:
     cf1: 310
     cf2: 2020
     cf3: 2960
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -3841,8 +3841,8 @@ phonemes:
     pf1: 310
     pf2: 2020
     pf3: 2960
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.8
   "ŋ":
@@ -3867,8 +3867,8 @@ phonemes:
     cf1: 410
     cf2: 1800
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 1700
     cfNP: 240
@@ -3889,8 +3889,8 @@ phonemes:
     pf1: 480
     pf2: 1800
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ő":
@@ -3913,8 +3913,8 @@ phonemes:
     cf1: 430
     cf2: 1500
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3935,8 +3935,8 @@ phonemes:
     pf1: 480
     pf2: 1500
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "œ":
@@ -3958,8 +3958,8 @@ phonemes:
     cf1: 530
     cf2: 1500
     cf3: 2350
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -3980,8 +3980,8 @@ phonemes:
     pf1: 530
     pf2: 1500
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ũ":
@@ -4003,8 +4003,8 @@ phonemes:
     cf1: 290
     cf2: 950
     cf3: 2280
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -4025,8 +4025,8 @@ phonemes:
     pf1: 350
     pf2: 900
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.8
   "ű":
@@ -4049,8 +4049,8 @@ phonemes:
     cf1: 255
     cf2: 1740
     cf3: 2150
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4071,8 +4071,8 @@ phonemes:
     pf1: 275
     pf2: 1790
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.8
   "ɐ":
@@ -4095,8 +4095,8 @@ phonemes:
     cf1: 530
     cf2: 1310
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4117,8 +4117,8 @@ phonemes:
     pf1: 620
     pf2: 1220
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɐ_au":
@@ -4141,8 +4141,8 @@ phonemes:
     cf1: 740
     cf2: 1290
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4163,8 +4163,8 @@ phonemes:
     pf1: 780
     pf2: 1230
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.82
   "ɪ_au":
@@ -4185,8 +4185,8 @@ phonemes:
     cf1: 345
     cf2: 2050
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4207,8 +4207,8 @@ phonemes:
     pf1: 380
     pf2: 2050
     pf3: 2700
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɒ_au":
@@ -4231,8 +4231,8 @@ phonemes:
     cf1: 685
     cf2: 1000
     cf3: 2450
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4253,8 +4253,8 @@ phonemes:
     pf1: 740
     pf2: 1050
     pf3: 2450
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.68
   "ɑ":
@@ -4276,8 +4276,8 @@ phonemes:
     cf1: 700
     cf2: 1330
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4298,8 +4298,8 @@ phonemes:
     pf1: 700
     pf2: 1330
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   s_fi:
@@ -4324,8 +4324,8 @@ phonemes:
     cf1: 310
     cf2: 1550
     cf3: 2620
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4346,8 +4346,8 @@ phonemes:
     pf1: 310
     pf2: 1550
     pf3: 2620
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 5050
     voiceAmplitude: 0
   h_fi:
@@ -4385,8 +4385,8 @@ phonemes:
     cf1: 690
     cf2: 1060
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4407,8 +4407,8 @@ phonemes:
     pf1: 690
     pf2: 1060
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   a_open:
@@ -4433,8 +4433,8 @@ phonemes:
     cf1: 720
     cf2: 1200
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4455,8 +4455,8 @@ phonemes:
     pf1: 720
     pf2: 1200
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   e_fi:
@@ -4480,8 +4480,8 @@ phonemes:
     cf1: 395
     cf2: 2070
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4502,8 +4502,8 @@ phonemes:
     pf1: 395
     pf2: 2070
     pf3: 2700
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   # i_fi: removed — shares i_hu (ΔF1=5, ΔF2=20 Hz — inaudible difference).
@@ -4528,8 +4528,8 @@ phonemes:
     cf1: 390
     cf2: 730
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4550,8 +4550,8 @@ phonemes:
     pf1: 440
     pf2: 780
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   u_fi:
@@ -4575,8 +4575,8 @@ phonemes:
     cf1: 290
     cf2: 630
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4597,8 +4597,8 @@ phonemes:
     pf1: 340
     pf2: 600
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ø_fi":
@@ -4622,8 +4622,8 @@ phonemes:
     cf1: 390
     cf2: 1400
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4644,8 +4644,8 @@ phonemes:
     pf1: 390
     pf2: 1400
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "æ_fi":
@@ -4669,8 +4669,8 @@ phonemes:
     cf1: 610
     cf2: 1690
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4691,8 +4691,8 @@ phonemes:
     pf1: 610
     pf2: 1690
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   # ᵅ: UK RP PALM/START vowel - properly back "ah" quality.
@@ -4716,8 +4716,8 @@ phonemes:
     cf1: 700
     cf2: 1200
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4738,8 +4738,8 @@ phonemes:
     pf1: 700
     pf2: 1200
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɑj":
@@ -4761,8 +4761,8 @@ phonemes:
     cf1: 660
     cf2: 1200
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4783,8 +4783,8 @@ phonemes:
     pf1: 660
     pf2: 1200
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # PRICE diphthong: ramps [ɑ] -> [ɪ] (Klatt 1980 Table IV)
@@ -4814,8 +4814,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4836,8 +4836,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # RP GOAT diphthong: [ə] onset -> [ʊ] offset (F2=1000, not [w] F2=610)
@@ -4868,8 +4868,8 @@ phonemes:
     cf1: 640
     cf2: 1230
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4890,8 +4890,8 @@ phonemes:
     pf1: 640
     pf2: 1230
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # MOUTH diphthong: ramps [ɑ] -> [ʊ] (Klatt 1980 Table IV)
@@ -4922,8 +4922,8 @@ phonemes:
     cf1: 580
     cf2: 1050
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -4944,8 +4944,8 @@ phonemes:
     pf1: 580
     pf2: 1050
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.7
   "ɒ":
@@ -4967,8 +4967,8 @@ phonemes:
     cf1: 660
     cf2: 1100
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -4989,8 +4989,8 @@ phonemes:
     pf1: 720
     pf2: 1150
     pf3: 2450
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.78
   "ɔ":
@@ -5012,8 +5012,8 @@ phonemes:
     cf1: 420
     cf2: 840
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5034,8 +5034,8 @@ phonemes:
     pf1: 600
     pf2: 990
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɔ_r":
@@ -5056,8 +5056,8 @@ phonemes:
     cf1: 620
     cf2: 1050
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5078,8 +5078,8 @@ phonemes:
     pf1: 620
     pf2: 1050
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.95
   "ɔ_oz":
@@ -5110,8 +5110,8 @@ phonemes:
     cf1: 470
     cf2: 940
     cf3: 2450
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5132,8 +5132,8 @@ phonemes:
     pf1: 470
     pf2: 940
     pf3: 2450
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.90
   "ɔ_fr":
@@ -5157,8 +5157,8 @@ phonemes:
     cf1: 530
     cf2: 900
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5179,8 +5179,8 @@ phonemes:
     pf1: 600
     pf2: 950
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ø_fr":
@@ -5204,8 +5204,8 @@ phonemes:
     cf1: 370
     cf2: 1500
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5226,8 +5226,8 @@ phonemes:
     pf1: 370
     pf2: 1500
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɔj":
@@ -5249,8 +5249,8 @@ phonemes:
     cf1: 550
     cf2: 960
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5271,8 +5271,8 @@ phonemes:
     pf1: 550
     pf2: 960
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # CHOICE diphthong: ramps [ɔ] -> [ɪ] (Klatt 1980 Table IV)
@@ -5302,8 +5302,8 @@ phonemes:
     cf1: 300
     cf2: 2100
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5324,8 +5324,8 @@ phonemes:
     pf1: 300
     pf2: 2100
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "ɘ":
@@ -5347,8 +5347,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5369,8 +5369,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ə":
@@ -5392,8 +5392,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5414,8 +5414,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ə͡l":
@@ -5437,8 +5437,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5459,8 +5459,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Syllabic L: ramps from schwa [ə] toward dark [ɫ] (F2 drops 1400→1000)
@@ -5490,8 +5490,8 @@ phonemes:
     cf1: 500
     cf2: 1300
     cf3: 1800
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5512,8 +5512,8 @@ phonemes:
     pf1: 500
     pf2: 1300
     pf3: 1800
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.95
   "ɛ":
@@ -5535,8 +5535,8 @@ phonemes:
     cf1: 530
     cf2: 1750
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5557,8 +5557,8 @@ phonemes:
     pf1: 530
     pf2: 1750
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɛ_hu":
@@ -5583,8 +5583,8 @@ phonemes:
     cf1: 555
     cf2: 1870
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5605,8 +5605,8 @@ phonemes:
     pf1: 555
     pf2: 1870
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   # ɛ̃: Nasalized open-mid front vowel (Polish ę in word-final and pre-fricative position).
@@ -5632,8 +5632,8 @@ phonemes:
     cf1: 474
     cf2: 1750
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 400
     cfNP: 250
@@ -5654,8 +5654,8 @@ phonemes:
     pf1: 474
     pf2: 1750
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.88
   # ɔ̃: Nasalized open-mid back vowel (Polish ą in word-final position).
@@ -5680,8 +5680,8 @@ phonemes:
     cf1: 491
     cf2: 1025
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 380
     cfNP: 250
@@ -5702,8 +5702,8 @@ phonemes:
     pf1: 491
     pf2: 1025
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.88
   "ɜ":
@@ -5725,8 +5725,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5747,8 +5747,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɝ":
@@ -5770,8 +5770,8 @@ phonemes:
     cf1: 460
     cf2: 1300
     cf3: 1700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5792,8 +5792,8 @@ phonemes:
     pf1: 460
     pf2: 1300
     pf3: 1700
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɟ":
@@ -5823,8 +5823,8 @@ phonemes:
     cf1: 250
     cf2: 2200
     cf3: 2850
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5845,8 +5845,8 @@ phonemes:
     pf1: 250
     pf2: 2200
     pf3: 2850
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.92
   "ɟ_wf":
@@ -5871,8 +5871,8 @@ phonemes:
     cf1: 250
     cf2: 2200
     cf3: 2850
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5893,8 +5893,8 @@ phonemes:
     pf1: 250
     pf2: 2200
     pf3: 2850
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.92
   "ɡ":
@@ -5923,8 +5923,8 @@ phonemes:
     cf1: 220
     cf2: 1800
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -5945,8 +5945,8 @@ phonemes:
     pf1: 220
     pf2: 1500
     pf3: 2100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.92
   "ɡ_es":
@@ -5991,8 +5991,8 @@ phonemes:
     cf1: 220
     cf2: 1800
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6013,8 +6013,8 @@ phonemes:
     pf1: 220
     pf2: 1500
     pf3: 2100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.92
   "ɣ":
@@ -6037,8 +6037,8 @@ phonemes:
     cf1: 280
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6059,8 +6059,8 @@ phonemes:
     pf1: 280
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.85
   "ɣ_es":
@@ -6110,8 +6110,8 @@ phonemes:
     cf1: 450
     cf2: 1500
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6132,8 +6132,8 @@ phonemes:
     pf1: 450
     pf2: 1450
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.22
   "ɣ_cls":
@@ -6163,8 +6163,8 @@ phonemes:
     cf1: 450
     cf2: 1500
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6185,8 +6185,8 @@ phonemes:
     pf1: 450
     pf2: 1450
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.12
   "ɣ_cas":
@@ -6214,8 +6214,8 @@ phonemes:
     cf1: 500
     cf2: 1150
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6236,8 +6236,8 @@ phonemes:
     pf1: 500
     pf2: 1150
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.72
   "β_cas":
@@ -6262,8 +6262,8 @@ phonemes:
     cf1: 300
     cf2: 1100
     cf3: 2350
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6284,8 +6284,8 @@ phonemes:
     pf1: 300
     pf2: 1100
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.82
   "ð_cas":
@@ -6310,8 +6310,8 @@ phonemes:
     cf1: 270
     cf2: 1350
     cf3: 2540
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6332,8 +6332,8 @@ phonemes:
     pf1: 270
     pf2: 1350
     pf3: 2540
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.85
   "ð_es":
@@ -6359,8 +6359,8 @@ phonemes:
     cf1: 270
     cf2: 1350
     cf3: 2540
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6381,8 +6381,8 @@ phonemes:
     pf1: 270
     pf2: 1350
     pf3: 2540
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.30
   "ɤ":
@@ -6404,8 +6404,8 @@ phonemes:
     cf1: 620
     cf2: 1220
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6426,8 +6426,8 @@ phonemes:
     pf1: 620
     pf2: 1220
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɦ":
@@ -6460,8 +6460,8 @@ phonemes:
     cf1: 400
     cf2: 1200
     cf3: 2200
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6482,8 +6482,8 @@ phonemes:
     pf1: 500
     pf2: 1500
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   # ɨ: Close central unrounded vowel (Polish "y", also Turkish, Russian).
@@ -6508,8 +6508,8 @@ phonemes:
     cf1: 388
     cf2: 1740
     cf3: 2424
-    cf4: 3200
-    cf5: 3600
+    cf4: 3392
+    cf5: 3816
     cf6: 4800
     cfN0: 250
     cfNP: 200
@@ -6530,8 +6530,8 @@ phonemes:
     pf1: 388
     pf2: 1620
     pf3: 2424
-    pf4: 3200
-    pf5: 3600
+    pf4: 3392
+    pf5: 3816
     pf6: 4800
     voiceAmplitude: 0.88
   "ɪ":
@@ -6553,8 +6553,8 @@ phonemes:
     cf1: 360
     cf2: 1900
     cf3: 2570
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6575,8 +6575,8 @@ phonemes:
     pf1: 400
     pf2: 1900
     pf3: 2570
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɪ_gb":
@@ -6601,8 +6601,8 @@ phonemes:
     cf1: 370
     cf2: 1850
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6623,8 +6623,8 @@ phonemes:
     pf1: 410
     pf2: 1850
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ⁱ":
@@ -6648,8 +6648,8 @@ phonemes:
     cf1: 320
     cf2: 1920
     cf3: 2800
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6670,8 +6670,8 @@ phonemes:
     pf1: 320
     pf2: 1920
     pf3: 2800
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵉ":
@@ -6701,8 +6701,8 @@ phonemes:
     cf1: 470
     cf2: 1950
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6723,8 +6723,8 @@ phonemes:
     pf1: 470
     pf2: 1950
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵘ":
@@ -6748,8 +6748,8 @@ phonemes:
     cf1: 310
     cf2: 1700
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6770,8 +6770,8 @@ phonemes:
     pf1: 340
     pf2: 1700
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɪ_es":
@@ -6797,8 +6797,8 @@ phonemes:
     cf1: 300
     cf2: 2200
     cf3: 2850
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6819,8 +6819,8 @@ phonemes:
     pf1: 330
     pf2: 2150
     pf3: 2850
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɫ":
@@ -6842,8 +6842,8 @@ phonemes:
     cf1: 310
     cf2: 1050
     cf3: 2880
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6864,8 +6864,8 @@ phonemes:
     pf1: 310
     pf2: 1050
     pf3: 2880
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɭ":
@@ -6887,8 +6887,8 @@ phonemes:
     cf1: 310
     cf2: 1050
     cf3: 2880
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6909,8 +6909,8 @@ phonemes:
     pf1: 310
     pf2: 1050
     pf3: 2880
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɯ":
@@ -6932,8 +6932,8 @@ phonemes:
     cf1: 330
     cf2: 1150
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -6954,8 +6954,8 @@ phonemes:
     pf1: 330
     pf2: 1150
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɲ":
@@ -6982,8 +6982,8 @@ phonemes:
     cf1: 280
     cf2: 2500
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 2000
     cfNP: 216
@@ -7004,8 +7004,8 @@ phonemes:
     pf1: 280
     pf2: 2400
     pf3: 3000
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # -- Turkish _tr vowels -----------------------------------------------
@@ -7029,8 +7029,8 @@ phonemes:
     cf1: 750
     cf2: 1250
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7051,8 +7051,8 @@ phonemes:
     pf1: 750
     pf2: 1250
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   e_tr:
@@ -7074,8 +7074,8 @@ phonemes:
     cf1: 460
     cf2: 2000
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7096,8 +7096,8 @@ phonemes:
     pf1: 460
     pf2: 2000
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   i_tr:
@@ -7119,8 +7119,8 @@ phonemes:
     cf1: 290
     cf2: 2350
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7141,8 +7141,8 @@ phonemes:
     pf1: 300
     pf2: 2350
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   o_tr:
@@ -7164,8 +7164,8 @@ phonemes:
     cf1: 440
     cf2: 850
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7186,8 +7186,8 @@ phonemes:
     pf1: 440
     pf2: 850
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   u_tr:
@@ -7209,8 +7209,8 @@ phonemes:
     cf1: 300
     cf2: 700
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7231,8 +7231,8 @@ phonemes:
     pf1: 310
     pf2: 700
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Turkish u with umlaut - close front rounded
@@ -7255,8 +7255,8 @@ phonemes:
     cf1: 290
     cf2: 1950
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7277,8 +7277,8 @@ phonemes:
     pf1: 300
     pf2: 1950
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ø_tr":
@@ -7300,8 +7300,8 @@ phonemes:
     cf1: 420
     cf2: 1600
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7322,8 +7322,8 @@ phonemes:
     pf1: 420
     pf2: 1600
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Turkish dotless i - back unrounded, characteristic low F2
@@ -7346,8 +7346,8 @@ phonemes:
     cf1: 380
     cf2: 1050
     cf3: 2450
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7368,8 +7368,8 @@ phonemes:
     pf1: 390
     pf2: 1050
     pf3: 2450
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɛ_tr":
@@ -7391,8 +7391,8 @@ phonemes:
     cf1: 550
     cf2: 1850
     cf3: 2650
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7413,8 +7413,8 @@ phonemes:
     pf1: 550
     pf2: 1850
     pf3: 2650
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "æ_tr":
@@ -7436,8 +7436,8 @@ phonemes:
     cf1: 650
     cf2: 1750
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7458,8 +7458,8 @@ phonemes:
     pf1: 650
     pf2: 1750
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɪ_tr":
@@ -7481,8 +7481,8 @@ phonemes:
     cf1: 380
     cf2: 1900
     cf3: 2650
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7503,8 +7503,8 @@ phonemes:
     pf1: 390
     pf2: 1900
     pf3: 2650
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɔ_tr":
@@ -7526,8 +7526,8 @@ phonemes:
     cf1: 500
     cf2: 850
     cf3: 2450
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7548,8 +7548,8 @@ phonemes:
     pf1: 500
     pf2: 850
     pf3: 2450
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "œ_tr":
@@ -7571,8 +7571,8 @@ phonemes:
     cf1: 500
     cf2: 1450
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7593,8 +7593,8 @@ phonemes:
     pf1: 500
     pf2: 1450
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʊ_tr":
@@ -7616,8 +7616,8 @@ phonemes:
     cf1: 370
     cf2: 850
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7638,8 +7638,8 @@ phonemes:
     pf1: 380
     pf2: 850
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Long /a/ from yumusak ge compensation (agac, dag)
@@ -7662,8 +7662,8 @@ phonemes:
     cf1: 750
     cf2: 1250
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7684,8 +7684,8 @@ phonemes:
     pf1: 750
     pf2: 1250
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Long /oe/ from yumusak ge (ogretmen, gogus)
@@ -7708,8 +7708,8 @@ phonemes:
     cf1: 500
     cf2: 1450
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7730,8 +7730,8 @@ phonemes:
     pf1: 500
     pf2: 1450
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Long /o/ from yumusak ge compensation (dogru, soguk)
@@ -7754,8 +7754,8 @@ phonemes:
     cf1: 440
     cf2: 850
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7776,8 +7776,8 @@ phonemes:
     pf1: 440
     pf2: 850
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Long /o with stroke/ from yumusak ge (buyugu, kucugu)
@@ -7800,8 +7800,8 @@ phonemes:
     cf1: 420
     cf2: 1600
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7822,8 +7822,8 @@ phonemes:
     pf1: 420
     pf2: 1600
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     # Long /upsilon/ from yumusak ge (ugur)
@@ -7846,8 +7846,8 @@ phonemes:
     cf1: 370
     cf2: 850
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -7868,8 +7868,8 @@ phonemes:
     pf1: 380
     pf2: 850
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
 
@@ -7895,8 +7895,8 @@ phonemes:
     cf1: 320
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3900
+    cf4: 3498
+    cf5: 4134
     cf6: 5500
     cfN0: 250
     cfNP: 200
@@ -7917,8 +7917,8 @@ phonemes:
     pf1: 320
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3900
+    pf4: 3498
+    pf5: 4134
     pf6: 5900
     voiceAmplitude: 0
 
@@ -7944,8 +7944,8 @@ phonemes:
     cf1: 240
     cf2: 1390
     cf3: 2530
-    cf4: 3300
-    cf5: 3900
+    cf4: 3498
+    cf5: 4134
     cf6: 5500
     cfN0: 250
     cfNP: 200
@@ -7966,8 +7966,8 @@ phonemes:
     pf1: 240
     pf2: 1390
     pf3: 2530
-    pf4: 3300
-    pf5: 3900
+    pf4: 3498
+    pf5: 4134
     pf6: 5900
     voiceAmplitude: 0.9
 
@@ -7991,8 +7991,8 @@ phonemes:
     cf1: 280
     cf2: 2500
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 2000
     cfNP: 216
@@ -8013,8 +8013,8 @@ phonemes:
     pf1: 280
     pf2: 2400
     pf3: 3000
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.95
   "ɵ":
@@ -8036,8 +8036,8 @@ phonemes:
     cf1: 450
     cf2: 1400
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8058,8 +8058,8 @@ phonemes:
     pf1: 450
     pf2: 1400
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɹ":
@@ -8081,8 +8081,8 @@ phonemes:
     cf1: 310
     cf2: 1200
     cf3: 1620
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8103,8 +8103,8 @@ phonemes:
     pf1: 310
     pf2: 1100
     pf3: 2050
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɻ":
@@ -8131,8 +8131,8 @@ phonemes:
     cf1: 370
     cf2: 1300
     cf3: 1760
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8153,8 +8153,8 @@ phonemes:
     pf1: 350
     pf2: 1220
     pf3: 1760
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.80
   "ɽ":
@@ -8178,8 +8178,8 @@ phonemes:
     cf1: 200
     cf2: 1600
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8200,8 +8200,8 @@ phonemes:
     pf1: 200
     pf2: 1600
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ɾ":
@@ -8231,8 +8231,8 @@ phonemes:
     cf1: 300
     cf2: 1650
     cf3: 2200
-    cf4: 3800
-    cf5: 3750
+    cf4: 4028
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8254,8 +8254,8 @@ phonemes:
     pf1: 220
     pf2: 1650
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 1.0
   "ɾ_wf":
@@ -8293,8 +8293,8 @@ phonemes:
     cf1: 420
     cf2: 1550
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8315,8 +8315,8 @@ phonemes:
     pf1: 420
     pf2: 1550
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.55
   "ʁ":
@@ -8345,8 +8345,8 @@ phonemes:
     cf1: 380
     cf2: 1000
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8367,8 +8367,8 @@ phonemes:
     pf1: 380
     pf2: 1000
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.50
   "ʂ":
@@ -8390,8 +8390,8 @@ phonemes:
     cf1: 300
     cf2: 1650
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8412,8 +8412,8 @@ phonemes:
     pf1: 300
     pf2: 1650
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "ʃ":
@@ -8435,8 +8435,8 @@ phonemes:
     cf1: 300
     cf2: 1840
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8457,8 +8457,8 @@ phonemes:
     pf1: 300
     pf2: 1840
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "ʉ":
@@ -8480,8 +8480,8 @@ phonemes:
     cf1: 320
     cf2: 1500
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8502,8 +8502,8 @@ phonemes:
     pf1: 350
     pf2: 1500
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʊ":
@@ -8525,8 +8525,8 @@ phonemes:
     cf1: 405
     cf2: 900
     cf3: 2420
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8547,8 +8547,8 @@ phonemes:
     pf1: 450
     pf2: 1100
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʊ_es":
@@ -8574,8 +8574,8 @@ phonemes:
     cf1: 340
     cf2: 780
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8596,8 +8596,8 @@ phonemes:
     pf1: 340
     pf2: 780
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʊ̞":
@@ -8619,8 +8619,8 @@ phonemes:
     cf1: 430
     cf2: 1020
     cf3: 2420
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8641,8 +8641,8 @@ phonemes:
     pf1: 480
     pf2: 1060
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʌ":
@@ -8664,8 +8664,8 @@ phonemes:
     cf1: 580
     cf2: 1200
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8686,8 +8686,8 @@ phonemes:
     pf1: 580
     pf2: 1200
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʍ":
@@ -8709,8 +8709,8 @@ phonemes:
     cf1: 290
     cf2: 610
     cf3: 2150
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8731,8 +8731,8 @@ phonemes:
     pf1: 290
     pf2: 610
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
     frameEx:
@@ -8756,8 +8756,8 @@ phonemes:
     cf1: 300
     cf2: 1800
     cf3: 3020
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8778,8 +8778,8 @@ phonemes:
     pf1: 300
     pf2: 1800
     pf3: 3020
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʎ_es":
@@ -8803,8 +8803,8 @@ phonemes:
     cf1: 300
     cf2: 2200
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8825,8 +8825,8 @@ phonemes:
     pf1: 300
     pf2: 2200
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
     frameEx:
@@ -8851,8 +8851,8 @@ phonemes:
     cf1: 350
     cf2: 1650
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8873,8 +8873,8 @@ phonemes:
     pf1: 350
     pf2: 1650
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.75
   "ʐ":
@@ -8896,8 +8896,8 @@ phonemes:
     cf1: 300
     cf2: 1650
     cf3: 2550
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8918,8 +8918,8 @@ phonemes:
     pf1: 300
     pf2: 1650
     pf3: 2550
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʑ":
@@ -8941,8 +8941,8 @@ phonemes:
     cf1: 300
     cf2: 2100
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -8963,8 +8963,8 @@ phonemes:
     pf1: 300
     pf2: 2100
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʒ":
@@ -8986,8 +8986,8 @@ phonemes:
     cf1: 300
     cf2: 1840
     cf3: 2750
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9008,8 +9008,8 @@ phonemes:
     pf1: 300
     pf2: 1840
     pf3: 2750
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ʔ":
@@ -9037,8 +9037,8 @@ phonemes:
     cf1: 500
     cf2: 1500
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9059,8 +9059,8 @@ phonemes:
     pf1: 500
     pf2: 1500
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.08
   "ˀ":
@@ -9097,8 +9097,8 @@ phonemes:
     cf1: 300
     cf2: 2100
     cf3: 3100
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9121,8 +9121,8 @@ phonemes:
     pf1: 300
     pf2: 2100
     pf3: 3100
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.85
   "β":
@@ -9147,8 +9147,8 @@ phonemes:
     cf1: 300
     cf2: 1150
     cf3: 2400
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9169,8 +9169,8 @@ phonemes:
     pf1: 300
     pf2: 1150
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.88
   "θ":
@@ -9192,8 +9192,8 @@ phonemes:
     cf1: 320
     cf2: 1290
     cf3: 2540
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9214,8 +9214,8 @@ phonemes:
     pf1: 320
     pf2: 1290
     pf3: 2540
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0
   "ᴀ":
@@ -9237,8 +9237,8 @@ phonemes:
     cf1: 800
     cf2: 1250
     cf3: 2600
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9259,8 +9259,8 @@ phonemes:
     pf1: 350
     pf2: 1350
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᴇ":
@@ -9282,8 +9282,8 @@ phonemes:
     cf1: 350
     cf2: 2150
     cf3: 2950
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9304,8 +9304,8 @@ phonemes:
     pf1: 400
     pf2: 2200
     pf3: 2950
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᴊ":
@@ -9328,8 +9328,8 @@ phonemes:
     cf1: 360
     cf2: 1850
     cf3: 2650
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9350,8 +9350,8 @@ phonemes:
     pf1: 360
     pf2: 1850
     pf3: 2650
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.35
   "ᴏ":
@@ -9373,8 +9373,8 @@ phonemes:
     cf1: 610
     cf2: 1000
     cf3: 2380
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9395,8 +9395,8 @@ phonemes:
     pf1: 600
     pf2: 990
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᴐ":
@@ -9418,8 +9418,8 @@ phonemes:
     cf1: 590
     cf2: 1020
     cf3: 2380
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9440,8 +9440,8 @@ phonemes:
     pf1: 600
     pf2: 1000
     pf3: 2400
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.85
   "ᴒ":
@@ -9469,8 +9469,8 @@ phonemes:
     cf1: 620
     cf2: 1000
     cf3: 2450
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9491,8 +9491,8 @@ phonemes:
     pf1: 560
     pf2: 950
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.80
   "ᴜ":
@@ -9514,8 +9514,8 @@ phonemes:
     cf1: 405
     cf2: 900
     cf3: 2420
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -9536,8 +9536,8 @@ phonemes:
     pf1: 450
     pf2: 1100
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.8
   "ᵁ":
@@ -9559,8 +9559,8 @@ phonemes:
     cf1: 405
     cf2: 1150
     cf3: 2420
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9581,8 +9581,8 @@ phonemes:
     pf1: 450
     pf2: 1250
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵂ":
@@ -9605,8 +9605,8 @@ phonemes:
     cf1: 290
     cf2: 610
     cf3: 2150
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9627,8 +9627,8 @@ phonemes:
     pf1: 290
     pf2: 610
     pf3: 2150
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.35
   "ᵃ":
@@ -9650,8 +9650,8 @@ phonemes:
     cf1: 650
     cf2: 1430
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9672,8 +9672,8 @@ phonemes:
     pf1: 700
     pf2: 1220
     pf3: 2600
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵊ":
@@ -9696,8 +9696,8 @@ phonemes:
     cf1: 500
     cf2: 1400
     cf3: 2300
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9718,8 +9718,8 @@ phonemes:
     pf1: 500
     pf2: 1400
     pf3: 2300
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵊᵉ":
@@ -9741,8 +9741,8 @@ phonemes:
     cf1: 480
     cf2: 1600
     cf3: 2500
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9763,8 +9763,8 @@ phonemes:
     pf1: 480
     pf2: 1600
     pf3: 2500
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵒ":
@@ -9789,8 +9789,8 @@ phonemes:
     cf1: 480
     cf2: 1050
     cf3: 2350
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9811,8 +9811,8 @@ phonemes:
     pf1: 480
     pf2: 1050
     pf3: 2350
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵻ":
@@ -9834,8 +9834,8 @@ phonemes:
     cf1: 360
     cf2: 1750
     cf3: 2530
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9856,8 +9856,8 @@ phonemes:
     pf1: 400
     pf2: 1750
     pf3: 2530
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ᵾ":
@@ -9879,8 +9879,8 @@ phonemes:
     cf1: 290
     cf2: 1350
     cf3: 2280
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9901,8 +9901,8 @@ phonemes:
     pf1: 350
     pf2: 1250
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 1
   "ᵿ":
@@ -9926,8 +9926,8 @@ phonemes:
     cf1: 290
     cf2: 1250
     cf3: 2280
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -9948,8 +9948,8 @@ phonemes:
     pf1: 350
     pf2: 1200
     pf3: 2200
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.9
   "ẽ":
@@ -9971,8 +9971,8 @@ phonemes:
     cf1: 430
     cf2: 1900
     cf3: 2700
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 250
@@ -9993,8 +9993,8 @@ phonemes:
     pf1: 430
     pf2: 1900
     pf3: 2700
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.8
   "":
@@ -10017,8 +10017,8 @@ phonemes:
     cf1: 260
     cf2: 2070
     cf3: 3020
-    cf4: 3300
-    cf5: 3750
+    cf4: 3498
+    cf5: 3975
     cf6: 4900
     cfN0: 250
     cfNP: 200
@@ -10039,8 +10039,8 @@ phonemes:
     pf1: 260
     pf2: 2070
     pf3: 3020
-    pf4: 3300
-    pf5: 3750
+    pf4: 3498
+    pf5: 3975
     pf6: 4900
     voiceAmplitude: 0.35
 
