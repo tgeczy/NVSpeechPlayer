@@ -152,7 +152,7 @@ struct Settings {
     bool logging_enabled = false;
     std::unordered_set<std::wstring> excluded;
 
-    int sample_rate = 16000;
+    int sample_rate = 22050;
     int pauseMode = 1; // 0=off, 1=short, 2=long
 
     // Pitch mode: 0 = language default, 1-5 = specific mode.
@@ -203,7 +203,7 @@ Settings load_settings(const std::wstring& ini_path)
     for (const auto& t : split_list(buf)) s.excluded.insert(t);
     s.excluded.erase(L"default");
 
-    s.sample_rate = GetPrivateProfileIntW(L"Audio", L"sampleRate", 16000, ini_path.c_str());
+    s.sample_rate = GetPrivateProfileIntW(L"Audio", L"sampleRate", 22050, ini_path.c_str());
     s.pauseMode = GetPrivateProfileIntW(L"Audio", L"pauseMode", 1, ini_path.c_str());
 
     // Pitch mode: read string, map to index.
@@ -491,8 +491,9 @@ void reset_sliders_to_defaults(HWND hDlg)
     set_slider(hDlg, IDC_SL_SHIMMER,     0);
     set_slider(hDlg, IDC_SL_SHARPNESS,   50);
 
-    // Reset sample rate to 16000, pause mode to Short, pitch to language default.
-    SendDlgItemMessageW(hDlg, IDC_SAMPLE_RATE, CB_SETCURSEL, 1, 0);
+    // Reset sample rate to 22050 (#117: match every other platform's
+    // default), pause mode to Short, pitch to language default.
+    SendDlgItemMessageW(hDlg, IDC_SAMPLE_RATE, CB_SETCURSEL, 2, 0);
     SendDlgItemMessageW(hDlg, IDC_PAUSE_MODE, CB_SETCURSEL, 1, 0);
     SendDlgItemMessageW(hDlg, IDC_PITCH_MODE, CB_SETCURSEL, 0, 0);
     set_slider(hDlg, IDC_SL_INFLECTION, 50);
@@ -534,7 +535,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 
         // Sample rate combo.
         HWND combo = GetDlgItem(hDlg, IDC_SAMPLE_RATE);
-        int sel = 1; // default to 16000
+        int sel = 2; // default to 22050 (#117)
         for (int i = 0; i < 4; ++i) {
             SendMessageW(combo, CB_ADDSTRING, 0, (LPARAM)kSampleRateLabels[i]);
             if (kSampleRates[i] == st->settings.sample_rate) sel = i;
