@@ -350,6 +350,7 @@ static void generateAcousticEvents(
     // because the prominence pass assigns voiceAmplitude after any
     // token-level value could be set. Gated by the pack knob (1.0 = off).
     if (t.def && (t.def->flags & kIsTap) != 0 &&
+        (t.def->flags & kIsTrill) == 0 &&  // dual-flagged r: trill wins (#115)
         pack.lang.svarabhaktiTapDip < 1.0) {
       base[va] *= std::clamp(pack.lang.svarabhaktiTapDip, 0.1, 1.0);
     }
@@ -1393,7 +1394,8 @@ static void generateAcousticEvents(
     // New approach: onset starts at 70% previous vowel + 30% tap formants,
     // notch reaches 100% tap target (brief), recovery blends back out.
     // The DSP crossfade to the following token handles the exit naturally.
-    const bool isTap = t.def && ((t.def->flags & kIsTap) != 0);
+    const bool isTap = t.def && ((t.def->flags & kIsTap) != 0) &&
+                       ((t.def->flags & kIsTrill) == 0);  // dual-flagged r: trill wins (#115)
     // Skip micro-event notch for very short taps.
     if (isTap && t.durationMs >= 8.0) {
       const double totalDur = t.durationMs;

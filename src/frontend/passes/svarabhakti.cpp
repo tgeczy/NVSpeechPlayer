@@ -131,6 +131,12 @@ bool runSvarabhakti(
     for (std::size_t i = 0; i < tokens.size(); ++i) {
       Token& t = tokens[i];
       if (!t.def || (t.def->flags & kIsTap) == 0) continue;
+      // The trill phoneme is dual-flagged tap+trill (since the original
+      // pack import, so tap-matching allophone rules can reach it). Trill
+      // wins here: its contact phases carry their own modulation, and
+      // vowel-blending them dulled the closures into "a d in the middle
+      // of rr" (#115, caught in the field within hours).
+      if ((t.def->flags & kIsTrill) != 0) continue;
       const Token* donor = findDonor(tokens, i);
       if (!donor) continue;
       for (const auto& pair : kPairs) {

@@ -87,6 +87,25 @@ TEST_CASE_FIXTURE(tgsb_test::HandleFixture,
 }
 
 TEST_CASE_FIXTURE(tgsb_test::HandleFixture,
+                  "svarabhakti: trills are NOT taps — contacts keep their own color") {
+    // The r phoneme is dual-flagged tap+trill (original pack import). The
+    // tap vowel-blend/dip dulled trill contact phases into "a d in the
+    // middle of rr" (#115, guerra/herramienta). Trill wins at every
+    // kIsTap consumer: contacts must keep the trill's own formants.
+    auto fs = emitFrames(handle, "ɡˈera");  // es rr context
+    bool sawOwnColor = false;
+    for (const auto& c : fs) {
+        if (!c.hasFrame) continue;
+        // Trill contact zone: the def's cf2 ~1650-1800, NOT blended down
+        // toward the flanking /e a/ mix (~1290-1450).
+        if (c.f.cf2 > 1700.0 && c.f.voiceAmplitude > 0.4 &&
+            c.f.voiceAmplitude < 0.7)
+            sawOwnColor = true;
+    }
+    CHECK(sawOwnColor);
+}
+
+TEST_CASE_FIXTURE(tgsb_test::HandleFixture,
                   "svarabhakti: final-tap hold redirected to the nucleus") {
     auto fs = emitFrames(handle, "amˈoɾ");
     // Find the nuclear /o/ (loud, F1 near 490) and everything after it.
