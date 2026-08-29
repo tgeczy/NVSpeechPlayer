@@ -442,7 +442,14 @@ class VoicingToneMixin:
                 except (ValueError, TypeError):
                     return default
 
-            # Apply voice tilt OFFSET from the slider
+            # Apply voice tilt OFFSET from the slider.
+            # Direction is INTENTIONAL — think of a valve: at 100 it's wide
+            # open and the rush muffles/darkens the voice; closing it toward
+            # 0 opens the voice up, brighter. So slider up = positive dB/oct
+            # = darker; slider down = negative = brighter (the DSP's
+            # voicedTiltDbPerOct treats negative as brighter — opposite sign
+            # convention from aspirationTiltDbPerOct and fricationTiltDb).
+            # Do not "fix" this by flipping the map.
             tiltSlider = safe_float(getattr(self, "_curVoiceTilt", 50), 50.0)
             tiltOffset = (tiltSlider - 50.0) * (24.0 / 50.0)
             tone.voicedTiltDbPerOct += tiltOffset

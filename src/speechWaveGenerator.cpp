@@ -684,7 +684,13 @@ public:
                 // partially self-adapts via its IIR feedback (0.75*lastValue).
                 double fricNoise = fricGenerator.getNext() * kFricNoiseScale * fricAmp * bypassGain * bypassVoicedDuck * voicedFricScale;
 
-                // Apply tilt filter to frication (same tilt as aspiration for now)
+                // Apply tilt filter to frication (same tilt as aspiration for
+                // now). NOTE: this means aspirationTiltDbPerOct colors the
+                // frication SOURCE, while frameEx.fricationTiltDb is applied
+                // separately to the parallel amplitudes (formantGenerator.h)
+                // — two different knobs converging on fricative spectrum.
+                // Keep in mind when tuning either (asp tilt ships 0.0, so
+                // this path is inert by default).
                 fricNoise = voiceGenerator.applyFricationTilt(fricNoise);
 
                 // Optional Klatt-style glottal-cycle AM for noise sources.

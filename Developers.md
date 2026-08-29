@@ -184,7 +184,7 @@ This allows older drivers to continue working with newer DLLs, and vice versa.
 | `highShelfGainDb` | double | 5.5 | -12 to +12 | High-shelf EQ gain in dB. Positive = brighter; negative = darker. |
 | `highShelfFcHz` | double | 2000.0 | 500–8000 | High-shelf corner frequency in Hz. |
 | `highShelfQ` | double | 0.7 | 0.3–2.0 | High-shelf Q factor. Higher = more resonant shelf transition. |
-| `voicedTiltDbPerOct` | double | 0.0 | -24 to +24 | Spectral tilt in dB/octave. Negative = darker (normal for speech); positive = brighter. |
+| `voicedTiltDbPerOct` | double | 0.0 | -24 to +24 | Spectral tilt in dB/octave. Negative = BRIGHTER (ramps in the +6 dB/oct lip-radiation derivative); positive = darker/smoother. Note: opposite sign convention from `aspirationTiltDbPerOct` and `fricationTiltDb`. |
 
 ### V2 parameters (DSP version 4+)
 
@@ -199,7 +199,7 @@ This allows older drivers to continue working with newer DLLs, and vice versa.
 | Parameter | Type | Default | Range | Description |
 |-----------|------|---------|-------|-------------|
 | `speedQuotient` | double | 2.0 | 0.5–4.0 | Glottal pulse asymmetry. Lower (0.5–1.5) = softer/female-like; higher (2.5–4.0) = sharper/male/pressed. |
-| `aspirationTiltDbPerOct` | double | 0.0 | -12 to +12 | Spectral tilt for aspiration noise, independent of `voicedTiltDbPerOct`. |
+| `aspirationTiltDbPerOct` | double | 0.0 | -12 to +12 | Spectral tilt for aspiration noise (negative = darker, positive = brighter), independent of `voicedTiltDbPerOct`. Caveat: the frication noise source shares this filter (`applyFricationTilt` reads the same smoothed value), so non-zero values also color fricatives — stacking with any per-phoneme `fricationTiltDb`, which is applied separately to the parallel amplitudes. |
 | `cascadeBwScale` | double | 0.9 | 0.3–2.0 | Global cascade formant bandwidth multiplier. Lower = sharper formant peaks; higher = softer/more muffled. |
 | `tremorDepth` | double | 0.0 | 0.0–0.5 | Vocal tremor depth. A ~5.5 Hz LFO modulates amplitude for elderly/shaky voice. Stacks with jitter/shimmer. |
 
@@ -629,7 +629,7 @@ The driver exposes 14 sliders for real-time voice tuning:
 
 | Slider | Range | Default | Maps to |
 |--------|-------|---------|---------|
-| Voice tilt (brightness) | 0–100 | 50 | `voicedTiltDbPerOct` (-24 to +24 dB/oct) |
+| Voice tilt (brightness) | 0–100 | 50 | `voicedTiltDbPerOct` (-24 to +24 dB/oct). Direction is intentional: slider up = positive = more tilt = darker/bassier; slider down = brighter. |
 | Noise glottal modulation | 0–100 | 0 | `noiseGlottalModDepth` (0.0–1.0) |
 | Pitch-sync F1 delta | 0–100 | 50 | `pitchSyncF1DeltaHz` (-60 to +60 Hz) |
 | Pitch-sync B1 delta | 0–100 | 50 | `pitchSyncB1DeltaHz` (-50 to +50 Hz) |

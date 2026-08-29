@@ -119,19 +119,27 @@ typedef struct {
     /**
      * Spectral tilt applied to voiced signal, in dB per octave.
      * 
-     * This provides a natural-sounding gradual roll-off that increases with
-     * frequency, mimicking the natural harmonic decay of real glottal sources.
-     * Unlike a lowpass filter (which has a sharp "knee"), tilt is smoother
-     * and more voice-like.
+     * Implemented as a tilt pole plus a lip-radiation mix ramp (see
+     * voiceGenerator.h updateTiltTargets): negative values ramp in more
+     * of the +6 dB/oct radiation derivative (brighter, more presence,
+     * still warm); positive values fade it out and steepen the roll-off
+     * toward pure glottal flow (darker, smoother).
      * 
+     * SIGN CONVENTION: NEGATIVE = BRIGHTER, POSITIVE = DARKER.
+     * This is the OPPOSITE of aspirationTiltDbPerOct and of the
+     * per-phoneme frameEx.fricationTiltDb (both: negative = darker).
+     * Shipped tuning depends on this direction (voice profiles use
+     * -6/-10 "for brightness"), so the sign must not be flipped without
+     * migrating every stored profile and preset.
+     *
      * Typical values:
-     *   - Adult male:  -4 to -6 dB/oct (brighter, buzzier)
-     *   - Female:      -7 to -10 dB/oct (smoother)
-     *   - Child/soft:  -9 to -12 dB/oct (very smooth/muffled)
-     *   - 0 dB/oct:    No tilt (brightest, most synthetic)
+     *   - -4 to -8:   brighter, crisper, more presence
+     *   - 0:          neutral (no tilt)
+     *   - +4 to +8:   darker, smoother, mellower
+     *   - +9 to +12:  very smooth/muffled (child/soft)
      * 
-     * Negative values = darker/smoother (normal for speech)
-     * Positive values = brighter (unusual, may sound harsh)
+     * Negative values = brighter (radiation boost; how profiles brighten)
+     * Positive values = darker/smoother (fades radiation, steeper roll-off)
      * 
      * Default: 0.0 (no additional tilt, preserves original DSP behavior)
      */
@@ -263,11 +271,16 @@ typedef struct {
      * Range: 0.3 to 2.0 (clamped by DSP)
      *   - 0.3: Very sharp/ringy formants, crystalline, may ring on transitions
      *   - 0.7: Noticeably sharper, clear vowel definition
+     *   - 0.9: default — mild narrowing for clearer vowels
      *   - 1.0: neutral, slight muffle
-     *   - 0.75: default for more clarity
      *   - 1.2-1.4: Softer, warmer, formants blend more
-     * 
-     * Default: 0.75 (slight scaling, mostly preserves original behavior)
+     *
+     * NOTE: the cascade additionally tightens F1 (x0.75) and F2 (x0.88)
+     * relative to this scale (formantGenerator.h), so the effective
+     * F1/F2 scaling at the default is ~0.675/0.792 — narrower than this
+     * value alone suggests.
+     *
+     * Default: 0.9 (mild narrowing, matches TGSB_VOICING_TONE_DEFAULTS)
      */
     double cascadeBwScale;
 
