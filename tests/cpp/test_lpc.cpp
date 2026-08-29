@@ -38,8 +38,12 @@ TEST_CASE_FIXTURE(HandleFixture,
     // is broken and no further LPC test results are trustworthy.
     auto res = synthesizeToPcmWithTrace(handle, "a", 1.0, 140.0, 0.5, 22050);
     REQUIRE(!res.pcm.empty());
+    // Order 20 (was 16): since the b9 vowel-B1 widening the /a/ F1 peak
+    // is genuinely broader; an order-16 all-pole envelope flattens it
+    // into a shoulder and the peak-picker misses it. More poles let the
+    // envelope carve the wide F1 as its own local maximum.
     auto f = extractFormantsLPC(res.pcm, res.pcm.size() / 2, 22050,
-                                /*window*/ 1024, /*order*/ 16);
+                                /*window*/ 1024, /*order*/ 20);
     REQUIRE(f.valid);
     REQUIRE(f.freqsHz.size() >= 3);
     MESSAGE("  /a/ LPC formants: F1=" << (int)f.freqsHz[0]

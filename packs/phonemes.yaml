@@ -10,7 +10,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 45
     cb3: 82.5
     cb4: 250
@@ -34,7 +34,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 60
     pb3: 110
     pb4: 250
@@ -55,7 +55,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 45
     cb3: 82.5
     cb4: 250
@@ -79,7 +79,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 60
     pb3: 110
     pb4: 250
@@ -145,7 +145,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 45
     cb3: 82.5
     cb4: 250
@@ -169,7 +169,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 60
     pb3: 110
     pb4: 250
@@ -190,7 +190,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 66
+    cb1: 118.8
     cb2: 67.5
     cb3: 150
     cb4: 250
@@ -214,7 +214,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 60
+    pb1: 108
     pb2: 90
     pb3: 200
     pb4: 250
@@ -235,7 +235,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -259,7 +259,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 50
+    pb1: 90
     pb2: 100
     pb3: 140
     pb4: 250
@@ -280,7 +280,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 99
+    cb1: 178.2
     cb2: 90
     cb3: 180
     cb4: 250
@@ -304,7 +304,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 100
     pb3: 200
     pb4: 250
@@ -325,7 +325,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 75
     cb3: 60
     cb4: 250
@@ -349,7 +349,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 80
     pb4: 250
@@ -371,7 +371,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -395,7 +395,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -416,7 +416,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 37.5
     cb3: 105
     cb4: 250
@@ -440,7 +440,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 50
     pb3: 140
     pb4: 250
@@ -554,7 +554,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 116.6
+    cb1: 209.88
     cb2: 76.5
     cb3: 178
     cb4: 250
@@ -578,7 +578,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 70
     pb3: 160
     pb4: 250
@@ -605,7 +605,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 170
+    cb1: 300
     cb2: 120
     cb3: 170
     cb4: 250
@@ -629,7 +629,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 170
+    pb1: 300
     pb2: 120
     pb3: 170
     pb4: 250
@@ -658,7 +658,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 200
+    cb1: 300
     cb2: 180
     cb3: 170
     cb4: 250
@@ -682,7 +682,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 200
+    pb1: 300
     pb2: 180
     pb3: 170
     pb4: 250
@@ -707,7 +707,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 116.6
+    cb1: 209.88
     cb2: 76.5
     cb3: 178
     cb4: 250
@@ -731,7 +731,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 70
     pb3: 160
     pb4: 250
@@ -753,7 +753,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 140
+    cb1: 252
     cb2: 90
     cb3: 178
     cb4: 250
@@ -777,7 +777,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 140
+    pb1: 252
     pb2: 90
     pb3: 160
     pb4: 250
@@ -1257,7 +1257,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 75
     cb3: 150
     cb4: 250
@@ -1281,7 +1281,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -1302,7 +1302,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 75
     cb3: 150
     cb4: 250
@@ -1326,7 +1326,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -1352,7 +1352,7 @@ phonemes:
     cf4: 3498
     cf5: 3975
     cf6: 4900
-    cb1: 80
+    cb1: 144
     cb2: 90
     cb3: 160
     cb4: 250
@@ -1369,7 +1369,7 @@ phonemes:
     pf4: 3498
     pf5: 3975
     pf6: 4900
-    pb1: 75
+    pb1: 135
     pb2: 110
     pb3: 200
     pb4: 250
@@ -1502,7 +1502,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 49.5
+    cb1: 89.1
     cb2: 150
     cb3: 300
     cb4: 250
@@ -1526,7 +1526,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 200
     pb3: 400
     pb4: 250
@@ -1975,7 +1975,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 1
-    cb1: 90
+    cb1: 162
     cb2: 260
     cb3: 225
     cb4: 300
@@ -1999,7 +1999,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 40
+    pb1: 72
     pb2: 300
     pb3: 300
     pb4: 300
@@ -2020,7 +2020,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 120
+    cb1: 216
     cb2: 120
     cb3: 120
     cb4: 250
@@ -2044,7 +2044,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 120
+    pb1: 216
     pb2: 120
     pb3: 120
     pb4: 250
@@ -2065,7 +2065,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 120
+    cb1: 216
     cb2: 120
     cb3: 120
     cb4: 250
@@ -2089,7 +2089,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 120
+    pb1: 216
     pb2: 120
     pb3: 120
     pb4: 250
@@ -2115,7 +2115,7 @@ phonemes:
     cf4: 3498
     cf5: 3975
     cf6: 4900
-    cb1: 85
+    cb1: 153
     cb2: 80
     cb3: 150
     cb4: 250
@@ -2132,7 +2132,7 @@ phonemes:
     pf4: 3498
     pf5: 3975
     pf6: 4900
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 190
     pb4: 250
@@ -2796,7 +2796,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -2820,7 +2820,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -2979,7 +2979,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 80
+    cb1: 144
     cb2: 100
     cb3: 150
     cb4: 250
@@ -3003,7 +3003,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 150
     pb4: 250
@@ -3024,7 +3024,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 49.5
+    cb1: 89.1
     cb2: 150
     cb3: 300
     cb4: 250
@@ -3048,7 +3048,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 200
     pb3: 400
     pb4: 250
@@ -3115,7 +3115,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 100
+    cb1: 180
     cb2: 150
     cb3: 200
     cb4: 250
@@ -3139,7 +3139,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 150
     pb3: 200
     pb4: 250
@@ -3164,7 +3164,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 166.6
+    cb1: 299.88
     cb2: 155
     cb3: 200
     cb4: 250
@@ -3188,7 +3188,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 130
     pb3: 185
     pb4: 250
@@ -3210,7 +3210,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 100
+    cb1: 180
     cb2: 150
     cb3: 200
     cb4: 250
@@ -3234,7 +3234,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 150
     pb3: 200
     pb4: 250
@@ -3255,7 +3255,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 112.5
     cb3: 240
     cb4: 250
@@ -3279,7 +3279,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 150
     pb3: 320
     pb4: 250
@@ -3347,7 +3347,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 165
     cb4: 250
@@ -3371,7 +3371,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -3392,7 +3392,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 49.5
+    cb1: 89.1
     cb2: 150
     cb3: 300
     cb4: 250
@@ -3416,7 +3416,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 200
     pb3: 400
     pb4: 250
@@ -3440,7 +3440,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 49.5
+    cb1: 89.1
     cb2: 150
     cb3: 300
     cb4: 250
@@ -3464,7 +3464,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 200
     pb3: 400
     pb4: 250
@@ -3530,7 +3530,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 120
+    cb1: 216
     cb2: 120
     cb3: 120
     cb4: 250
@@ -3554,7 +3554,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 120
+    pb1: 216
     pb2: 120
     pb3: 120
     pb4: 250
@@ -3575,7 +3575,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 120
+    cb1: 216
     cb2: 120
     cb3: 120
     cb4: 250
@@ -3599,7 +3599,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 120
+    pb1: 216
     pb2: 120
     pb3: 120
     pb4: 250
@@ -3624,7 +3624,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 160
     cb4: 250
@@ -3648,7 +3648,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -3670,7 +3670,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 160
     cb4: 250
@@ -3694,7 +3694,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -3715,7 +3715,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -3739,7 +3739,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -3763,7 +3763,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -3787,7 +3787,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -3808,7 +3808,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 49.5
+    cb1: 89.1
     cb2: 150
     cb3: 300
     cb4: 250
@@ -3832,7 +3832,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 200
     pb3: 400
     pb4: 250
@@ -3902,7 +3902,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 160
     cb4: 250
@@ -3926,7 +3926,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -3947,7 +3947,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 66
+    cb1: 118.8
     cb2: 67.5
     cb3: 150
     cb4: 250
@@ -3971,7 +3971,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 60
+    pb1: 108
     pb2: 90
     pb3: 200
     pb4: 250
@@ -3992,7 +3992,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -4016,7 +4016,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -4038,7 +4038,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 80
+    cb1: 144
     cb2: 100
     cb3: 150
     cb4: 250
@@ -4062,7 +4062,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 150
     pb4: 250
@@ -4084,7 +4084,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 37.5
     cb3: 105
     cb4: 250
@@ -4108,7 +4108,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 50
     pb3: 140
     pb4: 250
@@ -4130,7 +4130,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 140
+    cb1: 252
     cb2: 100
     cb3: 140
     cb4: 250
@@ -4154,7 +4154,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 95
     pb3: 160
     pb4: 250
@@ -4174,7 +4174,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -4198,7 +4198,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 50
+    pb1: 90
     pb2: 100
     pb3: 140
     pb4: 250
@@ -4220,7 +4220,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 145
+    cb1: 261
     cb2: 120
     cb3: 200
     cb4: 250
@@ -4244,7 +4244,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 155
+    pb1: 279
     pb2: 130
     pb3: 250
     pb4: 250
@@ -4265,7 +4265,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 170
+    cb1: 300
     cb2: 120
     cb3: 150
     cb4: 250
@@ -4289,7 +4289,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 170
+    pb1: 300
     pb2: 120
     pb3: 150
     pb4: 250
@@ -4374,7 +4374,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 170
+    cb1: 300
     cb2: 120
     cb3: 150
     cb4: 250
@@ -4398,7 +4398,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 170
+    pb1: 300
     pb2: 120
     pb3: 150
     pb4: 250
@@ -4422,7 +4422,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 170
+    cb1: 300
     cb2: 120
     cb3: 150
     cb4: 250
@@ -4446,7 +4446,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 170
+    pb1: 300
     pb2: 120
     pb3: 150
     pb4: 250
@@ -4469,7 +4469,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 75
     cb3: 150
     cb4: 250
@@ -4493,7 +4493,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -4517,7 +4517,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 120
+    cb1: 216
     cb2: 120
     cb3: 120
     cb4: 250
@@ -4541,7 +4541,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 120
+    pb1: 216
     pb2: 120
     pb3: 120
     pb4: 250
@@ -4564,7 +4564,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -4588,7 +4588,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -4611,7 +4611,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 160
     cb4: 250
@@ -4635,7 +4635,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -4658,7 +4658,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 100
+    cb1: 180
     cb2: 100
     cb3: 150
     cb4: 250
@@ -4682,7 +4682,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 100
     pb3: 150
     pb4: 250
@@ -4705,7 +4705,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 170
+    cb1: 300
     cb2: 120
     cb3: 150
     cb4: 250
@@ -4729,7 +4729,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 170
+    pb1: 300
     pb2: 120
     pb3: 150
     pb4: 250
@@ -4750,7 +4750,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 52.5
     cb3: 150
     cb4: 250
@@ -4774,7 +4774,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 70
     pb3: 200
     pb4: 250
@@ -4803,7 +4803,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 130
+    cb1: 234
     cb2: 100
     cb3: 160
     cb4: 250
@@ -4827,7 +4827,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 100
     pb3: 160
     pb4: 250
@@ -4857,7 +4857,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 52.5
     cb3: 105
     cb4: 250
@@ -4881,7 +4881,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 70
     pb3: 140
     pb4: 250
@@ -4911,7 +4911,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 150
+    cb1: 270
     cb2: 200
     cb3: 250
     cb4: 250
@@ -4935,7 +4935,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 150
+    pb1: 270
     pb2: 200
     pb3: 250
     pb4: 250
@@ -4956,7 +4956,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 170
+    cb1: 300
     cb2: 120
     cb3: 200
     cb4: 250
@@ -4980,7 +4980,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 170
+    pb1: 300
     pb2: 120
     pb3: 250
     pb4: 250
@@ -5001,7 +5001,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 99
+    cb1: 178.2
     cb2: 90
     cb3: 180
     cb4: 250
@@ -5025,7 +5025,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 100
     pb3: 200
     pb4: 250
@@ -5045,7 +5045,7 @@ phonemes:
     _isVoiced: true
     _isVowel: true
     aspirationAmplitude: 0
-    cb1: 140
+    cb1: 252
     cb2: 180
     cb3: 220
     cb4: 250
@@ -5069,7 +5069,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 140
+    pb1: 252
     pb2: 180
     pb3: 220
     pb4: 250
@@ -5094,7 +5094,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 100
+    cb1: 180
     cb2: 90
     cb3: 180
     cb4: 250
@@ -5123,7 +5123,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 140
+    pb1: 252
     pb2: 100
     pb3: 200
     pb4: 250
@@ -5146,7 +5146,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 99
+    cb1: 178.2
     cb2: 90
     cb3: 180
     cb4: 250
@@ -5170,7 +5170,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 100
     pb3: 200
     pb4: 250
@@ -5193,7 +5193,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 160
     cb4: 250
@@ -5217,7 +5217,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -5238,7 +5238,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 37.5
     cb3: 97.5
     cb4: 250
@@ -5262,7 +5262,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 50
     pb3: 130
     pb4: 250
@@ -5336,7 +5336,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 45
     cb3: 82.5
     cb4: 250
@@ -5360,7 +5360,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 60
     pb3: 110
     pb4: 250
@@ -5381,7 +5381,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 130
+    cb1: 234
     cb2: 100
     cb3: 160
     cb4: 250
@@ -5405,7 +5405,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 100
     pb3: 160
     pb4: 250
@@ -5426,7 +5426,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 45
     cb3: 82.5
     cb4: 250
@@ -5450,7 +5450,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 60
     pb3: 110
     pb4: 250
@@ -5479,7 +5479,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 70
     cb3: 120
     cb4: 250
@@ -5503,7 +5503,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 80
     pb3: 130
     pb4: 250
@@ -5524,7 +5524,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 90
+    cb1: 162
     cb2: 110
     cb3: 170
     cb4: 250
@@ -5548,7 +5548,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 110
     pb3: 170
     pb4: 250
@@ -5572,7 +5572,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 90
+    cb1: 162
     cb2: 110
     cb3: 170
     cb4: 250
@@ -5596,7 +5596,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 110
     pb3: 170
     pb4: 250
@@ -5621,7 +5621,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.40
-    cb1: 130
+    cb1: 234
     cb2: 110
     cb3: 170
     cb4: 250
@@ -5645,7 +5645,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 110
     pb3: 170
     pb4: 250
@@ -5669,7 +5669,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.40
-    cb1: 130
+    cb1: 234
     cb2: 90
     cb3: 180
     cb4: 250
@@ -5693,7 +5693,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 100
     pb3: 200
     pb4: 250
@@ -5714,7 +5714,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 45
     cb3: 82.5
     cb4: 250
@@ -5738,7 +5738,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 60
     pb3: 110
     pb4: 250
@@ -5759,7 +5759,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 70
     cb3: 120
     cb4: 250
@@ -5783,7 +5783,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 80
     pb3: 130
     pb4: 250
@@ -6393,7 +6393,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 37.5
     cb3: 105
     cb4: 250
@@ -6417,7 +6417,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 50
     pb3: 140
     pb4: 250
@@ -6497,7 +6497,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 70
+    cb1: 126
     cb2: 110
     cb3: 140
     cb4: 260
@@ -6521,7 +6521,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 110
     pb3: 140
     pb4: 260
@@ -6542,7 +6542,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -6566,7 +6566,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 50
+    pb1: 90
     pb2: 100
     pb3: 140
     pb4: 250
@@ -6590,7 +6590,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -6614,7 +6614,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 50
+    pb1: 90
     pb2: 100
     pb3: 140
     pb4: 250
@@ -6637,7 +6637,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 52
+    cb1: 93.6
     cb2: 120
     cb3: 220
     cb4: 250
@@ -6661,7 +6661,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 48
+    pb1: 86.4
     pb2: 160
     pb3: 300
     pb4: 250
@@ -6690,7 +6690,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 95
+    cb1: 171
     cb2: 130
     cb3: 180
     cb4: 250
@@ -6714,7 +6714,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 95
+    pb1: 171
     pb2: 130
     pb3: 180
     pb4: 250
@@ -6737,7 +6737,7 @@ phonemes:
     _isVoiced: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 68
+    cb1: 122.4
     cb2: 80
     cb3: 100
     cb4: 250
@@ -6761,7 +6761,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 62
+    pb1: 111.6
     pb2: 105
     pb3: 135
     pb4: 250
@@ -6921,7 +6921,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -6945,7 +6945,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 50
+    pb1: 90
     pb2: 100
     pb3: 140
     pb4: 250
@@ -7018,7 +7018,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 75
     cb3: 170
     cb4: 250
@@ -7042,7 +7042,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 90
     pb3: 200
     pb4: 250
@@ -7063,7 +7063,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 70
+    cb1: 126
     cb2: 90
     cb3: 150
     cb4: 250
@@ -7087,7 +7087,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 60
+    pb1: 108
     pb2: 105
     pb3: 180
     pb4: 250
@@ -7108,7 +7108,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 50
+    cb1: 90
     cb2: 70
     cb3: 100
     cb4: 250
@@ -7132,7 +7132,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 40
+    pb1: 72
     pb2: 85
     pb3: 130
     pb4: 250
@@ -7153,7 +7153,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 80
+    cb1: 144
     cb2: 85
     cb3: 170
     cb4: 250
@@ -7177,7 +7177,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -7198,7 +7198,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 65
+    cb1: 117
     cb2: 80
     cb3: 100
     cb4: 250
@@ -7222,7 +7222,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 55
+    pb1: 99
     pb2: 95
     pb3: 130
     pb4: 250
@@ -7244,7 +7244,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 110
     cb4: 250
@@ -7268,7 +7268,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 90
     pb3: 140
     pb4: 250
@@ -7289,7 +7289,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 75
+    cb1: 135
     cb2: 82
     cb3: 155
     cb4: 250
@@ -7313,7 +7313,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 97
     pb3: 185
     pb4: 250
@@ -7335,7 +7335,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -7359,7 +7359,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 90
     pb3: 135
     pb4: 250
@@ -7380,7 +7380,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 85
+    cb1: 153
     cb2: 105
     cb3: 165
     cb4: 250
@@ -7404,7 +7404,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 75
+    pb1: 135
     pb2: 120
     pb3: 195
     pb4: 250
@@ -7425,7 +7425,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 75
+    cb1: 135
     cb2: 108
     cb3: 230
     cb4: 250
@@ -7449,7 +7449,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 123
     pb3: 260
     pb4: 250
@@ -7470,7 +7470,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -7494,7 +7494,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 45
+    pb1: 81
     pb2: 90
     pb3: 135
     pb4: 250
@@ -7515,7 +7515,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 95
+    cb1: 171
     cb2: 88
     cb3: 175
     cb4: 250
@@ -7539,7 +7539,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 85
+    pb1: 153
     pb2: 103
     pb3: 205
     pb4: 250
@@ -7560,7 +7560,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 65
+    cb1: 117
     cb2: 65
     cb3: 148
     cb4: 250
@@ -7584,7 +7584,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 55
+    pb1: 99
     pb2: 80
     pb3: 178
     pb4: 250
@@ -7605,7 +7605,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 70
+    cb1: 126
     cb2: 80
     cb3: 100
     cb4: 250
@@ -7629,7 +7629,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 60
+    pb1: 108
     pb2: 95
     pb3: 130
     pb4: 250
@@ -7651,7 +7651,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 75
     cb3: 170
     cb4: 250
@@ -7675,7 +7675,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 90
     pb3: 200
     pb4: 250
@@ -7697,7 +7697,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 65
+    cb1: 117
     cb2: 65
     cb3: 148
     cb4: 250
@@ -7721,7 +7721,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 55
+    pb1: 99
     pb2: 80
     pb3: 178
     pb4: 250
@@ -7743,7 +7743,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 80
+    cb1: 144
     cb2: 85
     cb3: 170
     cb4: 250
@@ -7767,7 +7767,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -7789,7 +7789,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 75
+    cb1: 135
     cb2: 82
     cb3: 155
     cb4: 250
@@ -7813,7 +7813,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 97
     pb3: 185
     pb4: 250
@@ -7835,7 +7835,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 70
+    cb1: 126
     cb2: 80
     cb3: 100
     cb4: 250
@@ -7859,7 +7859,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 60
+    pb1: 108
     pb2: 95
     pb3: 130
     pb4: 250
@@ -8025,7 +8025,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 75
     cb3: 150
     cb4: 250
@@ -8049,7 +8049,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -8469,7 +8469,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -8493,7 +8493,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -8514,7 +8514,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 75
     cb3: 60
     cb4: 250
@@ -8538,7 +8538,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 80
     pb4: 250
@@ -8608,7 +8608,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 75
     cb3: 82.5
     cb4: 250
@@ -8632,7 +8632,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 80
     pb4: 250
@@ -8653,7 +8653,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 95
+    cb1: 171
     cb2: 110
     cb3: 170
     cb4: 250
@@ -8677,7 +8677,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 95
+    pb1: 171
     pb2: 110
     pb3: 170
     pb4: 250
@@ -8840,7 +8840,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 100
+    cb1: 180
     cb2: 180
     cb3: 250
     cb4: 250
@@ -8864,7 +8864,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 100
+    pb1: 180
     pb2: 180
     pb3: 250
     pb4: 250
@@ -9226,7 +9226,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 150.6
+    cb1: 271.08
     cb2: 110
     cb3: 178
     cb4: 250
@@ -9250,7 +9250,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 70
     pb3: 160
     pb4: 250
@@ -9271,7 +9271,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 77
+    cb1: 138.6
     cb2: 85
     cb3: 165
     cb4: 250
@@ -9295,7 +9295,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250
@@ -9362,7 +9362,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 120
+    cb1: 216
     cb2: 160
     cb3: 200
     cb4: 250
@@ -9386,7 +9386,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 100
     pb3: 80
     pb4: 250
@@ -9407,7 +9407,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 120
+    cb1: 216
     cb2: 160
     cb3: 200
     cb4: 250
@@ -9431,7 +9431,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 90
+    pb1: 162
     pb2: 100
     pb3: 80
     pb4: 250
@@ -9458,7 +9458,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 220
+    cb1: 300
     cb2: 150
     cb3: 160
     cb4: 250
@@ -9482,7 +9482,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 180
+    pb1: 300
     pb2: 120
     pb3: 140
     pb4: 250
@@ -9503,7 +9503,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 88
+    cb1: 158.4
     cb2: 75
     cb3: 60
     cb4: 250
@@ -9527,7 +9527,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 80
     pb4: 250
@@ -9548,7 +9548,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 88
+    cb1: 158.4
     cb2: 75
     cb3: 60
     cb4: 250
@@ -9572,7 +9572,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 80
+    pb1: 144
     pb2: 100
     pb3: 80
     pb4: 250
@@ -9639,7 +9639,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 116.6
+    cb1: 209.88
     cb2: 76.5
     cb3: 178
     cb4: 250
@@ -9663,7 +9663,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 130
+    pb1: 234
     pb2: 70
     pb3: 160
     pb4: 250
@@ -9778,7 +9778,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 110
+    cb1: 198
     cb2: 110
     cb3: 120
     cb4: 250
@@ -9802,7 +9802,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 110
+    pb1: 198
     pb2: 110
     pb3: 120
     pb4: 250
@@ -9823,7 +9823,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 55
+    cb1: 99
     cb2: 75
     cb3: 105
     cb4: 250
@@ -9847,7 +9847,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 50
+    pb1: 90
     pb2: 100
     pb3: 140
     pb4: 250
@@ -9868,7 +9868,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 71.5
+    cb1: 128.7
     cb2: 82.5
     cb3: 105
     cb4: 250
@@ -9892,7 +9892,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -9915,7 +9915,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0
-    cb1: 95
+    cb1: 171
     cb2: 110
     cb3: 105
     cb4: 250
@@ -9939,7 +9939,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 65
+    pb1: 117
     pb2: 110
     pb3: 140
     pb4: 250
@@ -9960,7 +9960,7 @@ phonemes:
     _isVowel: true
     aspirationAmplitude: 0
     caNP: 0.6
-    cb1: 77
+    cb1: 138.6
     cb2: 75
     cb3: 150
     cb4: 250
@@ -9984,7 +9984,7 @@ phonemes:
     pa5: 0
     pa6: 0
     parallelBypass: 0
-    pb1: 70
+    pb1: 126
     pb2: 100
     pb3: 200
     pb4: 250

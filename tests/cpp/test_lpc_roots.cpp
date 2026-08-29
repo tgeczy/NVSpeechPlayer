@@ -41,8 +41,13 @@ TEST_CASE_FIXTURE(HandleFixture,
     // are trustworthy.
     auto res = synthesizeToPcmWithTrace(handle, "a", 1.0, 140.0, 0.5, 22050);
     REQUIRE(!res.pcm.empty());
+    // Order 20 (was 16): since the b9 vowel-B1 widening (cb1/pb1 x1.8,
+    // BraiLab-matched), /a/'s true F1 bandwidth is ~140 Hz. An order-16
+    // fit smeared the wide F1 pole past the 400 Hz phantom gate and it
+    // was discarded; with more poles the fit carves F1 at ~230 Hz BW,
+    // safely inside the unchanged gate.
     auto r = extractFormantsViaRoots(res.pcm, res.pcm.size() / 2, 22050,
-                                     /*window*/ 1024, /*order*/ 16);
+                                     /*window*/ 1024, /*order*/ 20);
     REQUIRE(r.valid);
     REQUIRE(r.formants.size() >= 3);
 
