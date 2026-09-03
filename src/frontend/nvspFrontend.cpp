@@ -983,6 +983,18 @@ NVSP_FRONTEND_API char* nvspFrontend_prepareText(
     auto u32 = utf8ToU32(input);
     if (u32.size() == 1) {
       auto it = h->pack.letterDict.find(input);
+      if (it == h->pack.letterDict.end()) {
+        // Case-fold retry (#122): dictionaries are authored in lowercase
+        // ("á" -> "a acentuada"), but character navigation and typed-
+        // character echo hand us capitals too. The NVDA driver already
+        // folded on its side; every other platform reaches the dict only
+        // through here, so "Á" / "R" silently missed on SAPI, Android,
+        // iOS and Linux.
+        const char32_t lower = foldCodepointLower(u32[0]);
+        if (lower != u32[0]) {
+          it = h->pack.letterDict.find(u32ToUtf8(std::u32string(1, lower)));
+        }
+      }
       if (it != h->pack.letterDict.end()) {
         const std::string& desc = it->second;
         char* out = static_cast<char*>(std::malloc(desc.size() + 1));

@@ -285,6 +285,23 @@ std::string normalizeNFKC(const std::string& utf8) { return utf8; }
 
 #endif
 
+char32_t foldCodepointLower(char32_t c) {
+  if (c >= 0x41 && c <= 0x5A) return c + 0x20;                       // A-Z
+  if (c >= 0xC0 && c <= 0xDE && c != 0xD7) return c + 0x20;          // Latin-1 (not x)
+  if (c == 0x130) return 0x69;                                       // Turkish dotted I
+  if (c == 0x178) return 0xFF;                                       // Y-diaeresis
+  if ((c >= 0x100 && c <= 0x137) || (c >= 0x14A && c <= 0x177))     // Latin Ext-A, even=upper
+    return (c % 2 == 0) ? c + 1 : c;
+  if ((c >= 0x139 && c <= 0x148) || (c >= 0x179 && c <= 0x17E))     // Latin Ext-A, odd=upper
+    return (c % 2 == 1) ? c + 1 : c;
+  if (c >= 0x391 && c <= 0x3A9 && c != 0x3A2) return c + 0x20;       // Greek
+  if (c >= 0x400 && c <= 0x40F) return c + 0x50;                     // Cyrillic Ѐ-Џ (Є І Ї ...)
+  if (c >= 0x410 && c <= 0x42F) return c + 0x20;                     // Cyrillic А-Я
+  if ((c >= 0x460 && c <= 0x481) || (c >= 0x48A && c <= 0x4BF))     // Cyrillic Ext (Ґ ...)
+    return (c % 2 == 0) ? c + 1 : c;
+  return c;
+}
+
 std::string normalizeText(const std::string& s) {
   return normalizeNFKC(stripInvisible(s));
 }

@@ -18,6 +18,14 @@ std::u32string utf8ToU32(std::string_view s);
 // UTF-32 -> UTF-8.
 std::string u32ToUtf8(std::u32string_view s);
 
+// Locale-independent single-codepoint lowercase for the alphabets the packs
+// ship (ASCII, Latin-1 Supplement, Latin Extended-A, Greek, Cyrillic incl.
+// Ukrainian/Extended). std::towlower is ASCII-only in the default "C"
+// locale on MSVC, which is how capital letters silently missed the letter
+// dictionaries (#122). Returns the input unchanged when it is not an
+// uppercase letter in a covered block. Turkish dotted İ maps to plain i.
+char32_t foldCodepointLower(char32_t c);
+
 // Lowercase ASCII and convert '_' -> '-' (for language tags).
 std::string normalizeLangTag(std::string_view tag);
 
